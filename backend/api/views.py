@@ -60,4 +60,4 @@ def login_view(request):
 def logout_view(request):
     if not request.user.is_anonymous:
         logout(request)
-    return apiResponse(code=200)
+    return apiResponse()
