@@ -1,0 +1,51 @@
+<div class="container">
+    <span class="row"><hr size="#"></span>
+    <h3 class="row">
+        <span class="col-1"></span>
+        <span class="col">Signin Page</span>
+        <span class="col-1"></span>
+    </h3>
+    <div class="row">
+        <span class="col-1"></span>
+        <form class="form col" action="#">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="username" class="form-control" id="username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+            </div><div class="form-group">
+                <label for="password2">Retype your password</label>
+                <input type="password" class="form-control" id="password2" placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <input type="submit" onclick="login($(this).parent().parent())">
+            </div>
+            <a href="#" onclick="App.views.login()">I have already an account</a>
+        </form>
+        <span class="col-1"></span>
+    </div>
+    <div class="row">
+        <span class="col-1"></span>
+        <span class="col" id="error"></span>
+        <span class="col-1"></span>
+    </div>
+</div>
+<script type="text/javascript">
+    function login(form) {
+        username = form.find('#username').val();
+        email = form.find('#email').val();
+        password = form.find('#password').val();
+        password2 = form.find('#password2').val();
+        App.views.signin(username, email, password, password2);
+    }
+    $error = $('#error');
+    for (var i = 0; i < App.vars.errors.length; i++) {
+        $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    }
+</script>

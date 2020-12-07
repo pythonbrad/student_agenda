@@ -1,0 +1,20 @@
+.splash-image {
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.grid_system div[class^="col"] {
+    border: 1px solid white;
+    background: white;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px
+}
+
+.active {
+    color: #1E90FF;
+}

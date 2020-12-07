@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="container-fluid" id='block'>
+        <div id="parent">
+            <div class="row" onclick="$(this).parent().find('#child').fadeToggle();">
+                <div class="col-3">
+                    <i class="fas fa-4x fa-book" style="color: brown;"></i>
+                </div>
+                <div class="col">
+                    <span>CEF201</span>
+                    <h4>Physics of engineering I</h4>
+                </div>
+            </div>
+            <br>
+            <div class="row" id='child' style="display: none;">
+                <div class="card" style="width: 100%;">
+                    <p class="card-body">
+                        <b>Time:</b> 7am to 9am<br>
+                        <b>Venue:</b> Amphi 150 E<br>
+                        <b>Assignments:</b> <font color="red">No</font><br>
+                        <b>Tutorials:</b> <font color="green">Yes</font><br>
+                        <b>Status:</b> <font color="green">Begin</font><br>
+                        <b>Attendance:</b> <font color="orange">Waiting</font><br>
+                    </p>
+                </div>
+            </div>
+            <hr size="#">
+        </div>
+    </div>
+</div>
+<!-- We duplicate the data -->
+<script type="text/javascript">
+    $html = $('#block').html();
+    for (var i = 0; i <= 10; i++) {
+        $('#block').append($html);
+    }
+</script>
