@@ -26,6 +26,8 @@ App = {
 			Addons.request('/api/login', null, function (d) {
 				if (d.code == 200) {
 					App.vars.is_login = 1;
+				} else {
+					App.vars.is_login = 0;
 				}
 				// We load the home view
 				App.events[1] = setInterval(function () {
@@ -38,10 +40,10 @@ App = {
 		},
 		home: function () {
 			App.views.splash()
-			// We perform operation
-			// ...
-			// We load the home page
 			if (App.vars.is_login) {
+				// We perform operation
+				// ...
+				// We load the home page
 				App.views.base(
 					function () {
 						$('#contains').load('app/templates/home.html');
@@ -74,6 +76,17 @@ App = {
 				}
 			);
 		},
+		notifications: function () {
+			App.views.splash();
+			// We perform operation
+			// We load the template
+			App.views.base(
+				function () {
+					$('#contains').load('app/templates/notifications.html');
+					$('#header').load('app/templates/notifications_header.html');
+				}
+			);
+		},
 		login: function (username, password) {
 			App.views.splash();
 			// We perform operation
@@ -85,8 +98,7 @@ App = {
 							App.vars.errors = [d.error];
 							$('#main').load('app/templates/login.html');
 						} else {
-							App.vars.is_login = 1;
-							App.views.home();
+							App.views.index();
 						}
 					},false
 				);
@@ -118,11 +130,27 @@ App = {
 				$('#main').load('app/templates/signin.html');
 			}
 		},
+		profil: function () {
+			App.views.splash();
+			// We perform operation
+			// We load the template
+			App.views.base(
+				function () {
+					$('#contains').load('app/templates/profil.html');
+					$('#header').load('app/templates/profil_header.html');
+				}
+			);
+		},
 		logout: function () {
 			App.views.splash();
 			// We perform operation
-			App.vars.is_login = 0;
-			App.views.home();
+			Addons.request('/api/logout',null,
+				function (d) {
+					setTimeout(function () {
+						App.views.index();
+					}, 200);
+				},false
+			);
 		},
 	},
 	models: {},

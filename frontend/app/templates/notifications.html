@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="container-fluid" id='block'>
+        <div id="parent">
+            <div class="row">
+                <div class="col-3">
+                    <i class="fas fa-4x fa-bell text-dark"></i>
+                </div>
+                <div class="col card" style="width: 100%;">
+                    <p class="card-body">
+                        <b>Time:</b> Today at 7am<br>
+                        <b>CEF205 cancelled</b><br>
+                    </p>
+                </div>
+            </div>
+            <br>
+            <hr size="#">
+        </div>
+    </div>
+</div>
+<!-- We duplicate the data -->
+<script type="text/javascript">
+    $html = $('#block').html();
+    for (var i = 0; i <= 10; i++) {
+        $('#block').append($html);
+    }
+</script>
