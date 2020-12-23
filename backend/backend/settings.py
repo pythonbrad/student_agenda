@@ -120,3 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440
+
+MEDIA_ROOT = BASE_DIR / 'media'

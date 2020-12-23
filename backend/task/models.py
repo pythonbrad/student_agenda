@@ -12,7 +12,7 @@ class Student(models.Model):
         verbose_name_plural = "Students"
 
     def __str__(self):
-        return self.name
+        return str(self.user)
 
 class Absent(models.Model):
     student = models.ForeignKey('Student', on_delete=models.CASCADE)
@@ -24,12 +24,15 @@ class Absent(models.Model):
         verbose_name_plural = "Absents"
 
     def __str__(self):
-        return self.student
+        return str(self.student)
     
 
 class Timetable(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=10, unique=True)
     description = models.CharField(max_length=255, default='')
+    owner = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='Owner')
+    moderators = models.ManyToManyField('Student', related_name='Moderators')
+    followers = models.ManyToManyField('Student')
 
     class Meta:
         verbose_name = "Timetable"
@@ -40,13 +43,14 @@ class Timetable(models.Model):
 
 class Lecturer(models.Model):
     name = models.CharField(max_length=50)
+    timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Lecturer"
         verbose_name_plural = "Lecturers"
 
     def __str__(self):
-        return name
+        return self.name
 
 class Course(models.Model):
     name = models.CharField(max_length=50)
@@ -60,7 +64,7 @@ class Course(models.Model):
         verbose_name_plural = "Courses"
 
     def __str__(self):
-        return code
+        return self.code
 
 class Classe(models.Model):
     STATUS_CHOICES = (
@@ -70,12 +74,12 @@ class Classe(models.Model):
         ('e', 'Ended'),
     )
     description = models.CharField(max_length=255, default='')
-    timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
     absents = models.ManyToManyField('Absent')
-    time = models.DateTimeField()
+    begin = models.DateTimeField()
+    end = models.DateTimeField()
     updated = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -83,11 +87,12 @@ class Classe(models.Model):
         verbose_name_plural = "Classes"
 
     def __str__(self):
-        return self.course
+        return str(self.course)
 
 class Location(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255, default='')
+    timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Location"
@@ -102,6 +107,7 @@ class Asset(models.Model):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     readers = models.ManyToManyField('Student')
+    file = models.FileField(upload_to='uploads/%Y/%m/%d/')
 
     class Meta:
         verbose_name = "Asset"
@@ -113,6 +119,7 @@ class Asset(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255, default='')
+    timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Category"
