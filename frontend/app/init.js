@@ -23,7 +23,7 @@ App = {
 			}, 3000);
 			// We perform operation
 			// We verify if already login
-			Addons.request('/api/login', null, function (d) {
+			Addons.request('/api/auth/login', null, function (d) {
 				if (d.code == 200) {
 					App.vars.is_login = 1;
 				} else {
@@ -91,7 +91,7 @@ App = {
 			App.views.splash();
 			// We perform operation
 			if (username && password) {
-				Addons.request('/api/login',
+				Addons.request('/api/auth/login',
 					{username: username, password: password},
 					function (d) {
 						if (d.code != 200) {
@@ -113,7 +113,7 @@ App = {
 			if (password != password2) {
 				App.vars.errors = ['The passwords not match'];
 			} else if (username && email && password && password2) {
-				Addons.request('/api/signin',
+				Addons.request('/api/auth/signin',
 					{username: username, email: email, password: password, password2: password2},
 					function (d) {
 						if (d.code != 200) {
@@ -144,7 +144,7 @@ App = {
 		logout: function () {
 			App.views.splash();
 			// We perform operation
-			Addons.request('/api/logout',null,
+			Addons.request('/api/auth/logout',null,
 				function (d) {
 					setTimeout(function () {
 						App.views.index();

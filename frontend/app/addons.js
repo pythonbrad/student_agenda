@@ -4,7 +4,7 @@ Addons = {
     request: function (_url, _json, _func, _async=true) {
         $.ajax({
             url: _url,
-            type: 'post',
+            type: _json ? 'post' : 'get',
             dataType: 'json',
             ContentType: 'application/json',
             success: _func,

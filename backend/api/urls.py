@@ -3,7 +3,7 @@ from .views import authentification
 
 
 urlpatterns = [
-    path('signin', authentification.signin_view),
-    path('login', authentification.login_view),
-    path('logout', authentification.logout_view),
+    path('auth/signin', authentification.signin_view),
+    path('auth/login', authentification.login_view),
+    path('auth/logout', authentification.logout_view),
 ]

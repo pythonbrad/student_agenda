@@ -37,7 +37,7 @@ def signin_view(request):
 
 @csrf_exempt
 def login_view(request):
-    if not request.user.is_anonymous:
+    if request.user.is_authenticated:
         return apiResponse()
     elif request.POST:
         data = request.POST
@@ -55,6 +55,6 @@ def login_view(request):
 
 
 def logout_view(request):
-    if not request.user.is_anonymous:
+    if request.user.is_authenticated:
         logout(request)
     return apiResponse()

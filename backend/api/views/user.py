@@ -7,13 +7,16 @@ from .tools import apiResponse
 
 
 def get_timetable_view(request):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         return apiResponse(result=Timetable.objects.values())
     else:
         return apiResponse(code=601)
 
+
+
+
 def get_timetable_follower_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -25,7 +28,7 @@ def get_timetable_follower_view(request, timetable_pk):
 
 
 def follow_timetable_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -39,7 +42,7 @@ def follow_timetable_view(request, timetable_pk):
 
 
 def unfollow_timetable_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -53,7 +56,7 @@ def unfollow_timetable_view(request, timetable_pk):
 
 
 def get_timetable_lecturer_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -65,7 +68,7 @@ def get_timetable_lecturer_view(request, timetable_pk):
 
 
 def get_timetable_course_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -77,7 +80,7 @@ def get_timetable_course_view(request, timetable_pk):
 
 
 def get_course_lecturer_view(request, course_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
@@ -89,7 +92,7 @@ def get_course_lecturer_view(request, course_pk):
 
 
 def get_course_follower_view(request, course_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
@@ -101,7 +104,7 @@ def get_course_follower_view(request, course_pk):
 
 
 def set_course_follower_view(request, course_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
@@ -115,7 +118,7 @@ def set_course_follower_view(request, course_pk):
 
 
 def unset_course_follower_view(request, course_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
@@ -129,7 +132,7 @@ def unset_course_follower_view(request, course_pk):
 
 
 def get_timetable_classes_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             return apiResponse(
@@ -141,7 +144,7 @@ def get_timetable_classes_view(request, timetable_pk):
         return apiResponse(code=610)
 
 def get_classe_absent_view(request, classe_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         classe = Classe.objects.filter(pk=classe_pk)
         if classe:
             classe = classe[0]
@@ -154,7 +157,7 @@ def get_classe_absent_view(request, classe_pk):
 
 @csrf_exempt
 def set_classe_absent_view(request, classe_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             classe = Classe.objects.filter(pk=classe_pk)
@@ -178,7 +181,7 @@ def set_classe_absent_view(request, classe_pk):
 
 
 def unset_classe_absent_view(request, classe_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         classe = Classe.objects.filter(pk=classe_pk)
         if classe:
             classe = classe[0]
@@ -192,7 +195,7 @@ def unset_classe_absent_view(request, classe_pk):
 
 
 def get_timetable_location_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -203,7 +206,7 @@ def get_timetable_location_view(request, timetable_pk):
         return apiResponse(code=614)
 
 def get_timetable_category_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -214,7 +217,7 @@ def get_timetable_category_view(request, timetable_pk):
         return apiResponse(code=615)
 
 def get_asset_reader_view(request, asset_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset = asset[0]
@@ -227,7 +230,7 @@ def get_asset_reader_view(request, asset_pk):
 
 
 def set_asset_reader_view(request, asset_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset = asset[0]
@@ -241,7 +244,7 @@ def set_asset_reader_view(request, asset_pk):
 
 
 def unset_asset_reader_view(request, asset_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset = asset[0]
@@ -255,7 +258,7 @@ def unset_asset_reader_view(request, asset_pk):
 
 
 def get_timetable_course_view(request, timetable_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -267,7 +270,7 @@ def get_timetable_course_view(request, timetable_pk):
 
 
 def get_event_follower_view(request, event_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         event = Event.objects.filter(pk=event_pk)
         if event:
             event = event[0]
@@ -279,7 +282,7 @@ def get_event_follower_view(request, event_pk):
 
 
 def follow_event_view(request, event_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         event = Event.objects.filter(pk=event_pk)
         if event:
             event = event[0]
@@ -293,7 +296,7 @@ def follow_event_view(request, event_pk):
 
 
 def unfollow_event_view(request, event_pk):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         event = Event.objects.filter(pk=event_pk)
         if event:
             event = event[0]
@@ -307,7 +310,7 @@ def unfollow_event_view(request, event_pk):
 
 
 def get_notification(request):
-    if request.user.is_authentificated:
+    if request.user.is_authenticated:
         return apiResponse(result=Notification.objects.filter(receivers=request.user.student_set.get()).values())
     else:
         return apiResponse(code=622)
