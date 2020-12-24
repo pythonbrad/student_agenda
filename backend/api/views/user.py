@@ -2,15 +2,26 @@ from task.models import Course, Classe, Timetable, Notification
 from task.models import Lecturer, Absent, Asset, Event
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
+from .tools import apiResponse
 
 
-#code x(51-70)
 
 def get_timetable_view(request):
     if request.user.is_authentificated:
         return apiResponse(result=Timetable.objects.values())
     else:
         return apiResponse(code=601)
+
+def get_timetable_follower_view(request, timetable_pk):
+    if request.user.is_authentificated:
+        timetable = Timetable.objects.filter(pk=timetable_pk)
+        if timetable:
+            timetable = timetable[0]
+            return apiResponse(result=timetable.followers.values())
+        else:
+            return apiResponse(code=522)
+    else:
+        return apiResponse(code=624)
 
 
 def follow_timetable_view(request, timetable_pk):
@@ -253,6 +264,18 @@ def get_timetable_course_view(request, timetable_pk):
             return apiResponse(code=518)
     else:
         return apiResponse(code=619)
+
+
+def get_event_follower_view(request, event_pk):
+    if request.user.is_authentificated:
+        event = Event.objects.filter(pk=event_pk)
+        if event:
+            event = event[0]
+            return apiResponse(result=event.followers.values())
+        else:
+            return apiResponse(code=521)
+    else:
+        return apiResponse(code=623)
 
 
 def follow_event_view(request, event_pk):
