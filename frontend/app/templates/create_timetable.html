@@ -1,0 +1,42 @@
+<div class="container">
+    <span class="row"><hr size="#"></span>
+    <h3 class="row">
+        <span class="col-1"></span>
+        <span class="col">Create a timetable is Simple!</span>
+        <span class="col-1"></span>
+    </h3>
+    <div class="row">
+        <span class="col-1"></span>
+        <form class="form col" action="#">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="name" class="form-control" id="name" placeholder="Enter the timetable's name">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="description" class="form-control" id="description" placeholder="Enter the timetable's description">
+            </div>
+            <div class="form-group">
+                <input type="submit" onclick="create_timetable($(this).parent().parent())">
+            </div>
+            <button class="btn btn-primary col btn-sm" onclick="App.views.choose_timetable()">Choose Timetable</button>
+        </form>
+        <span class="col-1"></span>
+    </div>
+    <div class="row">
+        <span class="col-1"></span>
+        <span class="col" id="error"></span>
+        <span class="col-1"></span>
+    </div>
+</div>
+<script type="text/javascript">
+    function create_timetable(form) {
+        name = form.find('#name').val();
+        description = form.find('#description').val();
+        App.views.create_timetable(name, description);
+    }
+    $error = $('#error');
+    for (var i = 0; i < App.vars.errors.length; i++) {
+        $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    }
+</script>

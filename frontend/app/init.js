@@ -15,7 +15,7 @@ App = {
 			$('#main').load('app/templates/splash.html');
 		},
 		index: function () {
-			App.views.splash()
+			App.views.splash();
 			// We config it to permit to splash screen should be showed if the datas are fast loaded
 			App.vars.can_pass = 0;
 			App.events[0] = setTimeout(function () {
@@ -29,30 +29,82 @@ App = {
 				} else {
 					App.vars.is_login = 0;
 				}
-				// We load the home view
+				// We load the next view
 				App.events[1] = setInterval(function () {
 					if (App.vars.can_pass) {
 						clearInterval(App.events[1]);
-						App.views.home();
+						if (App.vars.is_login) {
+							// We verify if least 1 timetable is already follow
+							Addons.request('/api/user/timetable/follow', null, function (d) {
+								if (d.code == 200 && d.result && d.result.pk) {
+									// We load the home view
+									App.views.home();
+								} else {
+									App.views.choose_timetable();
+								}
+							})
+						} else {
+							// We load the login view
+							App.views.login();
+						}
 					}
 				}, 100);
 			}, false)
 		},
-		home: function () {
-			App.views.splash()
-			if (App.vars.is_login) {
-				// We perform operation
-				// ...
-				// We load the home page
-				App.views.base(
-					function () {
-						$('#contains').load('app/templates/home.html');
-						$('#header').load('app/templates/home_header.html');
+		choose_timetable: function (timetable_id) {
+			App.views.splash();
+			// We perform operation
+			if (timetable_id) {
+				Addons.request('/api/user/timetable/follow/'+timetable_id, null, function (d) {
+					if (d.code != 200) {
+						App.vars.errors = [d.error];
+						$('#main').load('app/templates/choose_timetable.html');
+					} else {
+						App.views.index();
 					}
-				);
+				}, false);
 			} else {
-				App.views.login();
+				// We load timetable
+				Addons.request('/api/user/timetable', null, function (d) {
+					if (d.code == 200) {
+						App.models.timetables = d.result;
+						// We load the page
+						$('#main').load('app/templates/choose_timetable.html');
+					} else {
+						alert('error: code '+d.code);
+					}
+				}, false);
 			}
+		},
+		create_timetable: function (name, description) {
+			App.views.splash();
+			// We perform operation
+			if (name && description) {
+				Addons.request('/api/admin/timetable/create',
+					{name: name, description: description},
+					function (d) {
+						if (d.code != 200) {
+							App.vars.errors = [d.error];
+							$('#main').load('app/templates/create_timetable.html');
+						} else {
+							App.views.choose_timetable();
+						}
+					}, false);
+			} else {
+				// We load the template
+				$('#main').load('app/templates/create_timetable.html');
+			}
+		},
+		home: function () {
+			App.views.splash();
+			// We perform operation
+			// We load the home page
+			App.views.base(
+				function () {
+					$('#contains').load('app/templates/home.html');
+					$('#header').load('app/templates/home_header.html');
+				}
+			);
 		},
 		supports: function () {
 			App.views.splash();
@@ -98,6 +150,7 @@ App = {
 							App.vars.errors = [d.error];
 							$('#main').load('app/templates/login.html');
 						} else {
+							App.models.user = {username: d.result.username};
 							App.views.index();
 						}
 					},false

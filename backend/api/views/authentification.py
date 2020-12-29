@@ -47,7 +47,7 @@ def login_view(request):
             password=data.get('password', None))
         if user is not None:
             login(request, user)
-            return apiResponse()
+            return apiResponse(result=user.student_set.get().get_as_json())
         else:
             return apiResponse(code=502)
     else:

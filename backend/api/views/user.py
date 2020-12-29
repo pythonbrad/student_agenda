@@ -8,11 +8,20 @@ from .tools import apiResponse
 
 def get_timetable_view(request):
     if request.user.is_authenticated:
-        return apiResponse(result=Timetable.objects.values())
+        return apiResponse(result=[timetable.get_as_json() for timetable in Timetable.objects.all()])
     else:
         return apiResponse(code=601)
 
-
+def get_timetable_follow_by_me_view(request):
+    if request.user.is_authenticated:
+        timetable = Timetable.objects.filter(followers=request.user.student_set.get())
+        if timetable:
+            timetable = timetable[0]
+            return apiResponse(result=timetable.get_as_json())
+        else:
+            return apiResponse(result=[])
+    else:
+        return apiResponse(code=624)
 
 
 def get_timetable_follower_view(request, timetable_pk):
@@ -20,7 +29,7 @@ def get_timetable_follower_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=timetable.followers.values())
+            return apiResponse(result=[follower.get_as_json() for followers in timetable.followers.all()])
         else:
             return apiResponse(code=522)
     else:
@@ -60,7 +69,7 @@ def get_timetable_lecturer_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=timetable.lecturers_set.values())
+            return apiResponse(result=[lecturer.get_as_json() for lecturer in timetable.lecturers_set.all()])
         else:
             return apiResponse(code=503)
     else:
@@ -72,7 +81,8 @@ def get_timetable_course_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=Course.objects.filter(lecturers__timetable=timetable).values())
+            courses = Course.objects.filter(lecturers__timetable=timetable)
+            return apiResponse(result=[course.get_as_json() for course in courses])
         else:
             return apiResponse(code=504)
     else:
@@ -84,7 +94,7 @@ def get_course_lecturer_view(request, course_pk):
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
-            return apiResponse(result=course.lecturers.values())
+            return apiResponse(result=[lecturer.get_as_json() for lecturer in course.lecturers.all()])
         else:
             return apiResponse(code=505)
     else:
@@ -96,7 +106,7 @@ def get_course_follower_view(request, course_pk):
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
-            return apiResponse(result=course.followers.values())
+            return apiResponse(result=[follower.get_as_json() for followers in course.followers.all()])
         else:
             return apiResponse(code=506)
     else:
@@ -135,9 +145,9 @@ def get_timetable_classes_view(request, timetable_pk):
     if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
+            classes = Classe.objects.filter(location__timetable=timetable[0])
             return apiResponse(
-                result=Classe.objects.filter(
-                    location__timetable=timetable[0]).values())
+                result=[classe.get_as_json() for classe in classes])
         else:
             return apiResponse(code=509)
     else:
@@ -148,7 +158,7 @@ def get_classe_absent_view(request, classe_pk):
         classe = Classe.objects.filter(pk=classe_pk)
         if classe:
             classe = classe[0]
-            return apiResponse(result=classe.absents.values())
+            return apiResponse(result=[absent.get_as_json() for absent in classe.absents.all()])
         else:
             return apiResponse(code=510)
     else:
@@ -199,7 +209,7 @@ def get_timetable_location_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=timetable.locations_set.values())
+            return apiResponse(result=[location.get_as_json() for location in timetable.locations_set.all()])
         else:
             return apiResponse(code=513)
     else:
@@ -210,7 +220,7 @@ def get_timetable_category_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=timetable.categorys_set.values())
+            return apiResponse(result=[category.get_as_json() for category in timetable.categorys_set.all()])
         else:
             return apiResponse(code=514)
     else:
@@ -221,7 +231,7 @@ def get_asset_reader_view(request, asset_pk):
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset = asset[0]
-            return apiResponse(result=asset.readers.values())
+            return apiResponse(result=[reader.get_as_json() for reader in asset.readers.all()])
         else:
             return apiResponse(code=515)
     else:
@@ -262,7 +272,8 @@ def get_timetable_course_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=Events.objects.filter(location__timetable=timetable).values())
+            events = Event.objects.filter(location__timetable=timetable);
+            return apiResponse(result=[event.get_as_json() for event in events])
         else:
             return apiResponse(code=518)
     else:
@@ -274,7 +285,7 @@ def get_event_follower_view(request, event_pk):
         event = Event.objects.filter(pk=event_pk)
         if event:
             event = event[0]
-            return apiResponse(result=event.followers.values())
+            return apiResponse(result=[follower.get_as_json() for followers in event.followers.all()])
         else:
             return apiResponse(code=521)
     else:
@@ -311,6 +322,7 @@ def unfollow_event_view(request, event_pk):
 
 def get_notification(request):
     if request.user.is_authenticated:
-        return apiResponse(result=Notification.objects.filter(receivers=request.user.student_set.get()).values())
+        notifications = Notification.objects.filter(receivers=request.user.student_set.get())
+        return apiResponse(result=[notification.get_as_json() for notification in notifications])
     else:
         return apiResponse(code=622)

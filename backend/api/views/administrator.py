@@ -8,7 +8,7 @@ from .tools import apiResponse
 
 @csrf_exempt
 def create_timetable_view(request):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             if Timetable.objects.filter(name=data.get('name', None)):
@@ -20,6 +20,7 @@ def create_timetable_view(request):
                     owner=request.user.student_set.get())
                 try:
                     timetable.full_clean()
+                    timetable.save()
                     timetable.moderators.add(request.user.student_set.get())
                     timetable.followers.add(request.user.student_set.get())
                     timetable.save()
@@ -33,7 +34,7 @@ def create_timetable_view(request):
 
 
 def delete_timetable_view(request, timetable_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
@@ -45,18 +46,18 @@ def delete_timetable_view(request, timetable_pk):
         return apiResponse(code=602)
 
 def get_timetable_moderator_view(request, timetable_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=timetable.moderators_set.values())
+            return apiResponse(result=timetable.moderators_set.get_as_json())
         else:
             return apiResponse(code=503)
     else:
         return apiResponse(code=603)
 
 def add_timetable_moderator_view(request, timetable_pk, user_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         user = User.objects.filter(pk=user_pk)
         if timetable and user:
@@ -71,7 +72,7 @@ def add_timetable_moderator_view(request, timetable_pk, user_pk):
 
 
 def remove_timetable_moderator_view(request, timetable_pk, user_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         user = User.objects.filter(pk=user_pk)
         if timetable and user:
@@ -87,7 +88,7 @@ def remove_timetable_moderator_view(request, timetable_pk, user_pk):
 
 @csrf_exempt
 def create_timetable_lecturer_view(request, timetable_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             timetable = Timetable.objects.filter(
@@ -110,7 +111,7 @@ def create_timetable_lecturer_view(request, timetable_pk):
 
 
 def delete_timetable_lecturer_view(request, lecturer_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         lecturer = Lecturer.objects.filter(pk=lecturer_pk)
         if lecturer:
             lecturer = lecturer[0]
@@ -124,7 +125,7 @@ def delete_timetable_lecturer_view(request, lecturer_pk):
 
 @csrf_exempt
 def create_timetable_course_view(request):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             course = Course(
@@ -144,7 +145,7 @@ def create_timetable_course_view(request):
 
 
 def delete_timetable_course_view(request, course_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         course = Course.objects.filter(pk=course_pk)
         if course:
             course.delete()
@@ -157,7 +158,7 @@ def delete_timetable_course_view(request, course_pk):
 
 @csrf_exempt
 def add_course_lecturer_view(request, course_pk, lecturer_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         lecturer = Lecturer.objects.filter(pk=lecturer_pk)
         course = Course.objects.filter(pk=course_pk)
         if course and lecturer:
@@ -173,7 +174,7 @@ def add_course_lecturer_view(request, course_pk, lecturer_pk):
 
 @csrf_exempt
 def remove_course_lecturer_view(request, course_pk, lecturer_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         lecturer = Lecturer.objects.filter(pk=lecturer_pk)
         course = Course.objects.filter(pk=course_pk)
         if course and lecturer:
@@ -188,7 +189,7 @@ def remove_course_lecturer_view(request, course_pk, lecturer_pk):
 
 @csrf_exempt
 def create_timetable_classe_view(request):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             classe = Classe(
@@ -216,7 +217,7 @@ def create_timetable_classe_view(request):
 
 
 def delete_timetable_classe_view(request, classe_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         classe = Classe.objects.filter(pk=classe_pk)
         if classe:
             classe.delete()
@@ -229,7 +230,7 @@ def delete_timetable_classe_view(request, classe_pk):
 
 @csrf_exempt
 def create_timetable_location_view(request, timetable_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             timetable = Timetable.objects.filter(
@@ -252,7 +253,7 @@ def create_timetable_location_view(request, timetable_pk):
 
 
 def delete_timetable_location_view(request, location_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         location = Location.objects.filter(pk=location_pk)
         if location:
             location = location[0]
@@ -266,7 +267,7 @@ def delete_timetable_location_view(request, location_pk):
 
 @csrf_exempt
 def create_timetable_category_view(request, timetable_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             timetable = Timetable.objects.filter(
@@ -289,7 +290,7 @@ def create_timetable_category_view(request, timetable_pk):
 
 
 def delete_timetable_category_view(request, category_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         category = Category.objects.filter(pk=category_pk)
         if category:
             category = category[0]
@@ -302,7 +303,7 @@ def delete_timetable_category_view(request, category_pk):
 
 @csrf_exempt
 def create_course_asset_view(request):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             asset = Asset(
@@ -329,7 +330,7 @@ def create_course_asset_view(request):
 
 
 def delete_course_asset_view(request, asset_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset.delete()
@@ -341,7 +342,7 @@ def delete_course_asset_view(request, asset_pk):
 
 @csrf_exempt
 def create_timetable_event_view(request, location_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             event = Event(
@@ -364,7 +365,7 @@ def create_timetable_event_view(request, location_pk):
         return apiResponse(code=620)
 
 def delete_timetable_event_view(request, event_pk):
-    if request.user.is_superuser:
+    if request.user.is_authenticated:
         event = Event.objects.filter(pk=event_pk)
         if event:
             event.delete()

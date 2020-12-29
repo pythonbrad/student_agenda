@@ -1,0 +1,70 @@
+<div class="container">
+    <span class="row"><hr size="#"></span>
+    <h3 class="row">
+        <span class="col-1"></span>
+        <span class="col">You should choose a Timetable</span>
+        <span class="col-1"></span>
+    </h3>
+    <div class="row">
+        <span class="col-1"></span>
+        <button class="btn btn-primary col btn-sm" onclick="App.views.create_timetable()">Create Timetable</button>
+        <span class="col-1"></span>
+    </div>
+    <br>
+    <div class="row">
+        <div class="container-fluid" id='block'>
+            <div id="parent">
+                <div class="row" onclick="$(this).parent().find('#child').fadeToggle();">
+                    <div class="col-3">
+                        <i class="fas fa-2x fa-calendar text-success"></i>
+                    </div>
+                    <div class="col">
+                        <h4>{{name}}</h4>
+                    </div>
+                </div>
+                <br>
+                <div class="row" id='child' style="display: none;">
+                    <div class="card" style="width: 100%;">
+                        <p class="card-body">
+                            <b>Followers:</b> {{followers}}<br>
+                            <b>Description:</b><br>{{description}}<br>
+                            <b>Admin:</b> {{owner}}<br>
+                            <button class="btn btn-success btn-sm" onclick="App.views.choose_timetable({{pk}})">Follow</button><br>
+                        </p>
+                    </div>
+                </div>
+                <hr size="#">
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-dark btn-sm" onclick="App.views.index()">Return to home</button><br>
+        </div>
+    </div>
+    <div class="row">
+        <span class="col-1"></span>
+        <span class="col" id="error"></span>
+        <span class="col-1"></span>
+    </div>
+</div>
+<script type="text/javascript">
+    $el=$('#block');
+    $html=$el.html();
+    if (App.models.timetables.length) {
+       $el.empty();
+       for (var i = 0; i < App.models.timetables.length; i++) {
+           $el.append($html
+            .replace('{{pk}}', App.models.timetables[i].pk)
+            .replace('{{name}}', App.models.timetables[i].name)
+            .replace('{{description}}', App.models.timetables[i].description)
+            .replace('{{owner}}', App.models.timetables[i].owner.username)
+            .replace('{{followers}}', App.models.timetables[i].followers.length));
+       }
+    } else {
+        console.log(1);
+        $el[0].innerHTML = 'No timetable for the moment.';
+    }
+    $error = $('#error');
+    for (var i = 0; i < App.vars.errors.length; i++) {
+        $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    }
+</script>
