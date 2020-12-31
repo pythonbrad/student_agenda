@@ -7,7 +7,7 @@ from .tools import apiResponse
 
 
 @csrf_exempt
-def create_timetable_view(request):
+def add_timetable_view(request):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -87,7 +87,7 @@ def remove_timetable_moderator_view(request, timetable_pk, user_pk):
 
 
 @csrf_exempt
-def create_timetable_lecturer_view(request, timetable_pk):
+def add_timetable_lecturer_view(request, timetable_pk):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -124,7 +124,7 @@ def delete_timetable_lecturer_view(request, lecturer_pk):
 
 
 @csrf_exempt
-def create_timetable_course_view(request):
+def add_timetable_course_view(request):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -188,18 +188,19 @@ def remove_course_lecturer_view(request, course_pk, lecturer_pk):
         return apiResponse(code=611)
 
 @csrf_exempt
-def create_timetable_classe_view(request):
+def add_timetable_classe_view(request, course_pk):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             classe = Classe(
                 description=data.get('description', None),
                 status=data.get('status', None),
-                time=data.get('time', None))
+                begin=data.get('begin', None),
+                end=data.get('end', None)),
             location = Location.objects.filter(
                 pk=data.get('location', None))
             course = Course.objects.filter(
-                pk=data.get('course', None))
+                pk=course_pk)
             if location and course:
                 classe.location = location[0]
                 classe.course = course[0]
@@ -229,7 +230,7 @@ def delete_timetable_classe_view(request, classe_pk):
 
 
 @csrf_exempt
-def create_timetable_location_view(request, timetable_pk):
+def add_timetable_location_view(request, timetable_pk):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -266,7 +267,7 @@ def delete_timetable_location_view(request, location_pk):
 
 
 @csrf_exempt
-def create_timetable_category_view(request, timetable_pk):
+def add_timetable_category_view(request, timetable_pk):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -302,7 +303,7 @@ def delete_timetable_category_view(request, category_pk):
         return apiResponse(code=617)
 
 @csrf_exempt
-def create_course_asset_view(request):
+def add_course_asset_view(request):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -341,7 +342,7 @@ def delete_course_asset_view(request, asset_pk):
         return apiResponse(code=619)
 
 @csrf_exempt
-def create_timetable_event_view(request, location_pk):
+def add_timetable_event_view(request, location_pk):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST

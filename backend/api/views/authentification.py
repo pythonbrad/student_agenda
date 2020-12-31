@@ -38,7 +38,7 @@ def signin_view(request):
 @csrf_exempt
 def login_view(request):
     if request.user.is_authenticated:
-        return apiResponse()
+        return apiResponse(result=request.user.student_set.get().get_as_json())
     elif request.POST:
         data = request.POST
         user = authenticate(

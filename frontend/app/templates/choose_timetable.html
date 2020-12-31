@@ -1,19 +1,20 @@
 <div class="container">
     <span class="row"><hr size="#"></span>
-    <h3 class="row">
-        <span class="col-1"></span>
-        <span class="col">You should choose a Timetable</span>
-        <span class="col-1"></span>
-    </h3>
     <div class="row">
         <span class="col-1"></span>
-        <button class="btn btn-primary col btn-sm" onclick="App.views.create_timetable()">Create Timetable</button>
+        <button class="btn btn-primary col btn-sm" onclick="App.views.add_timetable()">Add Timetable</button>
         <span class="col-1"></span>
     </div>
+    <hr size="#">
+    <h3 class="row">
+        <span class="col-1"></span>
+        <span class="col">Choose a Timetable</span>
+        <span class="col-1"></span>
+    </h3>
     <br>
     <div class="row">
         <div class="container-fluid" id='block'>
-            <div id="parent">
+            <div>
                 <div class="row" onclick="$(this).parent().find('#child').fadeToggle();">
                     <div class="col-3">
                         <i class="fas fa-2x fa-calendar text-success"></i>
@@ -36,8 +37,13 @@
                 <hr size="#">
             </div>
         </div>
-        <div>
-            <button class="btn btn-dark btn-sm" onclick="App.views.index()">Return to home</button><br>
+        <hr size="#">
+        <div class="row">
+            <span class="col-1"></span>
+            <div class="col">
+                <button class="btn btn-dark btn-sm" onclick="App.views.index()">Return to home</button>
+            </div>
+            <span class="col-1"></span>
         </div>
     </div>
     <div class="row">
@@ -45,6 +51,7 @@
         <span class="col" id="error"></span>
         <span class="col-1"></span>
     </div>
+    <br>
 </div>
 <script type="text/javascript">
     $el=$('#block');

@@ -14,10 +14,9 @@ def get_timetable_view(request):
 
 def get_timetable_follow_by_me_view(request):
     if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(followers=request.user.student_set.get())
-        if timetable:
-            timetable = timetable[0]
-            return apiResponse(result=timetable.get_as_json())
+        timetables = Timetable.objects.filter(followers=request.user.student_set.get())
+        if timetables:
+            return apiResponse(result=[timetable.get_as_json() for timetable in timetables])
         else:
             return apiResponse(result=[])
     else:

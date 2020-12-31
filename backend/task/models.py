@@ -36,7 +36,7 @@ class Absent(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'user': self.student.get_as_json(),
             'description': self.description,
             'time': self.time,
@@ -59,7 +59,7 @@ class Timetable(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'description': self.description,
             'moderators': [moderator.get_as_json() for moderator in self.moderators.all()],
@@ -80,7 +80,7 @@ class Lecturer(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'timetable': self.timetable.get_as_json(),
         }
@@ -101,7 +101,7 @@ class Course(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'description': self.description,
             'code': self.code,
@@ -121,8 +121,8 @@ class Classe(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
     absents = models.ManyToManyField('Absent')
-    begin = models.DateTimeField()
-    end = models.DateTimeField()
+    begin = models.CharField(max_length=10)
+    end = models.CharField(max_length=10)
     updated = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -134,7 +134,7 @@ class Classe(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'description': self.description,
             'location': self.location.get_as_json(),
             'course': self.course.get_as_json(),
@@ -159,7 +159,7 @@ class Location(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'description': self.description,
             'timetable': self.timetable.get_as_json(),
@@ -182,7 +182,7 @@ class Asset(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'description': self.description,
             'category': self.category.get_as_json(),
@@ -205,7 +205,7 @@ class Category(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'description': self.description,
             'timetable': self.timetable.get_as_json(),
@@ -228,7 +228,7 @@ class Event(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'name': self.name,
             'description': self.description,
             'location': self.location.get_as_json(),
@@ -251,6 +251,6 @@ class Notification(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'pk': str(self.pk),
             'description': self.description,
         }

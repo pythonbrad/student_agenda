@@ -1,0 +1,52 @@
+<div class="container">
+    <span class="row"><hr size="#"></span>
+    <h3 class="row">
+        <span class="col-1"></span>
+        <span class="col">Add a lecturer</span>
+        <span class="col-1"></span>
+    </h3>
+    <div class="row">
+        <span class="col-1"></span>
+        <form class="form col" action="#">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter the lecturer's name">
+            </div>
+            <div class="form-group">
+                <label for="timetable_pk">Timetable</label>
+                <select class="form-control" id="timetable_pk"></select>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="add_lecturer($(this).parent().parent())">
+            </div>
+            <hr size="#">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-dark btn-sm" onclick="App.views.admin()">Return to administration's panel</button>
+                </div>
+            </div>
+        </form>
+        <span class="col-1"></span>
+    </div>
+    <div class="row">
+        <span class="col-1"></span>
+        <span class="col" id="error"></span>
+        <span class="col-1"></span>
+    </div>
+    <br>
+</div>
+<script type="text/javascript">
+    function add_lecturer(form) {
+        name = form.find('#name').val();
+        timetable_pk = form.find('#timetable_pk').val();
+        App.views.add_lecturer(name, timetable_pk);
+    }
+    // We load timetable
+    for (var i = 0; i < App.models.timetables.length; i++) {
+        $("#timetable_pk").append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+    }
+    $error = $('#error');
+    for (var i = 0; i < App.vars.errors.length; i++) {
+        $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    }
+</script>

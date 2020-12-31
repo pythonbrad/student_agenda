@@ -2,7 +2,7 @@
     <span class="row"><hr size="#"></span>
     <h3 class="row">
         <span class="col-1"></span>
-        <span class="col">Create a timetable is Simple!</span>
+        <span class="col">Add a timetable is Simple!</span>
         <span class="col-1"></span>
     </h3>
     <div class="row">
@@ -10,16 +10,24 @@
         <form class="form col" action="#">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="name" class="form-control" id="name" placeholder="Enter the timetable's name">
+                <input type="text" class="form-control" id="name" placeholder="Enter the timetable's name">
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <input type="description" class="form-control" id="description" placeholder="Enter the timetable's description">
+                <input type="text" class="form-control" id="description" placeholder="Enter the timetable's description">
             </div>
             <div class="form-group">
-                <input type="submit" onclick="create_timetable($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="add_timetable($(this).parent().parent())">
             </div>
-            <button class="btn btn-primary col btn-sm" onclick="App.views.choose_timetable()">Choose Timetable</button>
+            <hr size="#">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary col btn-sm" onclick="App.views.choose_timetable()">Choose Timetable</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-dark btn-sm" onclick="App.views.index()">Return to home</button>
+                </div>
+            </div>
         </form>
         <span class="col-1"></span>
     </div>
@@ -28,12 +36,13 @@
         <span class="col" id="error"></span>
         <span class="col-1"></span>
     </div>
+    <br>
 </div>
 <script type="text/javascript">
-    function create_timetable(form) {
+    function add_timetable(form) {
         name = form.find('#name').val();
         description = form.find('#description').val();
-        App.views.create_timetable(name, description);
+        App.views.add_timetable(name, description);
     }
     $error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
