@@ -44,7 +44,7 @@ class Absent(models.Model):
     
 
 class Timetable(models.Model):
-    name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=255, default='')
     owner = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='Owner')
     moderators = models.ManyToManyField('Student', related_name='Moderators')

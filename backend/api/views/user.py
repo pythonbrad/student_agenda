@@ -54,7 +54,9 @@ def unfollow_timetable_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
+            print(timetable.followers.all())
             timetable.followers.remove(request.user.student_set.get())
+            print(timetable.followers.all())
             timetable.save()
             return apiResponse()
         else:

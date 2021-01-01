@@ -28,6 +28,7 @@
         <span class="col" id="error"></span>
         <span class="col-1"></span>
     </div>
+    <br>
 </div>
 <script type="text/javascript">
     function login(form) {
@@ -35,8 +36,8 @@
         password = form.find('#password').val();
         App.views.login(username, password);
     }
-    $error = $('#error');
+    App.vars.tmp.$error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
-        $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+        App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
     }
 </script>

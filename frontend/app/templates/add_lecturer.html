@@ -42,11 +42,12 @@
         App.views.add_lecturer(name, timetable_pk);
     }
     // We load timetable
+    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
-        $("#timetable_pk").append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+        App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
     }
-    $error = $('#error');
+    App.vars.tmp.$error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
-        $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+        App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
     }
 </script>

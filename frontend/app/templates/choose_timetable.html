@@ -30,7 +30,7 @@
                             <b>Followers:</b> {{followers}}<br>
                             <b>Description:</b><br>{{description}}<br>
                             <b>Admin:</b> {{owner}}<br>
-                            <button class="btn btn-success btn-sm" onclick="App.views.choose_timetable({{pk}})">Follow</button><br>
+                            <button class="btn btn-{{color}} btn-sm" onclick="App.views.choose_timetable({{pk}},{{reverse}})">{{action}}</button><br>
                         </p>
                     </div>
                 </div>
@@ -54,21 +54,32 @@
     <br>
 </div>
 <script type="text/javascript">
-    $el=$('#block');
-    $html=$el.html();
+    App.vars.tmp.$el=$('#block');
+    App.vars.tmp.$html=App.vars.tmp.$el.html();
     if (App.models.timetables.length) {
-       $el.empty();
-       for (var i = 0; i < App.models.timetables.length; i++) {
-           $el.append($html
-            .replace('{{pk}}', App.models.timetables[i].pk)
-            .replace('{{name}}', App.models.timetables[i].name)
-            .replace('{{description}}', App.models.timetables[i].description)
-            .replace('{{owner}}', App.models.timetables[i].owner.username)
-            .replace('{{followers}}', App.models.timetables[i].followers.length));
-       }
+        App.vars.tmp.$el.empty();
+        for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+            // We verify if already choosed or not
+            App.vars.tmp.followed = 0;
+            for (var follower_id = 0; follower_id < App.models.timetables[timetable_id].followers.length; follower_id++) {
+                if (App.models.timetables[timetable_id].followers[follower_id].pk == App.models.user.pk) {
+                    App.vars.tmp.followed = 1;
+                    break;
+                };
+            }
+            App.vars.tmp.$el.append(App.vars.tmp.$html
+                .replace('{{pk}}', App.models.timetables[timetable_id].pk)
+                .replace('{{name}}', App.models.timetables[timetable_id].name)
+                .replace('{{description}}', App.models.timetables[timetable_id].description)
+                .replace('{{owner}}', App.models.timetables[timetable_id].owner.username)
+                .replace('{{action}}', App.vars.tmp.followed ? "Unfollow" : "Follow")
+                .replace('{{color}}', App.vars.tmp.followed ? "danger" : "primary")
+                .replace('{{reverse}}', App.vars.tmp.followed ? 1 : 0)
+                .replace('{{followers}}', App.models.timetables[timetable_id].followers.length)
+            );
+        }
     } else {
-        console.log(1);
-        $el[0].innerHTML = 'No timetable for the moment.';
+        App.vars.tmp.$el[0].innerHTML = 'No timetable for the moment.';
     }
     $error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {

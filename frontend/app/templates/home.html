@@ -31,12 +31,12 @@
 </div>
 <!-- We duplicate the data -->
 <script type="text/javascript">
-    $el = $('#block');
-    $html = $el.html();
+    App.vars.tmp.$el = $('#block');
+    App.vars.tmp.$html = App.vars.tmp.$el.html();
     if (App.models.classes.length) {
-        $el.empty();
+        App.vars.tmp.$el.empty();
         for (var i = 0; i < App.models.classes.length; i++) {
-            $el.append($html
+            App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{code}}', App.models.classes[i].course.code)
                 .replace('{{name}}', App.models.classes[i].course.name)
                 .replace('{{begin}}', App.models.classes[i].begin)
@@ -51,6 +51,6 @@
             );
         };
     } else {
-        $el[0].innerHTML = 'No lesson for the moment.';
+        App.vars.tmp.$el[0].innerHTML = 'No lesson for the moment.';
     };
 </script>

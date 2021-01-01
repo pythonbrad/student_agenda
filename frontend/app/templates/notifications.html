@@ -19,8 +19,9 @@
 </div>
 <!-- We duplicate the data -->
 <script type="text/javascript">
-    $html = $('#block').html();
+    App.vars.tmp.$el = $('#block');
+    App.vars.tmp.$html = App.vars.tmp.$el.html();
     for (var i = 0; i <= 10; i++) {
-        $('#block').append($html);
+        App.vars.tmp.$el.append(App.vars.tmp.$html);
     }
 </script>

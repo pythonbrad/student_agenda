@@ -4,14 +4,12 @@ App = {
 	views: {
 		// For the moment load just the pages
 		base: function (next=function () {}) {
-			$('#main').load('app/templates/base.html');
-			setTimeout(function () {
-				next();
-			}, 100);
+			$('#main').load('app/templates/base.html', function () {next()});
 		},
 		splash: function () {
-			// We clean last error and delete all events
+			// We clean last error, delete all events and tmp datas
 			App.vars.errors = [];
+			App.vars.tmp = [];
 			App.vars.can_pass = 0;
 			for (var i = 0; i < 100; i++) {
 				clearInterval(App.events[i]);
@@ -57,7 +55,7 @@ App = {
 				}, 100);
 			}, false)
 		},
-		choose_timetable: function (timetable_pk) {
+		choose_timetable: function (timetable_pk, reverse) {
 			App.views.splash();
 			// We perform operation
 			App.vars.can_pass = 0;
@@ -69,14 +67,19 @@ App = {
 			}, 100);
 
 			if (timetable_pk) {
-				Addons.request('/api/user/timetable/'+timetable_pk+'/follow', null, function (d) {
-					if (d.code != 200) {
-						App.vars.errors = [d.error];
-						App.vars.can_pass = 1;
-					} else {
-						App.views.choose_timetable();
-					}
-				}, false);
+				Addons.request(
+					'/api/user/timetable/'+timetable_pk+'/'+(reverse?'unfollow':'follow'),
+					null,
+					function (d) {
+						if (d.code != 200) {
+							App.vars.errors = [d.error];
+							App.vars.can_pass = 1;
+						} else {
+							App.views.choose_timetable();
+						}
+					},
+					false
+				);
 			} else {
 				// We load timetable
 				Addons.request('/api/user/timetable', null, function (d) {
@@ -157,14 +160,14 @@ App = {
 			}, 100);
 			// We send data
 			if (name && timetable_pk) {
-				Addons.request('admin/timetable/'+timetable_pk+'/lecturer/add',
+				Addons.request('/api/admin/timetable/'+timetable_pk+'/lecturer/add',
 					{name:name},
 					function (d) {
 						if (d.code != 200) {
 							App.vars.errors = [d.error];
 							App.vars.can_pass = 1;
 						} else {
-							App.views.add_lecturer();
+							App.views.admin();
 						}
 					}, false);
 			} else {
@@ -184,14 +187,14 @@ App = {
 			}, 100);
 			// We send data
 			if (name && description && timetable_pk) {
-				Addons.request('admin/timetable/'+timetable_pk+'/location/add',
+				Addons.request('/api/admin/timetable/'+timetable_pk+'/location/add',
 					{name:name,description:description},
 					function (d) {
 						if (d.code != 200) {
 							App.vars.errors = [d.error];
 							App.vars.can_pass = 1;
 						} else {
-							App.views.add_location();
+							App.views.admin();
 						}
 					}, false);
 			} else {
@@ -353,6 +356,7 @@ App = {
 	events: {},
 	vars: {
 		errors: [],
+		tmp: [],
 		is_login: 0,
 	},
 };
