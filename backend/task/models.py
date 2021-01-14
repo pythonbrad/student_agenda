@@ -105,8 +105,8 @@ class Course(models.Model):
             'name': self.name,
             'description': self.description,
             'code': self.code,
-            'lecturers': [lecturer.get_as_json() for lecturer in self.lecturers],
-            'followers': [lecturer.get_as_json() for follower in self.followers],
+            'lecturers': [lecturer.get_as_json() for lecturer in self.lecturers.all()],
+            'followers': [follower.get_as_json() for follower in self.followers.all()],
         }
 
 class Classe(models.Model):
@@ -121,8 +121,8 @@ class Classe(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
     absents = models.ManyToManyField('Absent')
-    begin = models.CharField(max_length=10)
-    end = models.CharField(max_length=10)
+    begin = models.CharField(max_length=10, null=False)
+    end = models.CharField(max_length=10, null=False)
     updated = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -139,7 +139,7 @@ class Classe(models.Model):
             'location': self.location.get_as_json(),
             'course': self.course.get_as_json(),
             'status': self.status,
-            'absents': [absent.get_as_json() for absent in self.absents],
+            'absents': [absent.get_as_json() for absent in self.absents.all()],
             'begin': self.begin,
             'end': self.end,
             'updated': self.updated,

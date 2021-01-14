@@ -2,7 +2,7 @@
     <span class="row"><hr size="#"></span>
     <h3 class="row">
         <span class="col-1"></span>
-        <span class="col">Add a location</span>
+        <span class="col">Add a course</span>
         <span class="col-1"></span>
     </h3>
     <div class="row">
@@ -10,18 +10,28 @@
         <form class="form col" action="#">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the location's name">
+                <input type="text" class="form-control" id="name" placeholder="Enter the course's name">
+            </div>
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input type="text" class="form-control" id="code" placeholder="Enter the course's code">
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the location's description">
+                <input type="text" class="form-control" id="description" placeholder="Enter the course's description">
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk"></select>
+                <select class="form-control" id="timetable_pk" onchange="load_lecturer($(this))">
+                    <option selected></option>
+                </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_location($(this).parent().parent())">
+                <label for="lecturer_pks">Lecturer(s)</label>
+                <select class="form-control" id="lecturer_pks" multiple></select>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="add_course($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -40,11 +50,25 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_location(form) {
+    function add_course(form) {
         name = form.find('#name').val();
+        code = form.find('#code').val();
         description = form.find('#description').val();
-        timetable_pk = form.find('#timetable_pk').val();
-        App.views.add_location(name, description, timetable_pk);
+        lecturer_pks = form.find('#lecturer_pks').val();
+        App.views.add_course(name, code, description, lecturer_pks);
+    }
+    function load_lecturer(choice) {
+        $lecturers = $('#lecturer_pks');
+        $lecturers.empty();
+        if(choice.val()) {
+            Addons.request('/api/user/timetable/'+choice.val()+'/lecturer', null, function (d) {
+                if(d.code == 200) {
+                    for (var i = 0; i < d.result.length; i++) {
+                        $lecturers.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                    }
+                }
+            }, false);
+        };
     }
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");
@@ -52,7 +76,7 @@
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
             App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
-    }
+    };
     App.vars.tmp.$error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');

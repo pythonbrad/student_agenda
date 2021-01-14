@@ -1,6 +1,6 @@
 <div class="row">
     <div class="container-fluid" id='block'>
-        <div>
+        <div id='parent'>
             <div class="row" onclick="$(this).parent().find('#child').fadeToggle();">
                 <div class="col-3">
                     <i class="fas fa-4x fa-book" style="color: brown;"></i>
@@ -25,14 +25,20 @@
                     </p>
                 </div>
             </div>
-            <hr size="#">
         </div>
+        <br>
     </div>
 </div>
 <!-- We duplicate the data -->
 <script type="text/javascript">
     App.vars.tmp.$el = $('#block');
     App.vars.tmp.$html = App.vars.tmp.$el.html();
+    App.vars.tmp.STATUS_CHOICES = {
+        'w': 'Waiting',
+        's': 'Started',
+        'c': 'Cancelled',
+        'e': 'Ended',
+    };
     if (App.models.classes.length) {
         App.vars.tmp.$el.empty();
         for (var i = 0; i < App.models.classes.length; i++) {
@@ -44,7 +50,7 @@
                 .replace('{{venue}}', App.models.classes[i].location.name)
                 .replace('{{assigments}}', '????')
                 .replace('{{tutorials}}', '????')
-                .replace('{{status}}', App.models.classes[i].status)
+                .replace('{{status}}', App.vars.tmp.STATUS_CHOICES[App.models.classes[i].status])
                 .replace('{{attendance_done}}', '????')
                 .replace('{{last_update}}', App.models.classes[i].updated)
                 .replace('{{description}}', App.models.classes[i].description)

@@ -54,9 +54,7 @@ def unfollow_timetable_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            print(timetable.followers.all())
             timetable.followers.remove(request.user.student_set.get())
-            print(timetable.followers.all())
             timetable.save()
             return apiResponse()
         else:
@@ -70,7 +68,7 @@ def get_timetable_lecturer_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=[lecturer.get_as_json() for lecturer in timetable.lecturers_set.all()])
+            return apiResponse(result=[lecturer.get_as_json() for lecturer in timetable.lecturer_set.all()])
         else:
             return apiResponse(code=503)
     else:
@@ -142,6 +140,13 @@ def unset_course_follower_view(request, course_pk):
         return apiResponse(code=609)
 
 
+def get_classe_status_choice_view(request):
+    if request.user.is_authenticated:
+        return apiResponse(result=Classe.STATUS_CHOICES)
+    else:
+        return apiResponse(code=611)
+
+
 def get_timetable_classes_view(request, timetable_pk):
     if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
@@ -210,7 +215,7 @@ def get_timetable_location_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=[location.get_as_json() for location in timetable.locations_set.all()])
+            return apiResponse(result=[location.get_as_json() for location in timetable.location_set.all()])
         else:
             return apiResponse(code=513)
     else:
@@ -221,7 +226,7 @@ def get_timetable_category_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            return apiResponse(result=[category.get_as_json() for category in timetable.categorys_set.all()])
+            return apiResponse(result=[category.get_as_json() for category in timetable.category_set.all()])
         else:
             return apiResponse(code=514)
     else:
@@ -268,7 +273,7 @@ def unset_asset_reader_view(request, asset_pk):
         return apiResponse(code=618)
 
 
-def get_timetable_course_view(request, timetable_pk):
+def get_timetable_event_view(request, timetable_pk):
     if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:

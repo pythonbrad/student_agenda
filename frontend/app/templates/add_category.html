@@ -2,7 +2,7 @@
     <span class="row"><hr size="#"></span>
     <h3 class="row">
         <span class="col-1"></span>
-        <span class="col">Add a lecturer</span>
+        <span class="col">Add a category</span>
         <span class="col-1"></span>
     </h3>
     <div class="row">
@@ -10,14 +10,18 @@
         <form class="form col" action="#">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the lecturer's name">
+                <input type="text" class="form-control" id="name" placeholder="Enter the category's name">
+            </div>
+            <div class="form-group">
+                <label for="desciption">Desciption</label>
+                <input type="text" class="form-control" id="desciption" placeholder="Enter the category's desciption">
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
                 <select class="form-control" id="timetable_pk"></select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_lecturer($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="add_category($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -36,10 +40,11 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_lecturer(form) {
+    function add_category(form) {
         name = form.find('#name').val();
+        desciption = form.find('#desciption').val();
         timetable_pk = form.find('#timetable_pk').val();
-        App.views.add_lecturer(name, timetable_pk);
+        App.views.add_category(name, desciption, timetable_pk);
     }
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");

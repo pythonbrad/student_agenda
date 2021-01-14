@@ -7,14 +7,17 @@ App = {
 			$('#main').load('app/templates/base.html', function () {next()});
 		},
 		splash: function () {
+			// It permit to know if the splash has finished his loading
+			App.vars.splash_loaded = 0;
 			// We clean last error, delete all events and tmp datas
 			App.vars.errors = [];
-			App.vars.tmp = [];
-			App.vars.can_pass = 0;
+			App.vars.tmp = {};
 			for (var i = 0; i < 100; i++) {
 				clearInterval(App.events[i]);
 			};
-			$('#main').load('app/templates/splash.html');
+			$('#main').load('app/templates/splash.html',function () {
+				App.vars.splash_loaded = 1;
+			});
 		},
 		index: function () {
 			App.views.splash();
@@ -34,7 +37,9 @@ App = {
 				}
 				// We load the next view
 				App.events[1] = setInterval(function () {
-					if (App.vars.can_pass) {
+					// We verify if all the operations are finished
+					// and if the splash is already load (!important)
+					if (App.vars.can_pass && App.vars.splash_loaded) {
 						clearInterval(App.events[1]);
 						if (App.vars.is_login) {
 							// We verify if least 1 timetable is already follow
@@ -46,7 +51,7 @@ App = {
 								} else {
 									App.views.choose_timetable();
 								}
-							})
+							}, false);
 						} else {
 							// We load the login view
 							App.views.login();
@@ -60,7 +65,9 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/choose_timetable.html');
 				}
@@ -98,7 +105,9 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/add_timetable.html');
 				}
@@ -112,7 +121,7 @@ App = {
 							App.vars.errors = [d.error];
 							App.vars.can_pass = 1;
 						} else {
-							App.views.choose_timetable();
+							App.views.index();
 						}
 					}, false);
 			} else {
@@ -125,21 +134,24 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/add_lesson.html');
 				}
 			}, 100);
 			// We send data
+			console.log(description , status , begin , end , location_pk , course_pk);
 			if (description && status && begin && end && location_pk && course_pk) {
 				Addons.request('/api/admin/timetable/course/'+course_pk+'/lesson/add',
-					{description:description, status:status, begin:begin, end:end, location_pk:location_pk},
+					{description:description, status:status, begin:begin, end:end, location:location_pk, course:course_pk},
 					function (d) {
 						if (d.code != 200) {
 							App.vars.errors = [d.error];
 							App.vars.can_pass = 1;
 						} else {
-							App.views.add_lesson();
+							App.views.admin();
 						}
 					}, false);
 			} else {
@@ -153,7 +165,9 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/add_lecturer.html');
 				}
@@ -180,7 +194,9 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/add_location.html');
 				}
@@ -202,12 +218,101 @@ App = {
 				App.vars.can_pass = 1;
 			}
 		},
+		add_category: function (name,description,timetable_pk) {
+			App.views.splash();
+			// We perform operation
+			App.vars.can_pass = 0;
+			App.events[0] = setInterval(function () {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
+					clearInterval(App.events[0]);
+					$('#main').load('app/templates/add_category.html');
+				}
+			}, 100);
+			// We send data
+			if (name && description && timetable_pk) {
+				Addons.request('/api/admin/timetable/'+timetable_pk+'/category/add',
+					{name:name,description:description},
+					function (d) {
+						if (d.code != 200) {
+							App.vars.errors = [d.error];
+							App.vars.can_pass = 1;
+						} else {
+							App.views.admin();
+						}
+					}, false);
+			} else {
+				// We load the template
+				App.vars.can_pass = 1;
+			}
+		},
+		add_course: function (name,code,description,lecturer_pks) {
+			App.views.splash();
+			// We perform operation
+			App.vars.can_pass = 0;
+			App.events[0] = setInterval(function () {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
+					clearInterval(App.events[0]);
+					$('#main').load('app/templates/add_course.html');
+				}
+			}, 100);
+			// We send data
+			if (name && code && description && lecturer_pks.length) {
+				Addons.request('/api/admin/timetable/course/add',
+					{name:name,code:code,description:description,lecturers:lecturer_pks},
+					function (d) {
+						if (d.code != 200) {
+							App.vars.errors = [d.error];
+							App.vars.can_pass = 1;
+						} else {
+							App.views.admin();
+						}
+					}, false);
+			} else {
+				// We load the template
+				App.vars.can_pass = 1;
+			}
+		},
+		add_asset: function (name, description, category_pk, course_pk) {
+			App.views.splash();
+			// We perform operation
+			App.vars.can_pass = 0;
+			App.events[0] = setInterval(function () {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
+					clearInterval(App.events[0]);
+					$('#main').load('app/templates/add_asset.html');
+				}
+			}, 100);
+			// We send data
+			if (name && description && category_pk && course_pk) {
+				Addons.request('/api/admin/timetable/course/'+course_pk+'/asset/add',
+					{name:name,description:description,category:category_pk},
+					function (d) {
+						if (d.code != 200) {
+							App.vars.errors = [d.error];
+							App.vars.can_pass = 1;
+						} else {
+							App.views.admin();
+						}
+					}, false);
+			} else {
+				// We load the template
+				App.vars.can_pass = 1;
+			}
+		},
 		home: function () {
 			App.views.splash();
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					// We load the home page
 					App.views.base(
@@ -271,7 +376,9 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/login.html');
 				}
@@ -298,7 +405,9 @@ App = {
 			// We perform operation
 			App.vars.can_pass = 0;
 			App.events[0] = setInterval(function () {
-				if (App.vars.can_pass) {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
 					clearInterval(App.events[0]);
 					$('#main').load('app/templates/signin.html');
 				}
@@ -349,7 +458,12 @@ App = {
 			App.views.splash();
 			// We perform operation
 			// We load the template
-			$('#main').load('app/templates/admin.html');
+			App.views.base(
+				function () {
+					$('#contains').load('app/templates/admin.html');
+					$('#header').load('app/templates/admin_header.html');
+				}
+			);
 		},
 	},
 	models: {},

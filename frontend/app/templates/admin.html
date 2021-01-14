@@ -1,43 +1,78 @@
-<div class="container grid_system">
-    <div class="row">
-        <div class="col">
-            <h3>Administration's Panel</h3>
+<div class="row">
+    <div class="container-fluid" id='block'>
+        <div id="parent">
+            <div class="row" onclick="App.views.add_timetable()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-calendar-plus text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add timetable</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_lecturer()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-chalkboard-teacher text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add lecturer</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_course()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-chalkboard text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add course</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_location()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-search-location text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add location</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_lesson()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-pager text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add lesson</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_category()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-folder-plus text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add category</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_asset()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-folder-plus text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add asset</p>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row" onclick="App.views.add_event()">
+                <div class="col-3">
+                    <i class="fas fa-2x fa-folder-plus text-primary"></i>
+                </div>
+                <div class="col" style="width: 100%;">
+                    <p>Add event</p>
+                </div>
+            </div>
         </div>
+        
     </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-dark btn-sm" onclick="App.views.home()">Return to home</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-sm" onclick="App.views.add_timetable()">Add timetable</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-sm" onclick="App.views.add_course()">Add course</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-sm" onclick="App.views.add_location()">Add location</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-sm" onclick="App.views.add_category()">Add category</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-sm" onclick="App.views.add_lesson()">Add lesson</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <button class="btn btn-primary btn-sm" onclick="App.views.add_lecturer()">Add lecturer</button>
-        </div>
-    </div>
-    <br>
 </div>

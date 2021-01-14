@@ -2,44 +2,36 @@
     <span class="row"><hr size="#"></span>
     <h3 class="row">
         <span class="col-1"></span>
-        <span class="col">Add a lesson</span>
+        <span class="col">Add a asset</span>
         <span class="col-1"></span>
     </h3>
     <div class="row">
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter the asset's name">
+            </div>
+            <div class="form-group">
                 <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the description">
-            </div>
-            <div class="form-group">
-                <label for="status">Status</label>
-                <select class="form-control" id="status"></select>
-            </div>
-            <div class="form-group">
-                <label for="begin">Begin</label>
-                <input type="text" class="form-control" id="begin" placeholder="Enter the begin">
-            </div>
-            <div class="form-group">
-                <label for="end">End</label>
-                <input type="text" class="form-control" id="end" placeholder="Enter the end">
+                <input type="text" class="form-control" id="description" placeholder="Enter the asset's description">
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="load_location_and_course($(this))">
+                <select class="form-control" id="timetable_pk" onchange="load_category_and_course($(this))">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="location_pk">Location</label>
-                <select class="form-control" id="location_pk"></select>
+                <label for="category_pk">Category</label>
+                <select class="form-control" id="category_pk"></select>
             </div>
             <div class="form-group">
                 <label for="course_pk">Course</label>
                 <select class="form-control" id="course_pk"></select>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="add_lesson($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="add_asset($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -58,25 +50,23 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_lesson(form) {
+    function add_asset(form) {
+        name = form.find('#name').val();
         description = form.find('#description').val();
-        status = form.find('#status').val();
-        begin = form.find('#begin').val();
-        end = form.find('#end').val();
-        location_pk = form.find('#location_pk').val();
+        category_pk = form.find('#category_pk').val();
         course_pk = form.find('#course_pk').val();
-        App.views.add_lesson(description,status,begin,end,location_pk,course_pk);
-    }
-    function load_location_and_course(choice) {
-        $location = $('#location_pk');
-        $location.empty();
+        App.views.add_asset(name, description, category_pk, course_pk);
+    };
+    function load_category_and_course(choice) {
+        $category = $('#category_pk');
         $course = $('#course_pk');
+        $category.empty();
         $course.empty();
         if(choice.val()) {
-            Addons.request('/api/user/timetable/'+choice.val()+'/location', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice.val()+'/category', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $location.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        $category.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     }
                 }
             }, false);
@@ -88,16 +78,7 @@
                 }
             }, false);
         };
-    }
-    // We laod status
-    $status = $('#status');
-    Addons.request('/api/user/classe/status/choice', null, function (d) {
-        if(d.code == 200) {
-            for (var i = 0; i < d.result.length; i++) {
-                $status.append("<option value='"+d.result[i][0]+"'>"+d.result[i][1]+"</option");
-            }
-        }
-    }, false);
+    };
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {

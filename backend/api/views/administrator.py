@@ -1,5 +1,5 @@
 from task.models import Timetable, Classe, Asset
-from task.models import Location, Course, Lecturer
+from task.models import Location, Course, Lecturer, Category
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from .tools import apiResponse
@@ -35,7 +35,7 @@ def add_timetable_view(request):
 
 def delete_timetable_view(request, timetable_pk):
     if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk)
+        timetable = Timetable.objects.filter(pk=timetable_pk, owner=request.user.student_set.get())
         if timetable:
             timetable = timetable[0]
             timetable.delete()
@@ -47,7 +47,7 @@ def delete_timetable_view(request, timetable_pk):
 
 def get_timetable_moderator_view(request, timetable_pk):
     if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk)
+        timetable = Timetable.objects.filter(pk=timetable_pk, owner=request.user.student_set.get())
         if timetable:
             timetable = timetable[0]
             return apiResponse(result=timetable.moderators_set.get_as_json())
@@ -58,7 +58,7 @@ def get_timetable_moderator_view(request, timetable_pk):
 
 def add_timetable_moderator_view(request, timetable_pk, user_pk):
     if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk)
+        timetable = Timetable.objects.filter(pk=timetable_pk, owner=request.user.student_set.get())
         user = User.objects.filter(pk=user_pk)
         if timetable and user:
             timetable = timetable[0]
@@ -73,7 +73,7 @@ def add_timetable_moderator_view(request, timetable_pk, user_pk):
 
 def remove_timetable_moderator_view(request, timetable_pk, user_pk):
     if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk)
+        timetable = Timetable.objects.filter(pk=timetable_pk, owner=request.user.student_set.get())
         user = User.objects.filter(pk=user_pk)
         if timetable and user:
             timetable = timetable[0]
@@ -92,7 +92,7 @@ def add_timetable_lecturer_view(request, timetable_pk):
         if request.POST:
             data = request.POST
             timetable = Timetable.objects.filter(
-                pk=timetable_pk)
+                pk=timetable_pk, owner=request.user.student_set.get())
             if timetable:
                 lecturer = Lecturer(name=data.get('name', None))
                 lecturer.timetable = timetable[0]
@@ -112,7 +112,7 @@ def add_timetable_lecturer_view(request, timetable_pk):
 
 def delete_timetable_lecturer_view(request, lecturer_pk):
     if request.user.is_authenticated:
-        lecturer = Lecturer.objects.filter(pk=lecturer_pk)
+        lecturer = Lecturer.objects.filter(pk=lecturer_pk, owner=request.user.student_set.get())
         if lecturer:
             lecturer = lecturer[0]
             lecturer.delete()
@@ -131,10 +131,18 @@ def add_timetable_course_view(request):
             course = Course(
                 name=data.get('name', None),
                 description=data.get('description', None),
-                code=data.get('code', None))
+                code=data.get('code', None)
+            )
             try:
                 course.full_clean()
                 course.save()
+                course.followers.add(request.user.student_set.get())
+                for pk in data.get('lecturers[]', []):
+                    lecturer = Lecturer.objects.filter(pk=pk, timetable__owner=request.user.student_set.get())
+                    if lecturer:
+                        course.lecturers.add(lecturer[0])
+                    else:
+                        return apiResponse(code=528)
                 return apiResponse()
             except ValidationError:
                 return apiResponse(code=509)
@@ -146,7 +154,7 @@ def add_timetable_course_view(request):
 
 def delete_timetable_course_view(request, course_pk):
     if request.user.is_authenticated:
-        course = Course.objects.filter(pk=course_pk)
+        course = Course.objects.filter(pk=course_pk, owner=request.user.student_set.get())
         if course:
             course.delete()
             return apiResponse()
@@ -159,7 +167,7 @@ def delete_timetable_course_view(request, course_pk):
 @csrf_exempt
 def add_course_lecturer_view(request, course_pk, lecturer_pk):
     if request.user.is_authenticated:
-        lecturer = Lecturer.objects.filter(pk=lecturer_pk)
+        lecturer = Lecturer.objects.filter(pk=lecturer_pk, timetable__owner=request.user.student_set.get())
         course = Course.objects.filter(pk=course_pk)
         if course and lecturer:
             course = course[0]
@@ -175,7 +183,7 @@ def add_course_lecturer_view(request, course_pk, lecturer_pk):
 @csrf_exempt
 def remove_course_lecturer_view(request, course_pk, lecturer_pk):
     if request.user.is_authenticated:
-        lecturer = Lecturer.objects.filter(pk=lecturer_pk)
+        lecturer = Lecturer.objects.filter(pk=lecturer_pk, timetable__owner=request.user.student_set.get())
         course = Course.objects.filter(pk=course_pk)
         if course and lecturer:
             course = course[0]
@@ -196,9 +204,10 @@ def add_timetable_classe_view(request, course_pk):
                 description=data.get('description', None),
                 status=data.get('status', None),
                 begin=data.get('begin', None),
-                end=data.get('end', None)),
+                end=data.get('end', None)
+            )
             location = Location.objects.filter(
-                pk=data.get('location', None))
+                pk=data.get('location', None), owner=request.user.student_set.get())
             course = Course.objects.filter(
                 pk=course_pk)
             if location and course:
@@ -206,6 +215,7 @@ def add_timetable_classe_view(request, course_pk):
                 classe.course = course[0]
                 try:
                     classe.full_clean()
+                    classe.save()
                     return apiResponse()
                 except ValidationError:
                     return apiResponse(code=513)
@@ -219,7 +229,7 @@ def add_timetable_classe_view(request, course_pk):
 
 def delete_timetable_classe_view(request, classe_pk):
     if request.user.is_authenticated:
-        classe = Classe.objects.filter(pk=classe_pk)
+        classe = Classe.objects.filter(pk=classe_pk, owner=request.user.student_set.get())
         if classe:
             classe.delete()
             return apiResponse()
@@ -235,7 +245,7 @@ def add_timetable_location_view(request, timetable_pk):
         if request.POST:
             data = request.POST
             timetable = Timetable.objects.filter(
-                pk=timetable_pk)
+                pk=timetable_pk, owner=request.user.student_set.get())
             if timetable:
                 location = Location(name=data.get('name', None), description=data.get('description', None))
                 location.timetable = timetable[0]
@@ -255,7 +265,7 @@ def add_timetable_location_view(request, timetable_pk):
 
 def delete_timetable_location_view(request, location_pk):
     if request.user.is_authenticated:
-        location = Location.objects.filter(pk=location_pk)
+        location = Location.objects.filter(pk=location_pk, timetable__owner=request.user.student_set.get())
         if location:
             location = location[0]
             location.delete()
@@ -272,7 +282,7 @@ def add_timetable_category_view(request, timetable_pk):
         if request.POST:
             data = request.POST
             timetable = Timetable.objects.filter(
-                pk=timetable_pk)
+                pk=timetable_pk, owner=request.user.student_set.get())
             if timetable:
                 category = Category(name=data.get('name', None), description=data.get('description', None))
                 category.timetable = timetable[0]
@@ -292,7 +302,7 @@ def add_timetable_category_view(request, timetable_pk):
 
 def delete_timetable_category_view(request, category_pk):
     if request.user.is_authenticated:
-        category = Category.objects.filter(pk=category_pk)
+        category = Category.objects.filter(pk=category_pk, timetable__owner=request.user.student_set.get())
         if category:
             category = category[0]
             category.delete()
@@ -303,7 +313,7 @@ def delete_timetable_category_view(request, category_pk):
         return apiResponse(code=617)
 
 @csrf_exempt
-def add_course_asset_view(request):
+def add_course_asset_view(request, course_pk):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
@@ -311,9 +321,9 @@ def add_course_asset_view(request):
                 name=data.get('name', None),
                 description=data.get('description', None))
             category = Category.objects.filter(
-                pk=data.get('category', None))
+                pk=data.get('category', None), timetable__owner=request.user.student_set.get())
             course = Course.objects.filter(
-                pk=data.get('course', None))
+                pk=course_pk)
             if category and course:
                 asset.category = category[0]
                 asset.course = course[0]
@@ -332,7 +342,7 @@ def add_course_asset_view(request):
 
 def delete_course_asset_view(request, asset_pk):
     if request.user.is_authenticated:
-        asset = Asset.objects.filter(pk=asset_pk)
+        asset = Asset.objects.filter(pk=asset_pk, category__timetable__owner=request.user.student_set.get())
         if asset:
             asset.delete()
             return apiResponse()
@@ -350,7 +360,7 @@ def add_timetable_event_view(request, location_pk):
                 name=data.get('name', None),
                 description=data.get('description', None))
             location = Location.objects.filter(
-                pk=location_pk)
+                pk=location_pk, timetable__owner=request.user.student_set.get())
             if location:
                 event.location = location[0]
                 try:
@@ -367,7 +377,7 @@ def add_timetable_event_view(request, location_pk):
 
 def delete_timetable_event_view(request, event_pk):
     if request.user.is_authenticated:
-        event = Event.objects.filter(pk=event_pk)
+        event = Event.objects.filter(pk=event_pk, location__timetable__owner=request.user.student_set.get())
         if event:
             event.delete()
             return apiResponse()
