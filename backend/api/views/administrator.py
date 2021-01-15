@@ -207,7 +207,7 @@ def add_timetable_classe_view(request, course_pk):
                 end=data.get('end', None)
             )
             location = Location.objects.filter(
-                pk=data.get('location', None), owner=request.user.student_set.get())
+                pk=data.get('location', None), timetable__owner=request.user.student_set.get())
             course = Course.objects.filter(
                 pk=course_pk)
             if location and course:
