@@ -14,7 +14,9 @@
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
-                <select class="form-control" id="status"></select>
+                <select class="form-control" id="status">
+                    <option selected></option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="begin">Begin</label>
@@ -32,11 +34,15 @@
             </div>
             <div class="form-group">
                 <label for="location_pk">Location</label>
-                <select class="form-control" id="location_pk"></select>
+                <select class="form-control" id="location_pk">
+                    <option selected></option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="course_pk">Course</label>
-                <select class="form-control" id="course_pk"></select>
+                <select class="form-control" id="course_pk">
+                    <option selected></option>
+                </select>
             </div>
             <div class="form-group">
                 <input class="btn btn-primary btn-sm" type="submit" onclick="add_lesson($(this).parent().parent())">
