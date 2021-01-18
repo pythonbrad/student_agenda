@@ -7,3 +7,4 @@
 [] Possibility to user to see full public info about timetable (lecturer, location, course ..., a little like a hierachy)
 [] Possibility to admin to update data (if possible place a button (delete, update) beside each element that the user can manage)
 [] Fix bad renaming of data in my code,
+[] Update documentation
