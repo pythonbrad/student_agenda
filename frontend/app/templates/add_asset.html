@@ -35,6 +35,10 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="media">Media</label>
+                <input type='file' class="form-control" id="media"></input>
+            </div>
+            <div class="form-group">
                 <input class="btn btn-sm btn-primary" type="submit" onclick="add_asset($(this).parent().parent())">
             </div>
             <hr size="#">
@@ -59,7 +63,8 @@
         description = form.find('#description').val();
         category_pk = form.find('#category_pk').val();
         course_pk = form.find('#course_pk').val();
-        App.views.add_asset(name, description, category_pk, course_pk);
+        files = $('#media')[0].files;
+        App.views.add_asset(name, description, category_pk, course_pk, files);
     };
     function load_category_and_course(choice) {
         $category = $('#category_pk');

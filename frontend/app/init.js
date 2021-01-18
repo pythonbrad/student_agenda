@@ -1,3 +1,4 @@
+/*! Agenda's Student | (c) fomegnemeudje@outlook.com */
 // This script init datas and load datas in the loading of the page
 App = {
 	// I can inspired me of Django mvc
@@ -144,7 +145,7 @@ App = {
 			// We send data
 			console.log(description , status , begin , end , location_pk , course_pk);
 			if (description && status && begin && end && location_pk && course_pk) {
-				Addons.request('/api/admin/timetable/course/'+course_pk+'/lesson/add',
+				Addons.request('/api/admin/timetable/course/'+course_pk+'/classe/add',
 					{description:description, status:status, begin:begin, end:end, location:location_pk, course:course_pk},
 					function (d) {
 						if (d.code != 200) {
@@ -276,10 +277,11 @@ App = {
 				App.vars.can_pass = 1;
 			}
 		},
-		add_asset: function (name, description, category_pk, course_pk) {
+		add_asset: function (name, description, category_pk, course_pk, files) {
 			App.views.splash();
 			// We perform operation
 			App.vars.can_pass = 0;
+			MAX_SIZE = 1024*1024*10;
 			App.events[0] = setInterval(function () {
 				// We verify if all the operations are finished
 				// and if the splash is already load (!important)
@@ -289,17 +291,43 @@ App = {
 				}
 			}, 100);
 			// We send data
-			if (name && description && category_pk && course_pk) {
-				Addons.request('/api/admin/timetable/course/'+course_pk+'/asset/add',
-					{name:name,description:description,category:category_pk},
-					function (d) {
-						if (d.code != 200) {
-							App.vars.errors = [d.error];
-							App.vars.can_pass = 1;
-						} else {
-							App.views.admin();
-						}
-					}, false);
+			if (name && description && category_pk && course_pk && files.length) {
+				if (files[0].size < MAX_SIZE) {
+					media_data = new FormData();
+					media_data.append('file', files[0]);
+					$.ajax({
+						url: '/api/admin/media/add',
+						type: 'post',
+						data: media_data,
+						contentType: false,
+						processData: false,
+						success: function(response){
+							if(response.code == 200){
+								media_pk = response.result;
+								Addons.request(
+									'/api/admin/timetable/course/'+course_pk+'/asset/add',
+									{name:name,description:description,category:category_pk,media:media_pk},
+									function (d) {
+										if (d.code != 200) {
+											App.vars.errors = [d.error];
+											App.vars.can_pass = 1;
+										} else {
+											App.views.admin();
+										}
+									},
+									false
+								);
+							} else {
+								App.vars.errors = [response.error];
+								App.vars.can_pass = 1;
+							};
+						},
+						async: false,
+					});
+				} else {
+					App.vars.errors = ['The file is too large, maximun '+MAX_SIZE/(1024*1024)+' MB'];
+					App.vars.can_pass = 1;
+				};
 			} else {
 				// We load the template
 				App.vars.can_pass = 1;
@@ -341,13 +369,35 @@ App = {
 		supports: function () {
 			App.views.splash();
 			// We perform operation
-			// We load the template
-			App.views.base(
-				function () {
-					$('#contains').load('app/templates/supports.html');
-					$('#header').load('app/templates/supports_header.html');
+			App.vars.can_pass = 0;
+			App.events[0] = setInterval(function () {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
+					clearInterval(App.events[0]);
+					// We load the page
+					App.views.base(
+						function () {
+							$('#contains').load('app/templates/supports.html');
+							$('#header').load('app/templates/supports_header.html');
+						}
+					);
 				}
-			);
+			}, 100);
+			// We get datas
+			App.models.assets = [];
+			for (var i = 0; i < App.models.timetables.length; i++) {
+				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/asset', null, function (d) {
+					if (d.code == 200) {
+						for (var ii = 0; ii < d.result.length; ii++) {
+							App.models.assets.push(d.result[ii]);
+						}
+					};
+					if (i+1 == App.models.timetables.length) {
+						App.vars.can_pass = 1;
+					};
+				}, false);
+			};
 		},
 		events: function () {
 			App.views.splash();
@@ -470,7 +520,7 @@ App = {
 	events: {},
 	vars: {
 		errors: [],
-		tmp: [],
+		tmp: {},
 		is_login: 0,
 	},
 };

@@ -1,4 +1,4 @@
-from task.models import Timetable, Classe, Asset
+from task.models import Timetable, Classe, Asset, Media
 from task.models import Location, Course, Lecturer, Category
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
@@ -312,6 +312,19 @@ def delete_timetable_category_view(request, category_pk):
     else:
         return apiResponse(code=617)
 
+
+@csrf_exempt
+def add_media_view(request):
+    if request.user.is_authenticated:
+        if request.FILES:
+            media = Media.objects.create(file=request.FILES['file'], author=request.user.student_set.get())
+            return apiResponse(result=media.pk)
+        else:
+            return apiResponse(code=529)
+    else:
+        return apiResponse(code=622)
+
+
 @csrf_exempt
 def add_course_asset_view(request, course_pk):
     if request.user.is_authenticated:
@@ -322,13 +335,17 @@ def add_course_asset_view(request, course_pk):
                 description=data.get('description', None))
             category = Category.objects.filter(
                 pk=data.get('category', None), timetable__owner=request.user.student_set.get())
+            media = Media.objects.filter(
+                pk=data.get('media', None))
             course = Course.objects.filter(
                 pk=course_pk)
-            if category and course:
+            if category and media and course:
                 asset.category = category[0]
+                asset.media = media[0]
                 asset.course = course[0]
                 try:
                     asset.full_clean()
+                    asset.save()
                     return apiResponse()
                 except ValidationError:
                     return apiResponse(code=522)
@@ -365,6 +382,7 @@ def add_timetable_event_view(request, location_pk):
                 event.location = location[0]
                 try:
                     event.full_clean()
+                    event.save()
                     return apiResponse()
                 except ValidationError:
                     return apiResponse(code=525)

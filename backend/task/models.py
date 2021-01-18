@@ -165,13 +165,22 @@ class Location(models.Model):
             'timetable': self.timetable.get_as_json(),
         }
 
+class Media(models.Model):
+    file = models.FileField(upload_to='uploads/%Y/%m/%d/%I_%M_%p')
+    time = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey('Student', on_delete=models.CASCADE)
+
 class Asset(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255, default='')
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     readers = models.ManyToManyField('Student')
-    file = models.FileField(upload_to='uploads/%Y/%m/%d/')
+    media = models.ForeignKey('Media', on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = "Asset"
@@ -188,7 +197,8 @@ class Asset(models.Model):
             'category': self.category.get_as_json(),
             'course': self.course.get_as_json(),
             'readers': [reader.get_as_json() for reader in self.readers.all()],
-            'file': ':::',
+            'pub_date': self.pub_date,
+            'url': self.media.file.url,
         }
 
 class Category(models.Model):

@@ -7,16 +7,18 @@
                     <i class="fas fa-4x fa-book text-primary"></i>
                 </div>
                 <div class="col">
-                    <span>CEF201</span>
-                    <h4>Physics of engineering I</h4>
+                    <span>Course: {{code}}</span>
+                    <h4>{{name}}</h4>
                 </div>
             </div>
             <br>
             <div class="row" id='child' style="display: none;">
                 <div class="card" style="width: 100%;">
                     <p class="card-body">
-                        <b>Date of publication:</b> 21/11/20 at 1:10pm<br>
-                        <b>Type:</b> Tutorial<br>
+                        <b>Description:</b> {{description}}<br>
+                        <b>Date of publication:</b> {{pub_date}}<br>
+                        <b>Type:</b> {{category}}<br>
+                        <b>Number of downloading:</b> <span class="text-primary">{{nb_downloading}}</span><br>
                         <button class="btn btn-primary">Download</button><br>
                     </p>
                 </div>
@@ -28,8 +30,20 @@
 <!-- We duplicate the data -->
 <script type="text/javascript">
     App.vars.tmp.$el = $('#block');
-    $html = App.vars.tmp.$el.html();
-    for (var i = 0; i <= 10; i++) {
-        App.vars.tmp.$el.append($html);
-    }
+    App.vars.tmp.$html = App.vars.tmp.$el.html();
+    if (App.models.assets.length) {
+        App.vars.tmp.$el.empty();
+        for (var i = 0; i < App.models.assets.length; i++) {
+            App.vars.tmp.$el.append(App.vars.tmp.$html
+                .replace('{{code}}', App.models.assets[i].course.code)
+                .replace('{{name}}', App.models.assets[i].name)
+                .replace('{{description}}', App.models.assets[i].description)
+                .replace('{{pub_date}}', App.models.assets[i].pub_date)
+                .replace('{{category}}', App.models.assets[i].category.name)
+                .replace('{{nb_downloading}}', App.models.assets[i].readers.length)
+            );
+        };
+    } else {
+        App.vars.tmp.$el[0].innerHTML = 'No supports for the moment.';
+    };
 </script>

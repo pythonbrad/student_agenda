@@ -1,7 +1,9 @@
-[] Uploading of media
+[x] Uploading of media
+[x] Menu asset
 [] Possibility to user to see all information about a lesson (lecturer, location, course, )
 [] Make event menu
 [] Possibility to user to mark an absence or presence
-[] Possibility to download an asset and comment it
+[] Possibility to comment an asset
 [] Possibility to user to see full public info about timetable (lecturer, location, course ..., a little like a hierachy)
 [] Possibility to admin to update data (if possible place a button (delete, update) beside each element that the user can manage)
+[] Fix bad renaming of data in my code,

@@ -232,6 +232,18 @@ def get_timetable_category_view(request, timetable_pk):
     else:
         return apiResponse(code=615)
 
+def get_timetable_asset_view(request, timetable_pk):
+    if request.user.is_authenticated:
+        timetable = Timetable.objects.filter(pk=timetable_pk)
+        if timetable:
+            assets = Asset.objects.filter(course__lecturers__timetable=timetable[0])
+            return apiResponse(
+                result=[asset.get_as_json() for asset in assets])
+        else:
+            return apiResponse(code=509)
+    else:
+        return apiResponse(code=610)
+
 def get_asset_reader_view(request, asset_pk):
     if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk)
