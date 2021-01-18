@@ -19,7 +19,7 @@
                         <b>Date of publication:</b> {{pub_date}}<br>
                         <b>Type:</b> {{category}}<br>
                         <b>Number of downloading:</b> <span class="text-primary">{{nb_downloading}}</span><br>
-                        <button class="btn btn-primary">Download</button><br>
+                        <button class="btn btn-primary btn-sm" onclick='download({{id}})'>Download</button><br>
                     </p>
                 </div>
             </div>
@@ -41,9 +41,21 @@
                 .replace('{{pub_date}}', App.models.assets[i].pub_date)
                 .replace('{{category}}', App.models.assets[i].category.name)
                 .replace('{{nb_downloading}}', App.models.assets[i].readers.length)
+                .replace('{{id}}', i)
             );
         };
     } else {
         App.vars.tmp.$el[0].innerHTML = 'No supports for the moment.';
+    };
+    function download(id) {
+        Addons.request('/api/user/timetable/asset/'+App.models.assets[id].pk+'/read', null, function (){});
+        var win = window.open(App.models.assets[id].url, '_blank');
+        if (win) {
+            //Browser has allowed it to be opened
+            win.focus();
+        } else {
+            //Browser has blocked it
+            alert('Please allow popups for launch the downloading');
+        };
     };
 </script>
