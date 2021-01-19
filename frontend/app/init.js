@@ -5,20 +5,22 @@ App = {
 	views: {
 		// For the moment load just the pages
 		base: function (next=function () {}) {
+			$('#main').empty();
 			$('#main').load('app/templates/base.html', function () {next()});
 		},
 		splash: function () {
+			$('#main').empty();
 			// It permit to know if the splash has finished his loading
 			App.vars.splash_loaded = 0;
+			$('#main').load('app/templates/splash.html',function () {
+				App.vars.splash_loaded = 1;
+			});
 			// We clean last error, delete all events and tmp datas
 			App.vars.errors = [];
 			App.vars.tmp = {};
 			for (var i = 0; i < 100; i++) {
 				clearInterval(App.events[i]);
 			};
-			$('#main').load('app/templates/splash.html',function () {
-				App.vars.splash_loaded = 1;
-			});
 		},
 		index: function () {
 			App.views.splash();
