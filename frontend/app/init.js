@@ -52,12 +52,10 @@ App = {
 						    Addons.request('/api/user/status/choice', null, function (d) {
 						        if(d.code == 200) {
 						            App.vars.STATUS_CHOICES = d.result;
-						            console.log(App.vars.STATUS_CHOICES);
 						            App.vars.STATUS_CHOICES_DICT = {};
 						            for(i=0;i<d.result.length;i++) {
 						                App.vars.STATUS_CHOICES_DICT[d.result[i][0]] = d.result[i][1];
 						            }
-						            console.log(App.vars.STATUS_CHOICES_DICT);
 						        }
 						    }, true);
 							// We verify if least 1 timetable is already follow
@@ -172,7 +170,6 @@ App = {
 						}
 					}, false);
 			} else {
-				console.log(name , description , status , date , begin , end , location_pk);
 				// We load the template
 				App.vars.can_pass = 1;
 			}
