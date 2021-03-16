@@ -14,13 +14,12 @@
             <div class="row" id='child' style="display: none;">
                 <div class="card" style="width: 100%;">
                     <p class="card-body">
+                        <b>Date:</b> {{date}}<br>
                         <b>Time:</b> {{begin}} to {{end}}<br>
                         <b>Venue:</b> {{venue}}<br>
-                        <b>Assignments:</b> <span class="text-danger">{{assigments}}</span><br>
-                        <b>Tutorials:</b> <span class="text-primary">{{tutorials}}</span><br>
                         <b>Status:</b> <span class="text-primary">{{status}}</span><br>
-                        <b>Attendance:</b> <span class="text-warning">{{attendance_done}}</span><br>
-                        <b>Last update:</b> <span class="text-warning">{{last_update}}</span><br>
+                        <b>Attendance Done:</b> <span class="text-primary">{{attendance_done}}</span><br>
+                        <b>Last update:</b> <span class="text-success">{{last_update}}</span><br>
                         <b>Description:</b> {{description}}<br>
                     </p>
                 </div>
@@ -33,25 +32,18 @@
 <script type="text/javascript">
     App.vars.tmp.$el = $('#block');
     App.vars.tmp.$html = App.vars.tmp.$el.html();
-    App.vars.tmp.STATUS_CHOICES = {
-        'w': 'Waiting',
-        's': 'Started',
-        'c': 'Cancelled',
-        'e': 'Ended',
-    };
     if (App.models.classes.length) {
         App.vars.tmp.$el.empty();
         for (var i = 0; i < App.models.classes.length; i++) {
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{code}}', App.models.classes[i].course.code)
                 .replace('{{name}}', App.models.classes[i].course.name)
+                .replace('{{date}}', App.models.classes[i].date)
                 .replace('{{begin}}', App.models.classes[i].begin)
                 .replace('{{end}}', App.models.classes[i].end)
                 .replace('{{venue}}', App.models.classes[i].location.name)
-                .replace('{{assigments}}', '????')
-                .replace('{{tutorials}}', '????')
-                .replace('{{status}}', App.vars.tmp.STATUS_CHOICES[App.models.classes[i].status])
-                .replace('{{attendance_done}}', '????')
+                .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.classes[i].status])
+                .replace('{{attendance_done}}', App.models.classes[i].attendance_done ? 'Yes' : 'No')
                 .replace('{{last_update}}', App.models.classes[i].updated)
                 .replace('{{description}}', App.models.classes[i].description)
             );

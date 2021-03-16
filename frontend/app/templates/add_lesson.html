@@ -13,18 +13,29 @@
                 <input type="text" class="form-control" id="description" placeholder="Enter the description">
             </div>
             <div class="form-group">
+                <label for="attendance_done">Attendance done</label>
+                <select class="form-control" id="attendance_done">
+                    <option value='0' selected>No</option>
+                    <option value='1'>Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="status">Status</label>
                 <select class="form-control" id="status">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" placeholder="YYYY-MM-DD (2010-10-02)">
+            </div>
+            <div class="form-group">
                 <label for="begin">Begin</label>
-                <input type="text" class="form-control" id="begin" placeholder="Enter the begin">
+                <input type="time" class="form-control" id="begin" placeholder="HH:MM (15:23)">
             </div>
             <div class="form-group">
                 <label for="end">End</label>
-                <input type="text" class="form-control" id="end" placeholder="Enter the end">
+                <input type="time" class="form-control" id="end" placeholder="HH:MM (10:21)">
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
@@ -66,12 +77,14 @@
 <script type="text/javascript">
     function add_lesson(form) {
         description = form.find('#description').val();
+        attendance_done = form.find('#attendance_done').val();
         status = form.find('#status').val();
+        date = form.find('#date').val();
         begin = form.find('#begin').val();
         end = form.find('#end').val();
         location_pk = form.find('#location_pk').val();
         course_pk = form.find('#course_pk').val();
-        App.views.add_lesson(description,status,begin,end,location_pk,course_pk);
+        App.views.add_lesson(description,attendance_done,status,date,begin,end,location_pk,course_pk);
     }
     function load_location_and_course(choice) {
         $location = $('#location_pk');
@@ -95,15 +108,11 @@
             }, false);
         };
     }
-    // We laod status
+    // We load status
     $status = $('#status');
-    Addons.request('/api/user/classe/status/choice', null, function (d) {
-        if(d.code == 200) {
-            for (var i = 0; i < d.result.length; i++) {
-                $status.append("<option value='"+d.result[i][0]+"'>"+d.result[i][1]+"</option");
-            }
-        }
-    }, false);
+    for (var i = 0; i < App.vars.STATUS_CHOICES.length; i++) {
+        $status.append("<option value='"+App.vars.STATUS_CHOICES[i][0]+"'>"+App.vars.STATUS_CHOICES[i][1]+"</option");
+    };
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {

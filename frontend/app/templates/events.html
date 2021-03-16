@@ -1,3 +1,4 @@
+<div class="row"><hr size='#'></div>
 <div class="row">
     <div class="container-fluid" id='block'>
         <div id="parent">
@@ -6,23 +7,21 @@
                     <i class="fas fa-4x fa-book text-success"></i>
                 </div>
                 <div class="col">
-                    <h4>Orientation</h4>
+                    <h4>{{name}}</h4>
                 </div>
             </div>
             <br>
             <div class="row" id='child' style="display: none;">
                 <div class="card" style="width: 100%;">
                     <p class="card-body">
-                        <b>Time:</b> 7am to 9am<br>
-                        <b>Venue:</b> Amphi 150 E<br>
-                        <b>Status:</b> <font color="orange">Waiting</font><br>
-                        <b>Attendance:</b> <font color="red">Disabled</font><br>
-                        <b>Description:</b><br>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br>
+                        <b>Description:</b> {{description}}<br>
+                        <b>Location:</b> {{location}}<br>
+                        <b>Interested:</b> {{interested}}<br>
+                        <b>Status:</b> {{status}}<br>
+                        <b>Date:</b> {{date}}<br>
+                        <b>Begin:</b> {{begin}}<br>
+                        <b>End:</b> {{end}}<br>
+                        <b>Last updated:</b> {{updated}}<br>
                     </p>
                 </div>
             </div>
@@ -34,7 +33,22 @@
 <script type="text/javascript">
     App.vars.tmp.$el = $('#block');
     App.vars.tmp.$html = App.vars.tmp.$el.html();
-    for (var i = 0; i <= 10; i++) {
-        App.vars.tmp.$el.append(App.vars.tmp.$html);
-    }
+    if (App.models.events.length) {
+        App.vars.tmp.$el.empty();
+        for (var i = 0; i < App.models.events.length; i++) {
+            App.vars.tmp.$el.append(App.vars.tmp.$html
+                .replace('{{name}}', App.models.events[i].name)
+                .replace('{{description}}', App.models.events[i].description)
+                .replace('{{location}}', App.models.events[i].location.name)
+                .replace('{{interested}}', App.models.events[i].interested.length)
+                .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.events[i].status])
+                .replace('{{date}}', App.models.events[i].date)
+                .replace('{{begin}}', App.models.events[i].begin)
+                .replace('{{end}}', App.models.events[i].end)
+                .replace('{{updated}}', App.models.events[i].updated)
+            );
+        };
+    } else {
+        App.vars.tmp.$el[0].innerHTML = 'No events for the moment.';
+    };
 </script>

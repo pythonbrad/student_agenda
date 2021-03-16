@@ -2,7 +2,7 @@
     <span class="row"><hr size="#"></span>
     <h3 class="row">
         <span class="col-1"></span>
-        <span class="col">Add a asset</span>
+        <span class="col">Add an event</span>
         <span class="col-1"></span>
     </h3>
     <div class="row">
@@ -10,36 +10,44 @@
         <form class="form col" action="#">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the asset's name">
+                <input type="text" class="form-control" id="name" placeholder="Enter the name">
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the asset's description">
+                <input type="text" class="form-control" id="description" placeholder="Enter the description">
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" placeholder="YYYY-MM-DD (2010-10-02)">
+            </div>
+            <div class="form-group">
+                <label for="begin">Begin</label>
+                <input type="time" class="form-control" id="begin" placeholder="HH:MM (15:23)">
+            </div>
+            <div class="form-group">
+                <label for="end">End</label>
+                <input type="time" class="form-control" id="end" placeholder="HH:MM (10:21)">
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="load_category_and_course($(this))">
+                <select class="form-control" id="timetable_pk" onchange="load_location($(this))">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="category_pk">Category</label>
-                <select class="form-control" id="category_pk">
+                <label for="location_pk">Location</label>
+                <select class="form-control" id="location_pk">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="course_pk">Course</label>
-                <select class="form-control" id="course_pk">
-                    <option selected></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="media">Media</label>
-                <input type='file' class="form-control-file" id="media"></input>
-            </div>
-            <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_asset($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="add_event($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -58,35 +66,33 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_asset(form) {
+    function add_event(form) {
         name = form.find('#name').val();
         description = form.find('#description').val();
-        category_pk = form.find('#category_pk').val();
-        course_pk = form.find('#course_pk').val();
-        files = $('#media')[0].files;
-        App.views.add_asset(name, description, category_pk, course_pk, files);
-    };
-    function load_category_and_course(choice) {
-        $category = $('#category_pk');
-        $course = $('#course_pk');
-        $category.empty();
-        $course.empty();
+        status = form.find('#status').val();
+        date = form.find('#date').val();
+        begin = form.find('#begin').val();
+        end = form.find('#end').val();
+        location_pk = form.find('#location_pk').val();
+        App.views.add_event(name,description,status,date,begin,end,location_pk);
+    }
+    function load_location(choice) {
+        $location = $('#location_pk');
+        $location.empty();
         if(choice.val()) {
-            Addons.request('/api/user/timetable/'+choice.val()+'/category', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice.val()+'/location', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $category.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
-                    }
-                }
-            }, false);
-            Addons.request('/api/user/timetable/'+choice.val()+'/course', null, function (d) {
-                if(d.code == 200) {
-                    for (var i = 0; i < d.result.length; i++) {
-                        $course.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        $location.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     }
                 }
             }, false);
         };
+    }
+    // We load status
+    $status = $('#status');
+    for (var i = 0; i < App.vars.STATUS_CHOICES.length; i++) {
+        $status.append("<option value='"+App.vars.STATUS_CHOICES_DICT[i][0]+"'>"+App.vars.STATUS_CHOICES[i][1]+"</option");
     };
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");

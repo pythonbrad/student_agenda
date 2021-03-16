@@ -2,6 +2,12 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+STATUS_CHOICES = (
+    ('w', 'Waiting'),
+    ('s', 'Started'),
+    ('c', 'Cancelled'),
+    ('e', 'Ended'),
+)
 
 # Create your models here.
 class Student(models.Model):
@@ -110,19 +116,15 @@ class Course(models.Model):
         }
 
 class Classe(models.Model):
-    STATUS_CHOICES = (
-        ('w', 'Waiting'),
-        ('s', 'Started'),
-        ('c', 'Cancelled'),
-        ('e', 'Ended'),
-    )
     description = models.CharField(max_length=255, default='')
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    date = models.DateField(default=timezone.now)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
     absents = models.ManyToManyField('Absent')
-    begin = models.CharField(max_length=10, null=False)
-    end = models.CharField(max_length=10, null=False)
+    attendance_done = models.BooleanField(default=0)
+    begin = models.TimeField(default=timezone.now)
+    end = models.TimeField(default=timezone.now)
     updated = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -138,7 +140,9 @@ class Classe(models.Model):
             'description': self.description,
             'location': self.location.get_as_json(),
             'course': self.course.get_as_json(),
+            'date': self.date,
             'status': self.status,
+            'attendance_done': self.attendance_done,
             'absents': [absent.get_as_json() for absent in self.absents.all()],
             'begin': self.begin,
             'end': self.end,
@@ -226,7 +230,10 @@ class Event(models.Model):
     description = models.CharField(max_length=255, default='')
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     interested = models.ManyToManyField('Student')
-    time = models.DateTimeField()
+    status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
+    date = models.DateField(default=timezone.now)
+    begin = models.TimeField(default=timezone.now)
+    end = models.TimeField(default=timezone.now)
     updated = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -243,7 +250,10 @@ class Event(models.Model):
             'description': self.description,
             'location': self.location.get_as_json(),
             'interested': [i.get_as_json() for i in self.interested.all()],
-            'time': self.time,
+            'status': self.status,
+            'date': self.date,
+            'begin': self.begin,
+            'end': self.end,
             'updated': self.updated,
         }
 

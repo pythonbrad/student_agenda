@@ -22,6 +22,9 @@ App = {
 				clearInterval(App.events[i]);
 			};
 		},
+		error: function () {
+			$('#main').html('<div class="splash-image" align="center"><i class="fas fa-6x fa-disease text-warning"></i><h4><b>Error unexpected.</b></h4><i style="font-size: 75%">If persist, you can contact the webmaster.<br>Email: fomegnemeudje@outlook.com</i><hr size="#"><h5></div>');
+		},
 		index: function () {
 			App.views.splash();
 			// We config it to permit to splash screen should be showed if the datas are fast loaded
@@ -45,6 +48,18 @@ App = {
 					if (App.vars.can_pass && App.vars.splash_loaded) {
 						clearInterval(App.events[1]);
 						if (App.vars.is_login) {
+							// We load c0nstant
+						    Addons.request('/api/user/status/choice', null, function (d) {
+						        if(d.code == 200) {
+						            App.vars.STATUS_CHOICES = d.result;
+						            console.log(App.vars.STATUS_CHOICES);
+						            App.vars.STATUS_CHOICES_DICT = {};
+						            for(i=0;i<d.result.length;i++) {
+						                App.vars.STATUS_CHOICES_DICT[d.result[i][0]] = d.result[i][1];
+						            }
+						            console.log(App.vars.STATUS_CHOICES_DICT);
+						        }
+						    }, true);
 							// We verify if least 1 timetable is already follow
 							Addons.request('/api/user/timetable/follow', null, function (d) {
 								if (d.code == 200 && d.result.length) {
@@ -54,7 +69,7 @@ App = {
 								} else {
 									App.views.choose_timetable();
 								}
-							}, false);
+							}, true);
 						} else {
 							// We load the login view
 							App.views.login();
@@ -132,7 +147,37 @@ App = {
 				App.vars.can_pass = 1;
 			};
 		},
-		add_lesson: function (description,status,begin,end,location_pk,course_pk) {
+		add_event: function (name,description,status,date,begin,end,location_pk) {
+			App.views.splash();
+			// We perform operation
+			App.vars.can_pass = 0;
+			App.events[0] = setInterval(function () {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
+					clearInterval(App.events[0]);
+					$('#main').load('app/templates/add_event.html');
+				}
+			}, 100);
+			// We send data
+			if (name && description && status && date && begin && end && location_pk) {
+				Addons.request('/api/admin/timetable/event/add',
+					{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
+					function (d) {
+						if (d.code != 200) {
+							App.vars.errors = [d.error];
+							App.vars.can_pass = 1;
+						} else {
+							App.views.admin();
+						}
+					}, false);
+			} else {
+				console.log(name , description , status , date , begin , end , location_pk);
+				// We load the template
+				App.vars.can_pass = 1;
+			}
+		},
+		add_lesson: function (description,attendance_done,status,date,begin,end,location_pk,course_pk) {
 			App.views.splash();
 			// We perform operation
 			App.vars.can_pass = 0;
@@ -145,10 +190,9 @@ App = {
 				}
 			}, 100);
 			// We send data
-			console.log(description , status , begin , end , location_pk , course_pk);
-			if (description && status && begin && end && location_pk && course_pk) {
+			if (description && attendance_done && status && date && begin && end && location_pk && course_pk) {
 				Addons.request('/api/admin/timetable/course/'+course_pk+'/classe/add',
-					{description:description, status:status, begin:begin, end:end, location:location_pk, course:course_pk},
+					{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 					function (d) {
 						if (d.code != 200) {
 							App.vars.errors = [d.error];
@@ -404,13 +448,35 @@ App = {
 		events: function () {
 			App.views.splash();
 			// We perform operation
-			// We load the template
-			App.views.base(
-				function () {
-					$('#contains').load('app/templates/events.html');
-					$('#header').load('app/templates/events_header.html');
+			App.vars.can_pass = 0;
+			App.events[0] = setInterval(function () {
+				// We verify if all the operations are finished
+				// and if the splash is already load (!important)
+				if (App.vars.can_pass && App.vars.splash_loaded) {
+					clearInterval(App.events[0]);
+					// We load the page
+					App.views.base(
+						function () {
+							$('#contains').load('app/templates/events.html');
+							$('#header').load('app/templates/events_header.html');
+						}
+					);
 				}
-			);
+			}, 100);
+			// We get datas
+			App.models.events = [];
+			for (var i = 0; i < App.models.timetables.length; i++) {
+				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/event', null, function (d) {
+					if (d.code == 200) {
+						for (var ii = 0; ii < d.result.length; ii++) {
+							App.models.events.push(d.result[ii]);
+						}
+					};
+					if (i+1 == App.models.timetables.length) {
+						App.vars.can_pass = 1;
+					};
+				}, false);
+			};
 		},
 		notifications: function () {
 			App.views.splash();
@@ -526,6 +592,11 @@ App = {
 		is_login: 0,
 	},
 };
+
+// We config global ajax configuration
+$(document).ajaxError(function () {
+	App.views.error();
+})
 
 // We launch the default page
 App.views.index();

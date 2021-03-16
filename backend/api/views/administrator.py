@@ -1,4 +1,4 @@
-from task.models import Timetable, Classe, Asset, Media
+from task.models import Timetable, Classe, Asset, Media, Event
 from task.models import Location, Course, Lecturer, Category
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
@@ -202,7 +202,9 @@ def add_timetable_classe_view(request, course_pk):
             data = request.POST
             classe = Classe(
                 description=data.get('description', None),
+                attendance_done=True if (data.get('attendance_done', None) == '1') else False,
                 status=data.get('status', None),
+                date=data.get('date', None),
                 begin=data.get('begin', None),
                 end=data.get('end', None)
             )
@@ -217,7 +219,8 @@ def add_timetable_classe_view(request, course_pk):
                     classe.full_clean()
                     classe.save()
                     return apiResponse()
-                except ValidationError:
+                except ValidationError as err:
+                    print(err)
                     return apiResponse(code=513)
             else:
                 return apiResponse(code=514)
@@ -369,20 +372,26 @@ def delete_course_asset_view(request, asset_pk):
         return apiResponse(code=619)
 
 @csrf_exempt
-def add_timetable_event_view(request, location_pk):
+def add_timetable_event_view(request):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
             event = Event(
                 name=data.get('name', None),
-                description=data.get('description', None))
+                description=data.get('description', None),
+                status=data.get('status', None),
+                date=data.get('date', None),
+                begin=data.get('begin', None),
+                end=data.get('end', None)
+            )
             location = Location.objects.filter(
-                pk=location_pk, timetable__owner=request.user.student_set.get())
+                pk=data.get('location', None), timetable__owner=request.user.student_set.get())
             if location:
                 event.location = location[0]
                 try:
                     event.full_clean()
                     event.save()
+                    event.interested.add(request.user.student_set.get())
                     return apiResponse()
                 except ValidationError:
                     return apiResponse(code=525)

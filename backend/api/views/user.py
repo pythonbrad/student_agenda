@@ -1,5 +1,5 @@
 from task.models import Course, Classe, Timetable, Notification
-from task.models import Lecturer, Absent, Asset, Event
+from task.models import Lecturer, Absent, Asset, Event, STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from .tools import apiResponse
@@ -140,9 +140,9 @@ def unset_course_follower_view(request, course_pk):
         return apiResponse(code=609)
 
 
-def get_classe_status_choice_view(request):
+def get_status_choice_view(request):
     if request.user.is_authenticated:
-        return apiResponse(result=Classe.STATUS_CHOICES)
+        return apiResponse(result=STATUS_CHOICES)
     else:
         return apiResponse(code=611)
 

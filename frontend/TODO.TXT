@@ -1,7 +1,7 @@
 [x] Uploading of media
 [x] Menu asset
 [] Possibility to user to see all information about a lesson (lecturer, location, course, )
-[] Make event menu
+[x] Make event menu
 [] Possibility to user to mark an absence or presence
 [] Possibility to comment an asset
 [] Possibility to user to see full public info about timetable (lecturer, location, course ..., a little like a hierachy)
