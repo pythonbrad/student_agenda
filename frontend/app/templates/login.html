@@ -17,7 +17,7 @@
                 <input type="password" class="form-control" id="password" placeholder="Enter your password">
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="login($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.login($(this).parent().parent())">
             </div>
             <a href="#" onclick="App.views.signin()">I don't have an account</a>
         </form>
@@ -31,13 +31,13 @@
     <br>
 </div>
 <script type="text/javascript">
-    function login(form) {
+    App.vars.tmp.login = function (form) {
         username = form.find('#username').val();
         password = form.find('#password').val();
         App.views.login(username, password);
-    }
+    };
     App.vars.tmp.$error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
-    }
+    };
 </script>

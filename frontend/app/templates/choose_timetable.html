@@ -77,12 +77,12 @@
                 .replace('{{reverse}}', App.vars.tmp.followed ? 1 : 0)
                 .replace('{{followers}}', App.models.timetables[timetable_id].followers.length)
             );
-        }
+        };
     } else {
         App.vars.tmp.$el[0].innerHTML = 'No timetable for the moment.';
-    }
+    };
     $error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         $error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
-    }
+    };
 </script>

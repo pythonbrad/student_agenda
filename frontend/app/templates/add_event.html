@@ -36,7 +36,7 @@
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="load_location($(this))">
+                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_location($(this))">
                     <option selected></option>
                 </select>
             </div>
@@ -47,7 +47,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="add_event($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.add_event($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -66,7 +66,7 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_event(form) {
+    App.vars.tmp.add_event = function (form) {
         name = form.find('#name').val();
         description = form.find('#description').val();
         status = form.find('#status').val();
@@ -75,8 +75,8 @@
         end = form.find('#end').val();
         location_pk = form.find('#location_pk').val();
         App.views.add_event(name,description,status,date,begin,end,location_pk);
-    }
-    function load_location(choice) {
+    };
+    App.vars.tmp.load_location = function (choice) {
         $location = $('#location_pk');
         $location.empty();
         if(choice.val()) {
@@ -84,11 +84,11 @@
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         $location.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
-                    }
-                }
+                    };
+                };
             }, false);
         };
-    }
+    };
     // We load status
     $status = $('#status');
     for (var i = 0; i < App.vars.STATUS_CHOICES.length; i++) {

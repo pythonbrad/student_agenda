@@ -77,7 +77,7 @@ App = {
 		},
 		choose_timetable: function (timetable_pk, reverse) {
 			App.views.splash(
-				function (argument) {
+				function () {
 					// We perform operation
 					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {

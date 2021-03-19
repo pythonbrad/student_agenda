@@ -23,7 +23,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_location($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_location($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -42,12 +42,12 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_location(form) {
+    App.vars.tmp.add_location = function (form) {
         name = form.find('#name').val();
         description = form.find('#description').val();
         timetable_pk = form.find('#timetable_pk').val();
         App.views.add_location(name, description, timetable_pk);
-    }
+    };
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {

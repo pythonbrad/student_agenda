@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="load_category_and_course($(this))">
+                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_category_and_course($(this))">
                     <option selected></option>
                 </select>
             </div>
@@ -39,7 +39,7 @@
                 <input type='file' class="form-control-file" id="media"></input>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_asset($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_asset($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -58,7 +58,7 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_asset(form) {
+    App.vars.tmp.add_asset = function (form) {
         name = form.find('#name').val();
         description = form.find('#description').val();
         category_pk = form.find('#category_pk').val();
@@ -66,7 +66,7 @@
         files = $('#media')[0].files;
         App.views.add_asset(name, description, category_pk, course_pk, files);
     };
-    function load_category_and_course(choice) {
+    App.vars.tmp.load_category_and_course = function (choice) {
         $category = $('#category_pk');
         $course = $('#course_pk');
         $category.empty();
@@ -76,15 +76,15 @@
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         $category.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
-                    }
-                }
+                    };
+                };
             }, false);
             Addons.request('/api/user/timetable/'+choice.val()+'/course', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         $course.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
-                    }
-                }
+                    };
+                };
             }, false);
         };
     };

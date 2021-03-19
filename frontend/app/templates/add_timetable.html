@@ -17,7 +17,7 @@
                 <input type="text" class="form-control" id="description" placeholder="Enter the timetable's description">
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_timetable($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_timetable($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -39,13 +39,13 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_timetable(form) {
+    App.vars.tmp.add_timetable = function (form) {
         name = form.find('#name').val();
         description = form.find('#description').val();
         App.views.add_timetable(name, description);
-    }
+    };
     App.vars.tmp.$error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
-    }
+    };
 </script>

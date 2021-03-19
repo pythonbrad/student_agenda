@@ -39,7 +39,7 @@
             </div>
             <div class="form-group">
                 <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="load_location_and_course($(this))">
+                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_location_and_course($(this))">
                     <option selected></option>
                 </select>
             </div>
@@ -56,7 +56,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="add_lesson($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.add_lesson($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -75,7 +75,7 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_lesson(form) {
+    App.vars.tmp.add_lesson = function (form) {
         description = form.find('#description').val();
         attendance_done = form.find('#attendance_done').val();
         status = form.find('#status').val();
@@ -85,8 +85,8 @@
         location_pk = form.find('#location_pk').val();
         course_pk = form.find('#course_pk').val();
         App.views.add_lesson(description,attendance_done,status,date,begin,end,location_pk,course_pk);
-    }
-    function load_location_and_course(choice) {
+    };
+    App.vars.tmp.load_location_and_course = function (choice) {
         $location = $('#location_pk');
         $location.empty();
         $course = $('#course_pk');
@@ -96,18 +96,18 @@
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         $location.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
-                    }
-                }
+                    };
+                };
             }, false);
             Addons.request('/api/user/timetable/'+choice.val()+'/course', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         $course.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
-                    }
-                }
+                    };
+                };
             }, false);
         };
-    }
+    };
     // We load status
     $status = $('#status');
     for (var i = 0; i < App.vars.STATUS_CHOICES.length; i++) {

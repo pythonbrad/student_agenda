@@ -19,7 +19,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="add_lecturer($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_lecturer($(this).parent().parent())">
             </div>
             <hr size="#">
             <div class="row">
@@ -38,18 +38,18 @@
     <br>
 </div>
 <script type="text/javascript">
-    function add_lecturer(form) {
+    App.vars.tmp.add_lecturer = function (form) {
         name = form.find('#name').val();
         timetable_pk = form.find('#timetable_pk').val();
         App.views.add_lecturer(name, timetable_pk);
-    }
+    };
     // We load timetable
     App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
             App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
-    }
+    };
     App.vars.tmp.$error = $('#error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
