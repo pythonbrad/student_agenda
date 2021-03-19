@@ -13,14 +13,15 @@ App = {
 			// It permit to know if the splash has finished his loading
 			App.vars.splash_loaded = 0;
 			$('#main').load('app/templates/splash.html',function () {
+				// We clean last error, delete all events and tmp datas
+				App.vars.errors = [];
+				App.vars.tmp = {};
+				for (var i = 0; i < 100; i++) {
+					clearInterval(App.events[i]);
+				};
+				// We mark the end of the loading
 				App.vars.splash_loaded = 1;
 			});
-			// We clean last error, delete all events and tmp datas
-			App.vars.errors = [];
-			App.vars.tmp = {};
-			for (var i = 0; i < 100; i++) {
-				clearInterval(App.events[i]);
-			};
 		},
 		error: function () {
 			$('#main').html('<div class="splash-image" align="center"><i class="fas fa-6x fa-disease text-warning"></i><h4><b>Error unexpected.</b></h4><i style="font-size: 75%">If persist, you can contact the webmaster.<br>Email: fomegnemeudje@outlook.com</i><hr size="#"><h5></div>');
