@@ -6,20 +6,17 @@ App = {
 		// For the moment load just the pages
 		base: function (next=function () {}) {
 			$('#main').empty();
-			$('#main').load('app/templates/base.html', function () {next()});
+			$('#main').load('app/templates/base.html', next);
 		},
 		splash: function (next=function () {}) {
 			$('#main').empty();
-			$('#main').load('app/templates/splash.html',function () {
-				// We clean last error, delete all events and tmp datas
-				App.vars.errors = [];
-				App.vars.tmp = {};
-				for (var i = 0; i < 100; i++) {
-					clearInterval(App.events[i]);
-				};
-				// We execute the next instruction
-				next();
-			});
+			// We clean last error, delete all events and tmp datas
+			App.vars.errors = [];
+			App.vars.tmp = {};
+			for (var i = 0; i < 100; i++) {
+				clearInterval(App.events[i]);
+			};
+			$('#main').load('app/templates/splash.html',next);
 		},
 		error: function () {
 			$('#main').empty();
@@ -512,7 +509,7 @@ App = {
 							$('#header').load('app/templates/notifications_header.html');
 						}
 					);
-				} to manage error
+				}
 			);
 		},
 		login: function (username, password) {
