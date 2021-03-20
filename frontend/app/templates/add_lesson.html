@@ -9,54 +9,54 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the description">
+                <label for="lesson_description">Description</label>
+                <input type="text" class="form-control" id="lesson_description" placeholder="Enter the description">
             </div>
             <div class="form-group">
-                <label for="attendance_done">Attendance done</label>
-                <select class="form-control" id="attendance_done">
+                <label for="lesson_attendance_done">Attendance done</label>
+                <select class="form-control" id="lesson_attendance_done">
                     <option value='0' selected>No</option>
                     <option value='1'>Yes</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="status">Status</label>
-                <select class="form-control" id="status">
+                <label for="lesson_status">Status</label>
+                <select class="form-control" id="lesson_status">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" class="form-control" id="date" placeholder="YYYY-MM-DD (2010-10-02)">
+                <label for="lesson_date">Date</label>
+                <input type="date" class="form-control" id="lesson_date" placeholder="YYYY-MM-DD (2010-10-02)">
             </div>
             <div class="form-group">
-                <label for="begin">Begin</label>
-                <input type="time" class="form-control" id="begin" placeholder="HH:MM (15:23)">
+                <label for="lesson_begin">Begin</label>
+                <input type="time" class="form-control" id="lesson_begin" placeholder="HH:MM (15:23)">
             </div>
             <div class="form-group">
-                <label for="end">End</label>
-                <input type="time" class="form-control" id="end" placeholder="HH:MM (10:21)">
+                <label for="lesson_end">End</label>
+                <input type="time" class="form-control" id="lesson_end" placeholder="HH:MM (10:21)">
             </div>
             <div class="form-group">
-                <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_location_and_course($(this))">
+                <label for="lesson_timetable_pk">Timetable</label>
+                <select class="form-control" id="lesson_timetable_pk" onchange="App.vars.tmp.load_location_and_course($(this))">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="location_pk">Location</label>
-                <select class="form-control" id="location_pk">
+                <label for="lesson_location_pk">Location</label>
+                <select class="form-control" id="lesson_location_pk">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="course_pk">Course</label>
-                <select class="form-control" id="course_pk">
+                <label for="lesson_course_pk">Course</label>
+                <select class="form-control" id="lesson_course_pk">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.add_lesson($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.add_lesson()">
             </div>
             <hr size="#">
             <div class="row">
@@ -69,21 +69,21 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="lesson_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.add_lesson = function (form) {
-        description = form.find('#description').val();
-        attendance_done = form.find('#attendance_done').val();
-        status = form.find('#status').val();
-        date = form.find('#date').val();
-        begin = form.find('#begin').val();
-        end = form.find('#end').val();
-        location_pk = form.find('#location_pk').val();
-        course_pk = form.find('#course_pk').val();
+    App.vars.tmp.add_lesson = function () {
+        description = $('#description').val();
+        attendance_done = $('#attendance_done').val();
+        status = $('#status').val();
+        date = $('#date').val();
+        begin = $('#begin').val();
+        end = $('#end').val();
+        location_pk = $('#location_pk').val();
+        course_pk = $('#course_pk').val();
         App.views.add_lesson(description,attendance_done,status,date,begin,end,location_pk,course_pk);
     };
     App.vars.tmp.load_location_and_course = function (choice) {
@@ -120,8 +120,17 @@
             App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#lesson_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        $('#description').val(App.vars.tmp.form.description);
+        $('#attendance_done').val(App.vars.tmp.form.attendance_done);
+        $('#status').val(App.vars.tmp.form.status);
+        $('#date').val(App.vars.tmp.form.date);
+        $('#begin').val(App.vars.tmp.form.begin);
+        $('#end').val(App.vars.tmp.form.end);
     };
 </script>

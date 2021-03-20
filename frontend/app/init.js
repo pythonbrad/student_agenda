@@ -87,7 +87,6 @@ App = {
 							$('#main').load('app/templates/choose_timetable.html');
 						};
 					}, 100);
-
 					if (timetable_pk) {
 						Addons.request(
 							'/api/user/timetable/'+timetable_pk+'/'+(reverse?'unfollow':'follow'),
@@ -129,6 +128,8 @@ App = {
 							$('#main').load('app/templates/add_timetable.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,description:description};
 					// We send data
 					if (name && description) {
 						Addons.request('/api/admin/timetable/add',
@@ -160,6 +161,8 @@ App = {
 							$('#main').load('app/templates/add_event.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,description:description,status:status,date:date,begin:begin,end:end};
 					// We send data
 					if (name && description && status && date && begin && end && location_pk) {
 						Addons.request('/api/admin/timetable/event/add',
@@ -191,6 +194,8 @@ App = {
 							$('#main').load('app/templates/add_lesson.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end};
 					// We send data
 					if (description && attendance_done && status && date && begin && end && location_pk && course_pk) {
 						Addons.request('/api/admin/timetable/course/'+course_pk+'/classe/add',
@@ -223,6 +228,8 @@ App = {
 							$('#main').load('app/templates/add_lecturer.html');
 						}
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name};
 					// We send data
 					if (name && timetable_pk) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/lecturer/add',
@@ -254,6 +261,8 @@ App = {
 							$('#main').load('app/templates/add_location.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,description:description};
 					// We send data
 					if (name && description && timetable_pk) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/location/add',
@@ -285,6 +294,8 @@ App = {
 							$('#main').load('app/templates/add_category.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,description:description};
 					// We send data
 					if (name && description && timetable_pk) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/category/add',
@@ -316,6 +327,8 @@ App = {
 							$('#main').load('app/templates/add_course.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,code:code,description:description};
 					// We send data
 					if (name && code && description && lecturer_pks.length) {
 						Addons.request('/api/admin/timetable/course/add',
@@ -348,6 +361,8 @@ App = {
 							$('#main').load('app/templates/add_asset.html');
 						}
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,description:description};
 					// We send data
 					if (name && description && category_pk && course_pk && files.length) {
 						if (files[0].size < MAX_SIZE) {
@@ -524,6 +539,9 @@ App = {
 							$('#main').load('app/templates/login.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {username:username};
+					// We send data
 					if (username && password) {
 						Addons.request('/api/auth/login',
 							{username: username, password: password},
@@ -555,8 +573,11 @@ App = {
 							$('#main').load('app/templates/signin.html');
 						};
 					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {username:username,email:email};
 					if (password != password2) {
 						App.vars.errors = ['The passwords not match'];
+						App.vars.can_pass = 1;
 					} else if (username && email && password && password2) {
 						Addons.request('/api/auth/signin',
 							{username: username, email: email, password: password, password2: password2},
@@ -597,9 +618,7 @@ App = {
 					// We perform operation
 					Addons.request('/api/auth/logout',null,
 						function (d) {
-							setTimeout(function () {
-								App.views.index();
-							}, 200);
+							App.views.index();
 						},false
 					);
 				}

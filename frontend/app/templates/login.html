@@ -9,15 +9,15 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                <label for="user_username">Username</label>
+                <input type="text" class="form-control" id="user_username" placeholder="Enter your username">
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                <label for="user_password">Password</label>
+                <input type="password" class="form-control" id="user_password" placeholder="Enter your password">
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.login($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.login()">
             </div>
             <a href="#" onclick="App.views.signin()">I don't have an account</a>
         </form>
@@ -25,19 +25,23 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="user_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.login = function (form) {
-        username = form.find('#username').val();
-        password = form.find('#password').val();
+    App.vars.tmp.login = function () {
+        username = $('#user_username').val();
+        password = $('#user_password').val();
         App.views.login(username, password);
     };
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#user_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        $('#user_username').val(App.vars.tmp.form.username);
     };
 </script>

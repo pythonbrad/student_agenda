@@ -9,22 +9,22 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                <label for="user_username">Username</label>
+                <input type="text" class="form-control" id="user_username" placeholder="Enter your username">
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                <label for="user_email">Email</label>
+                <input type="email" class="form-control" id="user_email" placeholder="Enter your email">
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                <label for="user_password">Password</label>
+                <input type="password" class="form-control" id="user_password" placeholder="Enter your password">
             </div><div class="form-group">
-                <label for="password2">Retype your password</label>
-                <input type="password" class="form-control" id="password2" placeholder="Enter your password">
+                <label for="user_password2">Retype your password</label>
+                <input type="password" class="form-control" id="user_password2" placeholder="Enter your password">
             </div>
             <div class="form-group">
-                <input class='btn btn-primary btn-sm' type="submit" onclick="App.vars.tmp.login($(this).parent().parent())">
+                <input class='btn btn-primary btn-sm' type="submit" onclick="App.vars.tmp.login()">
             </div>
             <a href="#" onclick="App.views.login()">I have already an account</a>
         </form>
@@ -32,21 +32,26 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="user_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.login = function (form) {
-        username = form.find('#username').val();
-        email = form.find('#email').val();
-        password = form.find('#password').val();
-        password2 = form.find('#password2').val();
+    App.vars.tmp.login = function () {
+        username = $('#user_username').val();
+        email = $('#user_email').val();
+        password = $('#user_password').val();
+        password2 = $('#user_password2').val();
         App.views.signin(username, email, password, password2);
     };
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#user_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        $('#user_username').val(App.vars.tmp.form.username);
+        $('#user_email').val(App.vars.tmp.form.email);
     };
 </script>

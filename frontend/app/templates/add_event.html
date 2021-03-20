@@ -9,45 +9,45 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the name">
+                <label for="event_name">Name</label>
+                <input type="text" class="form-control" id="event_name" placeholder="Enter the name">
             </div>
             <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the description">
+                <label for="event_description">Description</label>
+                <input type="text" class="form-control" id="event_description" placeholder="Enter the description">
             </div>
             <div class="form-group">
-                <label for="status">Status</label>
-                <select class="form-control" id="status">
+                <label for="event_status">Status</label>
+                <select class="form-control" id="event_status">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" class="form-control" id="date" placeholder="YYYY-MM-DD (2010-10-02)">
+                <label for="event_date">Date</label>
+                <input type="date" class="form-control" id="event_date" placeholder="YYYY-MM-DD (2010-10-02)">
             </div>
             <div class="form-group">
-                <label for="begin">Begin</label>
-                <input type="time" class="form-control" id="begin" placeholder="HH:MM (15:23)">
+                <label for="event_begin">Begin</label>
+                <input type="time" class="form-control" id="event_begin" placeholder="HH:MM (15:23)">
             </div>
             <div class="form-group">
-                <label for="end">End</label>
-                <input type="time" class="form-control" id="end" placeholder="HH:MM (10:21)">
+                <label for="event_end">End</label>
+                <input type="time" class="form-control" id="event_end" placeholder="HH:MM (10:21)">
             </div>
             <div class="form-group">
-                <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_location($(this))">
+                <label for="event_timetable_pk">Timetable</label>
+                <select class="form-control" id="event_timetable_pk" onchange="App.vars.tmp.load_location($(this))">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="location_pk">Location</label>
-                <select class="form-control" id="location_pk">
+                <label for="event_location_pk">Location</label>
+                <select class="form-control" id="event_location_pk">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.add_event($(this).parent().parent())">
+                <input class="btn btn-primary btn-sm" type="submit" onclick="App.vars.tmp.add_event()">
             </div>
             <hr size="#">
             <div class="row">
@@ -60,20 +60,20 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="event_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.add_event = function (form) {
-        name = form.find('#name').val();
-        description = form.find('#description').val();
-        status = form.find('#status').val();
-        date = form.find('#date').val();
-        begin = form.find('#begin').val();
-        end = form.find('#end').val();
-        location_pk = form.find('#location_pk').val();
+    App.vars.tmp.add_event = function () {
+        name = $('#event_name').val();
+        description = $('#event_description').val();
+        status = $('#event_status').val();
+        date = $('#event_date').val();
+        begin = $('#event_begin').val();
+        end = $('#event_end').val();
+        location_pk = $('#event_location_pk').val();
         App.views.add_event(name,description,status,date,begin,end,location_pk);
     };
     App.vars.tmp.load_location = function (choice) {
@@ -101,8 +101,17 @@
             App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#event_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        $('#event_name').val(App.vars.tmp.form.#name);
+        $('#event_description').val(App.vars.tmp.form.#description);
+        $('#event_status').val(App.vars.tmp.form.#status);
+        $('#event_date').val(App.vars.tmp.form.#date);
+        $('#event_begin').val(App.vars.tmp.form.#begin);
+        $('#event_end').val(App.vars.tmp.form.#end);
     };
 </script>
