@@ -12,7 +12,7 @@ def add_timetable_view(request):
         if request.POST:
             data = request.POST
             if Timetable.objects.filter(name=data.get('name', None)):
-                return apiResponse(code=401)
+                return apiResponse(code=401, info="timetable's name already used")
             else:
                 timetable = Timetable(
                     name=data.get('name', None),

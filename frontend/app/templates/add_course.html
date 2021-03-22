@@ -9,29 +9,29 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the course's name">
+                <label for="course_name">Name</label>
+                <input type="text" class="form-control" id="course_name" placeholder="Enter the course's name">
             </div>
             <div class="form-group">
-                <label for="code">Code</label>
-                <input type="text" class="form-control" id="code" placeholder="Enter the course's code">
+                <label for="course_code">Code</label>
+                <input type="text" class="form-control" id="course_code" placeholder="Enter the course's code">
             </div>
             <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the course's description">
+                <label for="course_description">Description</label>
+                <input type="text" class="form-control" id="course_description" placeholder="Enter the course's description">
             </div>
             <div class="form-group">
-                <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_lecturer($(this))">
+                <label for="course_timetable_pk">Timetable</label>
+                <select class="form-control" id="course_timetable_pk" onchange="App.vars.tmp.load_lecturer()">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="lecturer_pks">Lecturer(s)</label>
-                <select class="form-control" id="lecturer_pks" multiple></select>
+                <label for="course_lecturer_pks">Lecturer(s)</label>
+                <select class="form-control" id="course_lecturer_pks" multiple></select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_course($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_course()">
             </div>
             <hr size="#">
             <div class="row">
@@ -44,41 +44,56 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="course_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.add_course = function (form) {
-        name = form.find('#name').val();
-        code = form.find('#code').val();
-        description = form.find('#description').val();
-        lecturer_pks = form.find('#lecturer_pks').val();
-        App.views.add_course(name, code, description, lecturer_pks);
+    // We define element that we will use
+    App.vars.tmp.$name = $('#course_name');
+    App.vars.tmp.$code = $('#course_code');
+    App.vars.tmp.$description = $('#course_description');
+    App.vars.tmp.$lecturer_pks = $('#course_lecturer_pks');
+    App.vars.tmp.$timetable_pk = $('#course_timetable_pk');
+    App.vars.tmp.add_course = function () {
+        name = App.vars.tmp.$name.val();
+        code = App.vars.tmp.$code.val();
+        description = App.vars.tmp.$description.val();
+        lecturer_pks = App.vars.tmp.$lecturer_pks.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
+        App.views.add_course(name, code, description, lecturer_pks, timetable_pk);
     };
-    App.vars.tmp.load_lecturer = function (choice) {
-        $lecturers = $('#lecturer_pks');
-        $lecturers.empty();
-        if(choice.val()) {
-            Addons.request('/api/user/timetable/'+choice.val()+'/lecturer', null, function (d) {
+    App.vars.tmp.load_lecturer = function () {
+        choice = App.vars.tmp.$timetable_pk.val();
+        App.vars.tmp.$lecturer_pks.empty();
+        if(choice) {
+            Addons.request('/api/user/timetable/'+choice+'/lecturer', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $lecturers.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        App.vars.tmp.$lecturer_pks.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
         };
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#course_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$code.val(App.vars.tmp.form.code);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
+        App.vars.tmp.load_lecturer();
+        App.vars.tmp.$lecturer_pks.val(App.vars.tmp.form.lecturer_pks);
     };
 </script>

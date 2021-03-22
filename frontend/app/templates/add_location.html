@@ -9,21 +9,21 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the location's name">
+                <label for="location_name">Name</label>
+                <input type="text" class="form-control" id="location_name" placeholder="Enter the location's name">
             </div>
             <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter the location's description">
+                <label for="location_description">Description</label>
+                <input type="text" class="form-control" id="location_description" placeholder="Enter the location's description">
             </div>
             <div class="form-group">
-                <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk">
+                <label for="location_timetable_pk">Timetable</label>
+                <select class="form-control" id="location_timetable_pk">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_location($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_location()">
             </div>
             <hr size="#">
             <div class="row">
@@ -36,27 +36,36 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="location_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.add_location = function (form) {
-        name = form.find('#name').val();
-        description = form.find('#description').val();
-        timetable_pk = form.find('#timetable_pk').val();
+    // We define element that we will use
+    App.vars.tmp.$name = $('#location_name');
+    App.vars.tmp.$description = $('#location_description');
+    App.vars.tmp.$timetable_pk = $('#location_timetable_pk');
+    App.vars.tmp.add_location = function () {
+        name = App.vars.tmp.$name.val();
+        description = App.vars.tmp.$description.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
         App.views.add_location(name, description, timetable_pk);
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     }
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#location_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
     };
 </script>

@@ -9,17 +9,17 @@
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter the lecturer's name">
+                <label for="lecturer_name">Name</label>
+                <input type="text" class="form-control" id="lecturer_name" placeholder="Enter the lecturer's name">
             </div>
             <div class="form-group">
-                <label for="timetable_pk">Timetable</label>
-                <select class="form-control" id="timetable_pk">
+                <label for="lecturer_timetable_pk">Timetable</label>
+                <select class="form-control" id="lecturer_timetable_pk">
                     <option selected></option>
                 </select>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_lecturer($(this).parent().parent())">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_lecturer()">
             </div>
             <hr size="#">
             <div class="row">
@@ -32,26 +32,33 @@
     </div>
     <div class="row">
         <span class="col-1"></span>
-        <span class="col" id="error"></span>
+        <span class="col" id="lecturer_error"></span>
         <span class="col-1"></span>
     </div>
     <br>
 </div>
 <script type="text/javascript">
-    App.vars.tmp.add_lecturer = function (form) {
-        name = form.find('#name').val();
-        timetable_pk = form.find('#timetable_pk').val();
+    // We define element that we will use
+    App.vars.tmp.$name = $('#lecturer_name');
+    App.vars.tmp.$timetable_pk = $('#lecturer_timetable_pk');
+    App.vars.tmp.add_lecturer = function () {
+        name = App.vars.tmp.$name.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
         App.views.add_lecturer(name, timetable_pk);
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
-    App.vars.tmp.$error = $('#error');
+    App.vars.tmp.$error = $('#lecturer_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+    // We load previous data form if present
+    if (App.vars.tmp.form) {
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
     };
 </script>

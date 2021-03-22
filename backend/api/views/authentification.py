@@ -17,7 +17,7 @@ def signin_view(request):
                 email=data.get('email', None)
             )
         ):
-            return apiResponse(code=401)
+            return apiResponse(code=401, info='username or email already used')
         else:
             user = User(
                 username=data.get('username', None),
@@ -49,7 +49,7 @@ def login_view(request):
             login(request, user)
             return apiResponse(result=user.student_set.get().get_as_json())
         else:
-            return apiResponse(code=502)
+            return apiResponse(code=502, info='username or password invalid')
     else:
         return apiResponse(code=102)
 
