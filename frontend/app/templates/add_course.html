@@ -22,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label for="course_timetable_pk">Timetable</label>
-                <select class="form-control" id="course_timetable_pk" onchange="App.vars.tmp.load_lecturer($(this))">
+                <select class="form-control" id="course_timetable_pk" onchange="App.vars.tmp.load_lecturer()">
                     <option selected></option>
                 </select>
             </div>
@@ -50,31 +50,37 @@
     <br>
 </div>
 <script type="text/javascript">
+    // We define element that we will use
+    App.vars.tmp.$name = $('#course_name');
+    App.vars.tmp.$code = $('#course_code');
+    App.vars.tmp.$description = $('#course_description');
+    App.vars.tmp.$lecturer_pks = $('#lecturer_pks');
+    App.vars.tmp.$timetable_pk = $('#timetable_pk');
     App.vars.tmp.add_course = function () {
-        name = $('#course_name').val();
-        code = $('#course_code').val();
-        description = $('#course_description').val();
-        lecturer_pks = $('#course_lecturer_pks').val();
-        App.views.add_course(name, code, description, lecturer_pks);
+        name = App.vars.tmp.$name.val();
+        code = App.vars.tmp.$code.val();
+        description = App.vars.tmp.$description.val();
+        lecturer_pks = App.vars.tmp.$lecturer_pks.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
+        App.views.add_course(name, code, description, lecturer_pks, timetable_pk);
     };
-    App.vars.tmp.load_lecturer = function (choice) {
-        $lecturers = $('#course_lecturer_pks');
-        $lecturers.empty();
-        if(choice.val()) {
-            Addons.request('/api/user/timetable/'+choice.val()+'/lecturer', null, function (d) {
+    App.vars.tmp.load_lecturer = function () {
+        choice = App.vars.tmp.$timetable_pk.val();
+        App.vars.tmp.$lecturer_pks.empty();
+        if(choice) {
+            Addons.request('/api/user/timetable/'+choice+'/lecturer', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $lecturers.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        App.vars.tmp.$lecturer_pks.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
         };
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#course_timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
     App.vars.tmp.$error = $('#course_error');
@@ -83,8 +89,11 @@
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#course_name').val(App.vars.tmp.form.name);
-        $('#course_code').val(App.vars.tmp.form.code);
-        $('#course_description').val(App.vars.tmp.form.description);
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$code.val(App.vars.tmp.form.code);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
+        App.vars.tmp.load_lecturer();
+        App.vars.tmp.$lecturer_pks.val(App.vars.tmp.form.lecturer_pks);
     };
 </script>

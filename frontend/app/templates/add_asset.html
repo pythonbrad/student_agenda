@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label for="asset_timetable_pk">Timetable</label>
-                <select class="form-control" id="asset_timetable_pk" onchange="App.vars.tmp.load_category_and_course($(this))">
+                <select class="form-control" id="asset_timetable_pk" onchange="App.vars.tmp.load_category_and_course()">
                     <option selected></option>
                 </select>
             </div>
@@ -58,41 +58,47 @@
     <br>
 </div>
 <script type="text/javascript">
+    // We define each element that we will use
+    App.vars.tmp.$name = ;
+    App.vars.tmp.$description = $('#asset_description');
+    App.vars.tmp.$category_pk = $('#asset_category_pk');
+    App.vars.tmp.$course_pk = $('#asset_course_pk');
+    App.vars.tmp.$media = $('#asset_media');
+    App.vars.tmp.$timetable_pk = $('#asset_timetable_pk');
     App.vars.tmp.add_asset = function () {
-        name = $('#asset_name').val();
-        description = $('#asset_description').val();
-        category_pk = $('#asset_category_pk').val();
-        course_pk = $('#asset_course_pk').val();
-        files = $('#asset_media')[0].files;
-        App.views.add_asset(name, description, category_pk, course_pk, files);
+        name = App.vars.tmp.$name.val();
+        description = App.vars.tmp.$description.val();
+        category_pk = App.vars.tmp.$category_pk.val();
+        course_pk = App.vars.tmp.$course_pk.val();
+        files = App.vars.tmp.$media[0].files;
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
+        App.views.add_asset(name, description, category_pk, course_pk, files, timetable_pk);
     };
-    App.vars.tmp.load_category_and_course = function (choice) {
-        $category = $('#asset_category_pk');
-        $course = $('#asset_course_pk');
-        $category.empty();
-        $course.empty();
-        if(choice.val()) {
-            Addons.request('/api/user/timetable/'+choice.val()+'/category', null, function (d) {
+    App.vars.tmp.load_category_and_course = function () {
+        choice = App.vars.tmp.$timetable_pk.val();
+        App.vars.tmp.$category_pk.empty();
+        App.vars.tmp.$course_pk_pk.empty();
+        if(choice) {
+            Addons.request('/api/user/timetable/'+choice+'/category', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $category.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        App.vars.tmp.$category_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
-            Addons.request('/api/user/timetable/'+choice.val()+'/course', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice+'/course', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $course.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        App.vars.tmp.$course_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
         };
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#asset_timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
     App.vars.tmp.$error = $('#asset_error');
@@ -101,7 +107,11 @@
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#asset_name').val(App.vars.tmp.form.name);
-        $('#asset_description').val(App.vars.tmp.form.description);
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
+        App.vars.tmp.load_category_and_course();
+        App.vars.tmp.$category_pk.val(App.vars.tmp.form.category_pk);
+        App.vars.tmp.$course_pk.val(App.vars.tmp.form.course_pk);
     };
 </script>

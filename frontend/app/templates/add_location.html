@@ -42,17 +42,20 @@
     <br>
 </div>
 <script type="text/javascript">
+    // We define element that we will use
+    App.vars.tmp.$name = $('#location_name');
+    App.vars.tmp.$description = $('#location_description');
+    App.vars.tmp.$timetable_pk = $('#location_timetable_pk');
     App.vars.tmp.add_location = function () {
-        name = $('#location_name').val();
-        description = $('#location_description').val();
-        timetable_pk = $('#location_timetable_pk').val();
+        name = App.vars.tmp.$name.val();
+        description = App.vars.tmp.$description.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
         App.views.add_location(name, description, timetable_pk);
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     }
     App.vars.tmp.$error = $('#location_error');
@@ -61,7 +64,8 @@
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#location_name').val(App.vars.tmp.form.name);
-        $('#location_description').val(App.vars.tmp.form.description);
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
     };
 </script>

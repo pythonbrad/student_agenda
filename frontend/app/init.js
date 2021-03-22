@@ -149,7 +149,7 @@ App = {
 				}
 			);
 		},
-		add_event: function (name,description,status,date,begin,end,location_pk) {
+		add_event: function (name,description,status,date,begin,end,location_pk,timetable_pk) {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -162,7 +162,7 @@ App = {
 						};
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {name:name,description:description,status:status,date:date,begin:begin,end:end};
+			        App.vars.tmp.form = {name:name,description:description,status:status,date:date,begin:begin,end:end,location_pk:location_pk, timetable_pk:timetable_pk};
 					// We send data
 					if (name && description && status && date && begin && end && location_pk) {
 						Addons.request('/api/admin/timetable/event/add',
@@ -182,7 +182,7 @@ App = {
 				}
 			);
 		},
-		add_lesson: function (description,attendance_done,status,date,begin,end,location_pk,course_pk) {
+		add_lesson: function (description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -195,7 +195,7 @@ App = {
 						};
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end};
+			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end,location_pk:location_pk,course_pk:course_pk,timetable_pk:timetable_pk};
 					// We send data
 					if (description && attendance_done && status && date && begin && end && location_pk && course_pk) {
 						Addons.request('/api/admin/timetable/course/'+course_pk+'/classe/add',
@@ -229,7 +229,7 @@ App = {
 						}
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {name:name};
+			        App.vars.tmp.form = {name:name,timetable_pk:timetable_pk};
 					// We send data
 					if (name && timetable_pk) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/lecturer/add',
@@ -262,7 +262,7 @@ App = {
 						};
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {name:name,description:description};
+			        App.vars.tmp.form = {name:name,description:description,timetable_pk:timetable_pk};
 					// We send data
 					if (name && description && timetable_pk) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/location/add',
@@ -295,7 +295,7 @@ App = {
 						};
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {name:name,description:description};
+			        App.vars.tmp.form = {name:name,description:description,timetable_pk:timetable_pk};
 					// We send data
 					if (name && description && timetable_pk) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/category/add',
@@ -315,7 +315,7 @@ App = {
 				}
 			);
 		},
-		add_course: function (name,code,description,lecturer_pks) {
+		add_course: function (name,code,description,lecturer_pks, timetable_pk) {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -328,7 +328,7 @@ App = {
 						};
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {name:name,code:code,description:description};
+			        App.vars.tmp.form = {name:name,code:code,description:description,timetable_pk:timetable_pk,lecturer_pks:lecturer_pks};
 					// We send data
 					if (name && code && description && lecturer_pks.length) {
 						Addons.request('/api/admin/timetable/course/add',
@@ -348,7 +348,7 @@ App = {
 				}
 			);
 		},
-		add_asset: function (name, description, category_pk, course_pk, files) {
+		add_asset: function (name, description, category_pk, course_pk, files, timetable_pk) {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -362,7 +362,7 @@ App = {
 						}
 					}, 100);
 					// We save the data form
-			        App.vars.tmp.form = {name:name,description:description};
+			        App.vars.tmp.form = {name:name,description:description,category_pk:category_pk,course_pk:course_pk,timetable_pk:timetable_pk};
 					// We send data
 					if (name && description && category_pk && course_pk && files.length) {
 						if (files[0].size < MAX_SIZE) {

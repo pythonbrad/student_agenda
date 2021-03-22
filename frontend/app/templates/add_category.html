@@ -13,8 +13,8 @@
                 <input type="text" class="form-control" id="category_name" placeholder="Enter the category's name">
             </div>
             <div class="form-group">
-                <label for="category_desciption">Desciption</label>
-                <input type="text" class="form-control" id="category_desciption" placeholder="Enter the category's desciption">
+                <label for="category_description">Desciption</label>
+                <input type="text" class="form-control" id="category_description" placeholder="Enter the category's desciption">
             </div>
             <div class="form-group">
                 <label for="category_timetable_pk">Timetable</label>
@@ -42,26 +42,30 @@
     <br>
 </div>
 <script type="text/javascript">
+    // We define each element that i will use
+    App.vars.tmp.$name = $('#category_name');
+    App.vars.tmp.$description = $('#category_description'); 
+    App.vars.tmp.$timetable_pk = $('#category_timetable_pk'); 
     App.vars.tmp.add_category = function () {
-        name = $('#category_name').val();
-        desciption = $('#category_desciption').val();
-        timetable_pk = $('#category_timetable_pk').val();
+        name = App.vars.tmp.$name.val();
+        desciption = App.vars.tmp.$description.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
         App.views.add_category(name, desciption, timetable_pk);
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
-    App.vars.tmp.$error = $('#timetable_error');
+    App.vars.tmp.$error = $('#category_error');
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#category_name').val(App.vars.tmp.form.name);
-        $('#category_description').val(App.vars.tmp.form.description);
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
     };
 </script>

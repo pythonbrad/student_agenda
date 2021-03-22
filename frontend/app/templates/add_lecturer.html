@@ -38,16 +38,18 @@
     <br>
 </div>
 <script type="text/javascript">
+    // We define element that we will use
+    App.vars.tmp.$name = $('#lecturer_name');
+    App.vars.tmp.$timetable_pk = $('#lecturer_timetable_pk');
     App.vars.tmp.add_lecturer = function () {
-        name = $('#name').val();
-        timetable_pk = $('#timetable_pk').val();
+        name = App.vars.tmp.$name.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
         App.views.add_lecturer(name, timetable_pk);
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
         };
     };
     App.vars.tmp.$error = $('#lecturer_error');
@@ -56,6 +58,7 @@
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#lecturer_name').val(App.vars.tmp.form.name);
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
     };
 </script>

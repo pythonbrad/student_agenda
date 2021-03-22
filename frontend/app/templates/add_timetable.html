@@ -39,9 +39,11 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.vars.tmp.$name = $('#timetable_name');
+    App.vars.tmp.$description = $('timetable_description');
     App.vars.tmp.add_timetable = function () {
-        name = $('#timetable_name').val();
-        description = $('#timetable_description').val();
+        name = App.vars.tmp.$name.val();
+        description = App.vars.tmp.$description.val();
         App.views.add_timetable(name, description);
     };
     App.vars.tmp.$error = $('#timetable_error');
@@ -50,7 +52,7 @@
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#timetable_name').val(App.vars.tmp.form.name);
-        $('#timetable_description').val(App.vars.tmp.form.description);
+        App.vars.tmp.$name.val(App.vars.tmp.form.name);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
     };
 </script>

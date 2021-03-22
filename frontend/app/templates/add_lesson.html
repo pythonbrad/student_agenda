@@ -39,7 +39,7 @@
             </div>
             <div class="form-group">
                 <label for="lesson_timetable_pk">Timetable</label>
-                <select class="form-control" id="lesson_timetable_pk" onchange="App.vars.tmp.load_location_and_course($(this))">
+                <select class="form-control" id="lesson_timetable_pk" onchange="App.vars.tmp.load_location_and_course()">
                     <option selected></option>
                 </select>
             </div>
@@ -75,46 +75,55 @@
     <br>
 </div>
 <script type="text/javascript">
+    // We define element that we will use
+    App.vars.tmp.$description = $('#lesson_description');
+    App.vars.tmp.$attendance_done = $('#lesson_attendance_done');
+    App.vars.tmp.$status = $('#lesson_status');
+    App.vars.tmp.$date = $('#lesson_date');
+    App.vars.tmp.$begin = $('#lesson_begin');
+    App.vars.tmp.$end = $('#lesson_end');
+    App.vars.tmp.$location_pk = $('#lesson_location_pk');
+    App.vars.tmp.$course_pk = $('#lesson_course_pk');
+    App.vars.tmp.$timetable_pk = $('#lesson_timetable_pk');
     App.vars.tmp.add_lesson = function () {
-        description = $('#description').val();
-        attendance_done = $('#attendance_done').val();
-        status = $('#status').val();
-        date = $('#date').val();
-        begin = $('#begin').val();
-        end = $('#end').val();
-        location_pk = $('#location_pk').val();
-        course_pk = $('#course_pk').val();
-        App.views.add_lesson(description,attendance_done,status,date,begin,end,location_pk,course_pk);
+        description = App.vars.tmp.$description.val();
+        attendance_done = App.vars.tmp.$attendance_done.val();
+        status = App.vars.tmp.$status.val();
+        date = App.vars.tmp.$date.val();
+        begin = App.vars.tmp.$begin.val();
+        end = App.vars.tmp.$end.val();
+        location_pk = App.vars.tmp.$location.val();
+        course_pk = App.vars.tmp.$course_pk.val();
+        timetable_pk = App.vars.tmp.$timetable_pk.val();
+        App.views.add_lesson(description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk);
     };
-    App.vars.tmp.load_location_and_course = function (choice) {
-        $location = $('#location_pk');
-        $location.empty();
-        $course = $('#course_pk');
-        $course.empty();
-        if(choice.val()) {
-            Addons.request('/api/user/timetable/'+choice.val()+'/location', null, function (d) {
+    App.vars.tmp.load_location_and_course = function () {
+        choice = App.vars.tmp.$timetable_pk.val();
+        App.vars.tmp.$location_pk.empty();
+        App.vars.tmp.$course_pk.empty();
+        if(choice) {
+            Addons.request('/api/user/timetable/'+choice+'/location', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $location.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        App.vars.tmp.$location_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
-            Addons.request('/api/user/timetable/'+choice.val()+'/course', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice+'/course', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
-                        $course.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
+                        App.vars.tmp.$course_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
         };
     };
     // We load status
-    $status = $('#status');
     for (var i = 0; i < App.vars.STATUS_CHOICES.length; i++) {
-        $status.append("<option value='"+App.vars.STATUS_CHOICES[i][0]+"'>"+App.vars.STATUS_CHOICES[i][1]+"</option");
+        App.vars.tmp.$status.append("<option value='"+App.vars.STATUS_CHOICES[i][0]+"'>"+App.vars.STATUS_CHOICES[i][1]+"</option");
     };
     // We load timetable
-    App.vars.tmp.$timetable = $("#timetable_pk");
+    App.vars.tmp.$timetable = $("#lesson_timetable_pk");
     for (var i = 0; i < App.models.timetables.length; i++) {
         if (App.models.timetables[i].owner.pk == App.models.user.pk) {
             App.vars.tmp.$timetable.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
@@ -126,11 +135,15 @@
     };
     // We load previous data form if present
     if (App.vars.tmp.form) {
-        $('#description').val(App.vars.tmp.form.description);
-        $('#attendance_done').val(App.vars.tmp.form.attendance_done);
-        $('#status').val(App.vars.tmp.form.status);
-        $('#date').val(App.vars.tmp.form.date);
-        $('#begin').val(App.vars.tmp.form.begin);
-        $('#end').val(App.vars.tmp.form.end);
+        App.vars.tmp.$description.val(App.vars.tmp.form.description);
+        App.vars.tmp.$attendance_done.val(App.vars.tmp.form.attendance_done);
+        App.vars.tmp.$status.val(App.vars.tmp.form.status);
+        App.vars.tmp.date.val(App.vars.tmp.form.date);
+        App.vars.tmp.$begin.val(App.vars.tmp.form.begin);
+        App.vars.tmp.$end.val(App.vars.tmp.form.end);
+        App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
+        App.vars.tmp.load_location_and_course();
+        App.vars.tmp.$location_pk.val(App.vars.tmp.form.location_pk);
+        App.vars.tmp.$course_pk.val(App.vars.tmp.form.course_pk);
     };
 </script>
