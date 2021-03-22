@@ -59,7 +59,7 @@
 </div>
 <script type="text/javascript">
     // We define each element that we will use
-    App.vars.tmp.$name = ;
+    App.vars.tmp.$name = $('#asset_name');
     App.vars.tmp.$description = $('#asset_description');
     App.vars.tmp.$category_pk = $('#asset_category_pk');
     App.vars.tmp.$course_pk = $('#asset_course_pk');
@@ -77,7 +77,7 @@
     App.vars.tmp.load_category_and_course = function () {
         choice = App.vars.tmp.$timetable_pk.val();
         App.vars.tmp.$category_pk.empty();
-        App.vars.tmp.$course_pk_pk.empty();
+        App.vars.tmp.$course_pk.empty();
         if(choice) {
             Addons.request('/api/user/timetable/'+choice+'/category', null, function (d) {
                 if(d.code == 200) {

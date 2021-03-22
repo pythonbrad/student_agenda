@@ -359,7 +359,7 @@ App = {
 						if (App.vars.can_pass) {
 							clearInterval(App.events[0]);
 							$('#main').load('app/templates/add_asset.html');
-						}
+						};
 					}, 100);
 					// We save the data form
 			        App.vars.tmp.form = {name:name,description:description,category_pk:category_pk,course_pk:course_pk,timetable_pk:timetable_pk};
