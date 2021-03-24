@@ -182,6 +182,18 @@ App = {
 				}
 			);
 		},
+		delete_event: function (event_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/admin/timetable/event/'+event_pk+'/delete',null,
+						function (d) {
+							App.views.events();
+						},false
+					);
+				}
+			);
+		},
 		add_lesson: function (description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
 			App.views.splash(
 				function () {
@@ -213,6 +225,16 @@ App = {
 						// We load the template
 						App.vars.can_pass = 1;
 					};
+				}
+			);
+		},
+		delete_lesson: function (classe_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/admin/timetable/classe/'+classe_pk+'/delete',null,function (d) {
+						App.views.home();
+					}, false);
 				}
 			);
 		},
@@ -405,6 +427,18 @@ App = {
 						// We load the template
 						App.vars.can_pass = 1;
 					};
+				}
+			);
+		},
+		delete_asset: function (asset_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/admin/timetable/asset/'+asset_pk+'/delete',null,
+						function (d) {
+							App.views.supports();
+						},false
+					);
 				}
 			);
 		},

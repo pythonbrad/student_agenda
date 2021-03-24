@@ -232,7 +232,7 @@ def add_timetable_classe_view(request, course_pk):
 
 def delete_timetable_classe_view(request, classe_pk):
     if request.user.is_authenticated:
-        classe = Classe.objects.filter(pk=classe_pk, owner=request.user.student_set.get())
+        classe = Classe.objects.filter(pk=classe_pk, location__timetable__owner=request.user.student_set.get())
         if classe:
             classe.delete()
             return apiResponse()
@@ -364,7 +364,8 @@ def delete_course_asset_view(request, asset_pk):
     if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk, category__timetable__owner=request.user.student_set.get())
         if asset:
-            asset.delete()
+            asset[0].media.file.delete()
+            asset[0].media.delete()
             return apiResponse()
         else:
             return apiResponse(code=524)

@@ -13,7 +13,7 @@
             <br>
             <div class="row" id='child' style="display: none;">
                 <div class="card" style="width: 100%;">
-                    <p class="card-body">
+                    <div class="card-body">
                         <b>Date:</b> {{date}}<br>
                         <b>Time:</b> {{begin}} to {{end}}<br>
                         <b>Venue:</b> {{venue}}<br>
@@ -21,7 +21,14 @@
                         <b>Attendance Done:</b> <span class="text-primary">{{attendance_done}}</span><br>
                         <b>Last update:</b> <span class="text-success">{{last_update}}</span><br>
                         <b>Description:</b> {{description}}<br>
-                    </p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-info btn-sm" onclick="alert('Coming Soon...')">See more</button>
+                        <span {{admin_panel}}>
+                            <button class="btn btn-warning btn-sm" onclick='alert("Coming Soon...")//App.views.update_lesson({{classe_pk}})'>Update</button>
+                            <button class="btn btn-danger btn-sm" onclick='App.views.delete_lesson({{classe_pk}})'>Delete</button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,6 +53,9 @@
                 .replace('{{attendance_done}}', App.models.classes[i].attendance_done ? 'Yes' : 'No')
                 .replace('{{last_update}}', App.models.classes[i].updated)
                 .replace('{{description}}', App.models.classes[i].description)
+                .replace('{{admin_panel}}', (App.models.classes[i].location.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{classe_pk}}', App.models.classes[i].pk)
+                .replace('{{classe_pk}}', App.models.classes[i].pk)
             );
         };
     } else {

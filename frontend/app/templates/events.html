@@ -13,7 +13,7 @@
             <br>
             <div class="row" id='child' style="display: none;">
                 <div class="card" style="width: 100%;">
-                    <p class="card-body">
+                    <div class="card-body">
                         <b>Description:</b> {{description}}<br>
                         <b>Location:</b> {{location}}<br>
                         <b>Interested:</b> {{interested}}<br>
@@ -22,7 +22,11 @@
                         <b>Begin:</b> {{begin}}<br>
                         <b>End:</b> {{end}}<br>
                         <b>Last updated:</b> {{updated}}<br>
-                    </p>
+                    </div>
+                    <div class="card-footer" {{admin_panel}}>
+                        <button class="btn btn-warning btn-sm" onclick='alert("Coming Soon...")//App.views.update_event({{event_pk}})'>Update</button>
+                        <button class="btn btn-danger btn-sm" onclick='App.views.delete_event({{event_pk}})'>Delete</button>
+                    </div>
                 </div>
             </div>
             <hr size="#">
@@ -46,6 +50,9 @@
                 .replace('{{begin}}', App.models.events[i].begin)
                 .replace('{{end}}', App.models.events[i].end)
                 .replace('{{updated}}', App.models.events[i].updated)
+                .replace('{{admin_panel}}', (App.models.events[i].location.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{event_pk}}', App.models.events[i].pk)
+                .replace('{{event_pk}}', App.models.events[i].pk)
             );
         };
     } else {

@@ -14,13 +14,17 @@
             <br>
             <div class="row" id='child' style="display: none;">
                 <div class="card" style="width: 100%;">
-                    <p class="card-body">
+                    <div class="card-body">
                         <b>Description:</b> {{description}}<br>
                         <b>Date of publication:</b> {{pub_date}}<br>
                         <b>Type:</b> {{category}}<br>
                         <b>Number of downloading:</b> <span class="text-primary">{{nb_downloading}}</span><br>
                         <button class="btn btn-primary btn-sm" onclick='App.vars.tmp.download({{id}})'>Download</button><br>
-                    </p>
+                    </div>
+                    <div class="card-footer" {{admin_panel}}>
+                        <button class="btn btn-warning btn-sm" onclick='alert("Coming Soon...")//App.views.update_asset({{asset_pk}})'>Update</button>
+                        <button class="btn btn-danger btn-sm" onclick='App.views.delete_asset({{asset_pk}})'>Delete</button>
+                    </div>
                 </div>
             </div>
             <hr size="#">
@@ -42,6 +46,9 @@
                 .replace('{{category}}', App.models.assets[i].category.name)
                 .replace('{{nb_downloading}}', App.models.assets[i].readers.length)
                 .replace('{{id}}', i)
+                .replace('{{admin_panel}}', (App.models.assets[i].category.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{asset_pk}}', App.models.assets[i].pk)
+                .replace('{{asset_pk}}', App.models.assets[i].pk)
             );
         };
     } else {

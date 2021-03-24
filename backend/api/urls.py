@@ -22,10 +22,13 @@ urlpatterns = [
     path('admin/timetable/add', administrator.add_timetable_view),
     path('admin/media/add', administrator.add_media_view),
     path('admin/timetable/course/<int:course_pk>/classe/add', administrator.add_timetable_classe_view),
+    path('admin/timetable/classe/<int:classe_pk>/delete', administrator.delete_timetable_classe_view),
     path('admin/timetable/course/<int:course_pk>/asset/add', administrator.add_course_asset_view),
+    path('admin/timetable/asset/<int:asset_pk>/delete', administrator.delete_course_asset_view),
     path('admin/timetable/course/add', administrator.add_timetable_course_view),
     path('admin/timetable/<int:timetable_pk>/lecturer/add', administrator.add_timetable_lecturer_view),
     path('admin/timetable/<int:timetable_pk>/location/add', administrator.add_timetable_location_view),
     path('admin/timetable/<int:timetable_pk>/category/add', administrator.add_timetable_category_view),
     path('admin/timetable/event/add', administrator.add_timetable_event_view),
+    path('admin/timetable/event/<int:event_pk>/delete', administrator.delete_timetable_event_view),
 ]
