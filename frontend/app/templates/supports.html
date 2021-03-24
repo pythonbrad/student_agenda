@@ -22,7 +22,7 @@
                         <button class="btn btn-primary btn-sm" onclick='App.vars.tmp.download({{id}})'>Download</button><br>
                     </div>
                     <div class="card-footer" {{admin_panel}}>
-                        <button class="btn btn-warning btn-sm" onclick='alert("Coming Soon...")//App.views.update_asset({{asset_pk}})'>Update</button>
+                        <button class="btn btn-warning btn-sm" onclick='App.views.update_asset({{id}})'>Update</button>
                         <button class="btn btn-danger btn-sm" onclick='App.views.delete_asset({{asset_pk}})'>Delete</button>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                 .replace('{{nb_downloading}}', App.models.assets[i].readers.length)
                 .replace('{{id}}', i)
                 .replace('{{admin_panel}}', (App.models.assets[i].category.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
-                .replace('{{asset_pk}}', App.models.assets[i].pk)
+                .replace('{{id}}', i)
                 .replace('{{asset_pk}}', App.models.assets[i].pk)
             );
         };

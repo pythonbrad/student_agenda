@@ -194,6 +194,59 @@ App = {
 				}
 			);
 		},
+		update_event: function (event_id,name,description,status,date,begin,end,location_pk,timetable_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					App.vars.can_pass = 0;
+					App.events[0] = setInterval(function () {
+						// We verify if all the operations are finished
+						if (App.vars.can_pass) {
+							clearInterval(App.events[0]);
+							// We convert add event to update event
+							$('#main').load('app/templates/add_event.html', function () {
+								$('#header').html($('#header').html().replace('Add', 'Update'));
+								$('#main').html($('#main').html().replace('views.add_event(', 'views.update_event(App.vars.tmp.form.event_id,'));
+							});
+						};
+					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {event_id:event_id,name:name,description:description,status:status,date:date,begin:begin,end:end,location_pk:location_pk,timetable_pk:timetable_pk};
+					// We send data
+					if (event_id != null) {
+						if (name && description && status && date && begin && end && location_pk) {
+							Addons.request('/api/admin/timetable/event/'+App.models.events[event_id].pk+'/update',
+								{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
+								function (d) {
+									if (d.code != 200) {
+										App.vars.errors = [d.error];
+										App.vars.can_pass = 1;
+									} else {
+										App.views.events();
+									};
+								}, false);
+						} else {
+							// We save the event data in the form
+					        App.vars.tmp.form = {
+					        	name:App.models.events[event_id].name,
+					        	description:App.models.events[event_id].description,
+					        	status:App.models.events[event_id].status,
+					        	date:App.models.events[event_id].date,
+					        	begin:App.models.events[event_id].begin,
+					        	end:App.models.events[event_id].end,
+					        	location_pk:App.models.events[event_id].location.pk,
+					        	timetable_pk:App.models.events[event_id].location.timetable.pk,
+					        	event_id:event_id
+					        };
+							// We load the template
+							App.vars.can_pass = 1;
+						};
+					} else {
+						App.views.events();
+					};
+				}
+			);
+		},
 		add_lesson: function (description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
 			App.views.splash(
 				function () {
@@ -235,6 +288,60 @@ App = {
 					Addons.request('/api/admin/timetable/classe/'+classe_pk+'/delete',null,function (d) {
 						App.views.home();
 					}, false);
+				}
+			);
+		},
+		update_lesson: function (lesson_id,description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					App.vars.can_pass = 0;
+					App.events[0] = setInterval(function () {
+						// We verify if all the operations are finished
+						if (App.vars.can_pass) {
+							clearInterval(App.events[0]);
+							// We convert add lesson to update lesson
+							$('#main').load('app/templates/add_lesson.html', function () {
+								$('#header').html($('#header').html().replace('Add', 'Update'));
+								$('#main').html($('#main').html().replace('views.add_lesson(', 'views.update_lesson(App.vars.tmp.form.lesson_id,'));
+							});
+						};
+					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end,location_pk:location_pk,course_pk:course_pk,timetable_pk:timetable_pk,lesson_id:lesson_id};
+					// We send data
+					if (lesson_id != null) {
+						if (description && attendance_done && status && date && begin && end && location_pk && course_pk) {
+							Addons.request('/api/admin/timetable/classe/'+App.models.classes[lesson_id].pk+'/update',
+								{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
+								function (d) {
+									if (d.code != 200) {
+										App.vars.errors = [d.error];
+										App.vars.can_pass = 1;
+									} else {
+										App.views.home();
+									};
+								}, false);
+						} else {
+							// We save the lesson data in the form
+					        App.vars.tmp.form = {
+					        	description:App.models.classes[lesson_id].description,
+					        	attendance_done:App.models.classes[lesson_id].attendance_done ? 1 : 0,
+					        	status:App.models.classes[lesson_id].status,
+					        	date:App.models.classes[lesson_id].date,
+					        	begin:App.models.classes[lesson_id].begin,
+					        	end:App.models.classes[lesson_id].end,
+					        	location_pk:App.models.classes[lesson_id].location.pk,
+					        	course_pk:App.models.classes[lesson_id].course.pk,
+					        	timetable_pk:App.models.classes[lesson_id].location.timetable.pk,
+					        	lesson_id:lesson_id
+					        };
+							// We load the template
+							App.vars.can_pass = 1;
+						};
+					} else {
+						App.views.home();
+					};
 				}
 			);
 		},
@@ -439,6 +546,57 @@ App = {
 							App.views.supports();
 						},false
 					);
+				}
+			);
+		},
+		update_asset: function (asset_id, name, description, category_pk, course_pk, files, timetable_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					App.vars.can_pass = 0;
+					App.events[0] = setInterval(function () {
+						// We verify if all the operations are finished
+						if (App.vars.can_pass) {
+							clearInterval(App.events[0]);
+							// We convert add asset to update asset
+							$('#main').load('app/templates/add_asset.html', function () {
+								$('#asset_media').parent().hide();
+								$('#header').html($('#header').html().replace('Add', 'Update'));
+								$('#main').html($('#main').html().replace('views.add_asset(', 'views.update_asset(App.vars.tmp.form.asset_id,'));
+							});
+						};
+					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {name:name,description:description,category_pk:category_pk,course_pk:course_pk,timetable_pk:timetable_pk,asset_id:asset_id};
+					// We send data
+					if (asset_id != null) {
+						if (name && description && category_pk && course_pk) {
+							Addons.request('/api/admin/timetable/asset/'+App.models.assets[asset_id].pk+'/update',
+								{name:name,description:description,category:category_pk,course:course_pk},
+								function (d) {
+									if (d.code != 200) {
+										App.vars.errors = [d.error];
+										App.vars.can_pass = 1;
+									} else {
+										App.views.supports();
+									};
+								}, false);
+						} else {
+							// We save the lesson data in the form
+					        App.vars.tmp.form = {
+					        	name:App.models.assets[asset_id].name,
+					        	description:App.models.assets[asset_id].description,
+					        	category_pk:App.models.assets[asset_id].category.pk,
+					        	course_pk:App.models.assets[asset_id].course.pk,
+					        	timetable_pk:App.models.assets[asset_id].category.timetable.pk,
+					        	asset_id:asset_id
+					        };
+							// We load the template
+							App.vars.can_pass = 1;
+						};
+					} else {
+						App.views.supports();
+					};
 				}
 			);
 		},

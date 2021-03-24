@@ -24,7 +24,7 @@
                         <b>Last updated:</b> {{updated}}<br>
                     </div>
                     <div class="card-footer" {{admin_panel}}>
-                        <button class="btn btn-warning btn-sm" onclick='alert("Coming Soon...")//App.views.update_event({{event_pk}})'>Update</button>
+                        <button class="btn btn-warning btn-sm" onclick='App.views.update_event({{id}})'>Update</button>
                         <button class="btn btn-danger btn-sm" onclick='App.views.delete_event({{event_pk}})'>Delete</button>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                 .replace('{{end}}', App.models.events[i].end)
                 .replace('{{updated}}', App.models.events[i].updated)
                 .replace('{{admin_panel}}', (App.models.events[i].location.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
-                .replace('{{event_pk}}', App.models.events[i].pk)
+                .replace('{{id}}', i)
                 .replace('{{event_pk}}', App.models.events[i].pk)
             );
         };

@@ -191,7 +191,7 @@ class Asset(models.Model):
         verbose_name_plural = "Assets"
 
     def __str__(self):
-        return self.course + ':' + self.category
+        return str(self.course) + ':' + str(self.category)
 
     def get_as_json(self):
         return {
