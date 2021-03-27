@@ -600,7 +600,7 @@ App = {
 				}
 			);
 		},
-		home: function () {
+		home: function (next_day=0) {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -612,8 +612,13 @@ App = {
 							// We load the home page
 							App.views.base(
 								function () {
-									$('#contains').load('app/templates/home.html');
 									$('#header').load('app/templates/home_header.html');
+									$('#contains').load('app/templates/home.html', function () {
+										$('#next_day').click(function () {
+											App.views.home(next_day+1);
+										});
+										$('#next_day').text('now + '+(next_day+1)+' day'+(next_day?'s':''));
+									});
 								}
 							);
 						};
@@ -621,7 +626,7 @@ App = {
 					// We get datas
 					App.models.classes = [];
 					for (var i = 0; i < App.models.timetables.length; i++) {
-						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/classe', null, function (d) {
+						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/classe/'+next_day, null, function (d) {
 							if (d.code == 200) {
 								for (var ii = 0; ii < d.result.length; ii++) {
 									App.models.classes.push(d.result[ii]);
@@ -670,7 +675,7 @@ App = {
 				}
 			);
 		},
-		events: function () {
+		events: function (next_day=0) {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -682,8 +687,13 @@ App = {
 							// We load the page
 							App.views.base(
 								function () {
-									$('#contains').load('app/templates/events.html');
 									$('#header').load('app/templates/events_header.html');
+									$('#contains').load('app/templates/events.html', function () {
+										$('#next_day').click(function () {
+											App.views.events(next_day+1);
+										});
+										$('#next_day').text('now + '+(next_day+1)+' day'+(next_day?'s':''));
+									});
 								}
 							);
 						};
@@ -691,7 +701,7 @@ App = {
 					// We get datas
 					App.models.events = [];
 					for (var i = 0; i < App.models.timetables.length; i++) {
-						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/event', null, function (d) {
+						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/event/'+next_day, null, function (d) {
 							if (d.code == 200) {
 								for (var ii = 0; ii < d.result.length; ii++) {
 									App.models.events.push(d.result[ii]);
