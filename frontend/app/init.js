@@ -36,6 +36,7 @@ App = {
 						if (d.code == 200) {
 							App.vars.is_login = 1;
 							App.models.user = {username: d.result.username, pk: d.result.pk};
+							App.vars.now = d.result.last_login;
 						} else {
 							App.vars.is_login = 0;
 						}
@@ -623,20 +624,8 @@ App = {
 							);
 						};
 					}, 100);
-					// We get datas
-					App.models.classes = [];
-					for (var i = 0; i < App.models.timetables.length; i++) {
-						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/classe/'+next_day, null, function (d) {
-							if (d.code == 200) {
-								for (var ii = 0; ii < d.result.length; ii++) {
-									App.models.classes.push(d.result[ii]);
-								};
-							};
-							if (i+1 == App.models.timetables.length) {
-								App.vars.can_pass = 1;
-							};
-						}, false);
-					};
+					// We get data
+					App.vars.get_lessons(next_day);
 				}
 			);
 		},
@@ -698,20 +687,8 @@ App = {
 							);
 						};
 					}, 100);
-					// We get datas
-					App.models.events = [];
-					for (var i = 0; i < App.models.timetables.length; i++) {
-						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/event/'+next_day, null, function (d) {
-							if (d.code == 200) {
-								for (var ii = 0; ii < d.result.length; ii++) {
-									App.models.events.push(d.result[ii]);
-								};
-							};
-							if (i+1 == App.models.timetables.length) {
-								App.vars.can_pass = 1;
-							};
-						}, false);
-					};
+					// We get data
+					App.vars.get_events(next_day);
 				}
 			);
 		},
@@ -840,6 +817,82 @@ App = {
 				}
 			);
 		},
+		calendar: function () {
+			App.views.splash(function () {
+				// We load datas
+				App.vars.get_lessons();
+				App.vars.get_events();
+				// We config the calendar
+				moment.locale('en');
+				/**
+					* Many events
+				*/
+				var events = [
+			        /*{
+			        	start: now.startOf('week').add(9, 'h').format('X'),
+			        	end: now.startOf('week').add(10, 'h').format('X'),
+			          	title: '1',
+			          	content: 'Hello World! <br> <p>Foo Bar</p>',
+			          	category:'Professionnal'
+			        },*/
+			    ];
+			    for (var i=0; i < App.models.classes.length; i++) {
+			    	var now = moment(App.models.classes[i].date);
+			    	var begin = App.models.classes[i].begin.split(':');
+			    	var end = App.models.classes[i].end.split(':');
+			    	events.push({
+			    		start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
+			        	end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
+			        	title: App.models.classes[i].course.name,
+			          	content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[App.models.classes[i].status]+"<br>\
+                        <b>Attendance Done:</b> "+App.models.classes[i].attendance_done+"<br>\
+                        <b>Last update:</b> "+App.models.classes[i].updated+"<br>\
+                        <b>Description:</b> "+App.models.classes[i].description+"<br>",
+			          	category: App.models.classes[i].course.code
+			    	});
+			    };
+			    for (var i=0; i < App.models.events.length; i++) {
+			    	var now = moment(App.models.events[i].date);
+			    	var begin = App.models.events[i].begin.split(':');
+			    	var end = App.models.events[i].end.split(':');
+			    	events.push({
+			    		start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
+			        	end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
+			        	title: App.models.events[i].name,
+			          	content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[App.models.events[i].status]+"<br>\
+                        <b>Venue:</b> "+App.models.events[i].location.name+"<br>\
+                        <b>Last update:</b> "+App.models.events[i].updated+"<br>\
+                        <b>Description:</b> "+App.models.events[i].description+"<br>",
+			          	category: "Event",
+			    	});
+			    };
+			    /**
+		      		* A daynote
+		       	*/
+		      	var daynotes = [
+			        /*{
+			        	time: now.startOf('week').add(15, 'h').add(30, 'm').format('X'),
+			          	title: 'Leo\'s holiday',
+			          	content: 'yo',
+			          	category: 'holiday'
+			        },*/
+		      	];
+			    /**
+			    * Init the calendar
+			    */
+		      	var calendar = $('#main').Calendar({
+		        	locale: 'en',
+		        	weekday: {
+		        		timeline: {
+		            		intervalMinutes: 30,
+		            		fromHour: 7
+		        		},
+		        	},
+		        	events: events,
+		        	daynotes: daynotes
+		      	}).init();
+			});
+		},
 	},
 	models: {},
 	events: {},
@@ -847,6 +900,38 @@ App = {
 		errors: [],
 		tmp: {},
 		is_login: 0,
+		get_lessons: function (next_day) {
+			// We get datas
+			App.models.classes = [];
+			for (var i = 0; i < App.models.timetables.length; i++) {
+				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/classe'+((next_day != null)?'/'+next_day:''), null, function (d) {
+					if (d.code == 200) {
+						for (var ii = 0; ii < d.result.length; ii++) {
+							App.models.classes.push(d.result[ii]);
+						};
+					};
+					if (i+1 == App.models.timetables.length) {
+						App.vars.can_pass = 1;
+					};
+				}, false);
+			};
+		},
+		get_events: function (next_day) {
+			// We get datas
+			App.models.events = [];
+			for (var i = 0; i < App.models.timetables.length; i++) {
+				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/event'+((next_day != null)?'/'+next_day:''), null, function (d) {
+					if (d.code == 200) {
+						for (var ii = 0; ii < d.result.length; ii++) {
+							App.models.events.push(d.result[ii]);
+						};
+					};
+					if (i+1 == App.models.timetables.length) {
+						App.vars.can_pass = 1;
+					};
+				}, false);
+			};
+		},
 	},
 };
 

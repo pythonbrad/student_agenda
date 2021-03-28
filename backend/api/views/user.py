@@ -147,12 +147,14 @@ def get_status_choice_view(request):
         return apiResponse(code=611)
 
 
-def get_timetable_classes_view(request, timetable_pk, next_day=0):
+def get_timetable_classes_view(request, timetable_pk, next_day=None):
     if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             current_date = timezone.now().date()
-            classes = Classe.objects.filter(location__timetable=timetable[0], date=current_date+timezone.timedelta(next_day)).order_by('begin')
+            classes = Classe.objects.filter(location__timetable=timetable[0])
+            if next_day != None:
+                classes = classes.filter(date=current_date+timezone.timedelta(next_day)).order_by('begin')
             return apiResponse(
                 result=[classe.get_as_json() for classe in classes])
         else:
@@ -286,13 +288,15 @@ def unset_asset_reader_view(request, asset_pk):
         return apiResponse(code=618)
 
 
-def get_timetable_event_view(request, timetable_pk, next_day=0):
+def get_timetable_event_view(request, timetable_pk, next_day=None):
     if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
             current_date = timezone.now().date()
-            events = Event.objects.filter(location__timetable=timetable, date=current_date+timezone.timedelta(next_day)).order_by('begin')
+            events = Event.objects.filter(location__timetable=timetable)
+            if next_day != None:
+                events = events.filter(date=current_date+timezone.timedelta(next_day)).order_by('begin')
             return apiResponse(result=[event.get_as_json() for event in events])
         else:
             return apiResponse(code=518)
