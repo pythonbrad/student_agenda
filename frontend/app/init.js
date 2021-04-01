@@ -824,48 +824,40 @@ App = {
 				App.vars.get_events();
 				// We config the calendar
 				moment.locale('en');
-				/**
-					* Many events
-				*/
-				var events = [
-			        /*{
-			        	start: now.startOf('week').add(9, 'h').format('X'),
-			        	end: now.startOf('week').add(10, 'h').format('X'),
-			          	title: '1',
-			          	content: 'Hello World! <br> <p>Foo Bar</p>',
-			          	category:'Professionnal'
-			        },*/
-			    ];
-			    for (var i=0; i < App.models.classes.length; i++) {
-			    	var now = moment(App.models.classes[i].date);
-			    	var begin = App.models.classes[i].begin.split(':');
-			    	var end = App.models.classes[i].end.split(':');
-			    	events.push({
-			    		start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
-			        	end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
-			        	title: App.models.classes[i].course.name,
-			          	content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[App.models.classes[i].status]+"<br>\
-                        <b>Attendance Done:</b> "+App.models.classes[i].attendance_done+"<br>\
-                        <b>Last update:</b> "+App.models.classes[i].updated+"<br>\
-                        <b>Description:</b> "+App.models.classes[i].description+"<br>",
-			          	category: App.models.classes[i].course.code
-			    	});
-			    };
-			    for (var i=0; i < App.models.events.length; i++) {
-			    	var now = moment(App.models.events[i].date);
-			    	var begin = App.models.events[i].begin.split(':');
-			    	var end = App.models.events[i].end.split(':');
-			    	events.push({
-			    		start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
-			        	end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
-			        	title: App.models.events[i].name,
-			          	content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[App.models.events[i].status]+"<br>\
-                        <b>Venue:</b> "+App.models.events[i].location.name+"<br>\
-                        <b>Last update:</b> "+App.models.events[i].updated+"<br>\
-                        <b>Description:</b> "+App.models.events[i].description+"<br>",
-			          	category: "Event",
-			    	});
-			    };
+				var datas = App.models.classes;
+                for (var i = 0; i < App.models.events.length; i++) {
+                    datas.push(App.models.events[i]);
+                };
+                // We config the calendar
+                moment.locale('en');
+                /**
+                    * Many events
+                */
+                var events = [
+                    /*{
+                        start: now.startOf('week').add(9, 'h').format('X'),
+                        end: now.startOf('week').add(10, 'h').format('X'),
+                        title: '1',
+                        content: 'Hello World! <br> <p>Foo Bar</p>',
+                        category:'Professionnal'
+                    },*/
+                ];
+                for (var i=0; i < datas.length; i++) {
+                    var now = moment(datas[i].date);
+                    var begin = datas[i].begin.split(':');
+                    var end = datas[i].end.split(':');
+                    events.push({
+                        start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
+                        end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
+                        title: datas[i].course ? datas[i].course.name : datas[i].name,
+                        content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[datas[i].status]+"<br>\
+                        "+(datas[i].attendance_done ? ("<b>Attendance Done:</b> "+datas[i].attendance_done+"<br>") : "")+"\
+                        <b>Venue:</b> "+datas[i].location.name+"<br>\
+                        <b>Last update:</b> "+datas[i].updated+"<br>\
+                        <b>Description:</b> "+datas[i].description+"<br>",
+                        category: datas[i].course ? datas[i].course.code : "Event"
+                    });
+                };
 			    /**
 		      		* A daynote
 		       	*/
