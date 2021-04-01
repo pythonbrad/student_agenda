@@ -9,14 +9,24 @@ App = {
 			$('#main').load('app/templates/base.html', next);
 		},
 		splash: function (next=function () {}) {
+			// We show the splash
 			$('#main').empty();
+			$('#main').hide();
+			$('#splash').show();
+			// We do minor operations
 			// We clean last error, delete all events and tmp datas
 			App.vars.errors = [];
 			App.vars.tmp = {};
+			App.vars.can_pass = 0;
 			for (var i = 0; i < 100; i++) {
 				clearInterval(App.events[i]);
 			};
-			$('#main').load('app/templates/splash.html',next);
+			// We execute the somes operations
+			next();
+			// Finally, we show the main page
+			$('#splash').hide(100, function () {
+				$('#main').show();
+			});
 		},
 		error: function () {
 			$('#main').empty();
@@ -26,10 +36,9 @@ App = {
 			App.views.splash(
 				function () {
 					// We config it to permit to splash screen should be showed if the datas are fast loaded
-					App.vars.can_pass = 0;
 					App.events[0] = setTimeout(function () {
 						App.vars.can_pass = 1;
-					}, 3000);
+					}, 1000);
 					// We perform operation
 					// We verify if already login
 					Addons.request('/api/auth/login', null, function (d) {
@@ -80,7 +89,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -121,7 +129,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -154,7 +161,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -199,7 +205,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -252,7 +257,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -296,7 +300,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -350,7 +353,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -383,7 +385,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -416,7 +417,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -449,7 +449,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -482,7 +481,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					MAX_SIZE = 1024*1024*10;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
@@ -554,7 +552,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -605,7 +602,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -633,7 +629,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -668,7 +663,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -710,7 +704,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -744,7 +737,6 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					App.vars.can_pass = 0;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -946,5 +938,8 @@ $(document).ajaxError(function () {
 	App.views.error();
 })
 
-// We launch the default page
-App.views.index();
+// We load the final splash
+$('#splash').load('app/templates/splash.html', function () {
+	// We launch the default page
+	App.views.index();
+});
