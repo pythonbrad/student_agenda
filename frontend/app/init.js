@@ -39,7 +39,7 @@ App = {
 							App.vars.now = d.result.last_login;
 						} else {
 							App.vars.is_login = 0;
-						}
+						};
 						// We load the next view
 						App.events[1] = setInterval(function () {
 							// We verify if all the operations are finished
@@ -53,8 +53,8 @@ App = {
 								            App.vars.STATUS_CHOICES_DICT = {};
 								            for(i=0;i<d.result.length;i++) {
 								                App.vars.STATUS_CHOICES_DICT[d.result[i][0]] = d.result[i][1];
-								            }
-								        }
+								            };
+								        };
 								    }, true);
 									// We verify if least 1 timetable is already follow
 									Addons.request('/api/user/timetable/follow', null, function (d) {
@@ -64,7 +64,7 @@ App = {
 											App.views.home();
 										} else {
 											App.views.choose_timetable();
-										}
+										};
 									}, true);
 								} else {
 									// We load the login view
@@ -819,70 +819,84 @@ App = {
 		},
 		calendar: function () {
 			App.views.splash(function () {
-				// We load datas
+				// We load the lessons
 				App.vars.get_lessons();
-				App.vars.get_events();
-				// We config the calendar
-				moment.locale('en');
-				var datas = App.models.classes;
-                for (var i = 0; i < App.models.events.length; i++) {
-                    datas.push(App.models.events[i]);
-                };
-                // We config the calendar
-                moment.locale('en');
-                /**
-                    * Many events
-                */
-                var events = [
-                    /*{
-                        start: now.startOf('week').add(9, 'h').format('X'),
-                        end: now.startOf('week').add(10, 'h').format('X'),
-                        title: '1',
-                        content: 'Hello World! <br> <p>Foo Bar</p>',
-                        category:'Professionnal'
-                    },*/
-                ];
-                for (var i=0; i < datas.length; i++) {
-                    var now = moment(datas[i].date);
-                    var begin = datas[i].begin.split(':');
-                    var end = datas[i].end.split(':');
-                    events.push({
-                        start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
-                        end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
-                        title: datas[i].course ? datas[i].course.name : datas[i].name,
-                        content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[datas[i].status]+"<br>\
-                        "+(datas[i].attendance_done ? ("<b>Attendance Done:</b> "+datas[i].attendance_done+"<br>") : "")+"\
-                        <b>Venue:</b> "+datas[i].location.name+"<br>\
-                        <b>Last update:</b> "+datas[i].updated+"<br>\
-                        <b>Description:</b> "+datas[i].description+"<br>",
-                        category: datas[i].course ? datas[i].course.code : "Event"
-                    });
-                };
-			    /**
-		      		* A daynote
-		       	*/
-		      	var daynotes = [
-			        /*{
-			        	time: now.startOf('week').add(15, 'h').add(30, 'm').format('X'),
-			          	title: 'Leo\'s holiday',
-			          	content: 'yo',
-			          	category: 'holiday'
-			        },*/
-		      	];
-			    /**
-			    * Init the calendar
-			    */
-		      	var calendar = $('#main').Calendar({
-		        	locale: 'en',
-		        	weekday: {
-		        		timeline: {
-		            		intervalMinutes: 30,
-		            		fromHour: 7
-		        		},
-		        	},
-		        	events: events,
-		        	daynotes: daynotes
-		      	}).init();
+				App.events[1] = setInterval(function () {
+					// We verify if the operation is finished
+					if (App.vars.can_pass) {
+						clearInterval(App.events[1]);
+						// We load the events
+						App.vars.can_pass = 0;
+						App.vars.get_events();
+						App.events[1] = setInterval(function () {
+							// We verify if the operation is finished
+							if (App.vars.can_pass) {
+								clearInterval(App.events[1]);
+								// We config the calendar
+								moment.locale('en');
+								var datas = App.models.classes;
+				                for (var i = 0; i < App.models.events.length; i++) {
+				                    datas.push(App.models.events[i]);
+				                };
+				                // We config the calendar
+				                moment.locale('en');
+				                /**
+				                    * Many events
+				                */
+				                var events = [
+				                    /*{
+				                        start: now.startOf('week').add(9, 'h').format('X'),
+				                        end: now.startOf('week').add(10, 'h').format('X'),
+				                        title: '1',
+				                        content: 'Hello World! <br> <p>Foo Bar</p>',
+				                        category:'Professionnal'
+				                    },*/
+				                ];
+				                for (var i=0; i < datas.length; i++) {
+				                    var now = moment(datas[i].date);
+				                    var begin = datas[i].begin.split(':');
+				                    var end = datas[i].end.split(':');
+				                    events.push({
+				                        start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
+				                        end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
+				                        title: datas[i].course ? datas[i].course.name : datas[i].name,
+				                        content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[datas[i].status]+"<br>\
+				                        "+(datas[i].attendance_done ? ("<b>Attendance Done:</b> "+datas[i].attendance_done+"<br>") : "")+"\
+				                        <b>Venue:</b> "+datas[i].location.name+"<br>\
+				                        <b>Last update:</b> "+datas[i].updated+"<br>\
+				                        <b>Description:</b> "+datas[i].description+"<br>",
+				                        category: datas[i].course ? datas[i].course.code : "Event"
+				                    });
+				                };
+							    /**
+						      		* A daynote
+						       	*/
+						      	var daynotes = [
+							        /*{
+							        	time: now.startOf('week').add(15, 'h').add(30, 'm').format('X'),
+							          	title: 'Leo\'s holiday',
+							          	content: 'yo',
+							          	category: 'holiday'
+							        },*/
+						      	];
+							    /**
+							    * Init the calendar
+							    */
+						      	var calendar = $('#main').Calendar({
+						        	locale: 'en',
+						        	weekday: {
+						        		timeline: {
+						            		intervalMinutes: 30,
+						            		fromHour: 7
+						        		},
+						        	},
+						        	events: events,
+						        	daynotes: daynotes
+						      	}).init();
+						    };
+						});
+					};
+				});
 			});
 		},
 	},
