@@ -9,65 +9,67 @@
     </div>
 </div>
 <script type="text/javascript">
-    // We config the calendar
-    moment.locale('en');
-    var datas = App.models.classes;
-    for (var i = 0; i < App.models.events.length; i++) {
-        datas.push(App.models.events[i]);
-    };
-    // We config the calendar
-    moment.locale('en');
-    /**
-        * Many events
-    */
-    var events = [
-        /*{
-            start: now.startOf('week').add(9, 'h').format('X'),
-            end: now.startOf('week').add(10, 'h').format('X'),
-            title: '1',
-            content: 'Hello World! <br> <p>Foo Bar</p>',
-            category:'Professionnal'
-        },*/
-    ];
-    for (var i=0; i < datas.length; i++) {
-        var now = moment(datas[i].date);
-        var begin = datas[i].begin.split(':');
-        var end = datas[i].end.split(':');
-        events.push({
-            start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
-            end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
-            title: datas[i].course ? datas[i].course.name : datas[i].name,
-            content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[datas[i].status]+"<br>\
-            "+(datas[i].attendance_done ? ("<b>Attendance Done:</b> "+datas[i].attendance_done+"<br>") : "")+"\
-            <b>Venue:</b> "+datas[i].location.name+"<br>\
-            <b>Last update:</b> "+datas[i].updated+"<br>\
-            <b>Description:</b> "+datas[i].description+"<br>",
-            category: datas[i].course ? datas[i].course.code : "Event"
-        });
-    };
-    /**
-        * A daynote
-    */
-    var daynotes = [
-        /*{
-            time: now.startOf('week').add(15, 'h').add(30, 'm').format('X'),
-            title: 'Leo\'s holiday',
-            content: 'yo',
-            category: 'holiday'
-        },*/
-    ];
-    /**
-    * Init the calendar
-    */
-    var calendar = $('#body').Calendar({
-        locale: 'en',
-        weekday: {
-            timeline: {
-                intervalMinutes: 30,
-                fromHour: 7
+    (function () {
+        // We config the calendar
+        moment.locale('en');
+        var datas = App.models.classes;
+        for (var i = 0; i < App.models.events.length; i++) {
+            datas.push(App.models.events[i]);
+        };
+        // We config the calendar
+        moment.locale('en');
+        /**
+            * Many events
+        */
+        var events = [
+            /*{
+                start: now.startOf('week').add(9, 'h').format('X'),
+                end: now.startOf('week').add(10, 'h').format('X'),
+                title: '1',
+                content: 'Hello World! <br> <p>Foo Bar</p>',
+                category:'Professionnal'
+            },*/
+        ];
+        for (var i=0; i < datas.length; i++) {
+            var now = moment(datas[i].date);
+            var begin = datas[i].begin.split(':');
+            var end = datas[i].end.split(':');
+            events.push({
+                start: now.startOf('day').add(begin[0], 'h').add(begin[1], 'm').format('X'),
+                end: now.startOf('day').add(end[0], 'h').add(end[1], 'm').format('X'),
+                title: datas[i].course ? datas[i].course.name : datas[i].name,
+                content: "<b>Status:</b> "+App.vars.STATUS_CHOICES_DICT[datas[i].status]+"<br>\
+                "+(datas[i].course ? ("<b>Attendance Done:</b> "+datas[i].attendance_done+"<br>") : "")+"\
+                <b>Venue:</b> "+datas[i].location.name+"<br>\
+                <b>Last update:</b> "+datas[i].updated+"<br>\
+                <b>Description:</b> "+datas[i].description+"<br>"
+                category: datas[i].course ? datas[i].course.code : "Event"
+            });
+        };
+        /**
+            * A daynote
+        */
+        var daynotes = [
+            /*{
+                time: now.startOf('week').add(15, 'h').add(30, 'm').format('X'),
+                title: 'Leo\'s holiday',
+                content: 'yo',
+                category: 'holiday'
+            },*/
+        ];
+        /**
+        * Init the calendar
+        */
+        var calendar = $('#body').Calendar({
+            locale: 'en',
+            weekday: {
+                timeline: {
+                    intervalMinutes: 30,
+                    fromHour: 7
+                },
             },
-        },
-        events: events,
-        daynotes: daynotes
-    }).init();
+            events: events,
+            daynotes: daynotes
+        }).init();
+    })();
 </script>
