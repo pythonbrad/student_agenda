@@ -5,28 +5,31 @@ App = {
 	views: {
 		// For the moment load just the pages
 		base: function (next=function () {}) {
-			$('#main').empty();
 			$('#main').load('app/templates/base.html', next);
 		},
-		splash: function (next=function () {}) {
-			// We show the splash
-			$('#main').empty();
-			$('#main').hide();
-			$('#splash').show();
-			// We do minor operations
-			// We clean last error, delete all events and tmp datas
-			App.vars.errors = [];
-			App.vars.tmp = {};
-			App.vars.can_pass = 0;
-			for (var i = 0; i < 100; i++) {
-				clearInterval(App.events[i]);
+		splash: function (next, option) {
+			if(option==null || option=='show') {
+				// We show the splash
+				$('#splash').show();
+				$('#main').hide();
+				$('#main').empty();
 			};
-			// We execute the somes operations
-			next();
-			// Finally, we show the main page
-			$('#splash').hide(100, function () {
+			// We do minor operations
+			if(next != null) {
+				// We clean last error, delete all events and tmp datas
+				App.vars.errors = [];
+				App.vars.tmp = {};
+				App.vars.can_pass = 0;
+				for (var i = 0; i < 100; i++) {
+					clearInterval(App.events[i]);
+				};
+				// We execute the somes operations
+				next();
+			};
+			if (option==null || option=='hide') {
 				$('#main').show();
-			});
+				$('#splash').hide();
+			};
 		},
 		error: function () {
 			$('#main').empty();
@@ -826,9 +829,9 @@ App = {
 								clearInterval(App.events[1]);
 								$('#main').load('app/templates/calendar.html');
 						    };
-						});
+						}, 100);
 					};
-				});
+				}, 100);
 			});
 		},
 	},
@@ -877,6 +880,15 @@ App = {
 $(document).ajaxError(function () {
 	App.views.error();
 })
+
+// We cofig the splash
+$(document).ajaxStart(function() {
+	// We show the splash
+	App.views.splash(null, 'show')
+}).ajaxStop(function() {
+	// Finally, we show the main page
+	App.views.splash(null, 'hide')
+});
 
 // We load the final splash
 $('#splash').load('app/templates/splash.html', function () {
