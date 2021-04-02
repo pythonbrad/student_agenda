@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 STATUS_CHOICES = (
     ('w', 'Waiting'),
@@ -274,3 +276,9 @@ class Notification(models.Model):
             'pk': str(self.pk),
             'description': self.description,
         }
+
+# Signals
+# Delete file when media delete
+@receiver(pre_delete, sender=Asset)
+def delete_media(sender, instance, **kwargs):
+    instance.media.file.delete()

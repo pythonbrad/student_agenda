@@ -30,8 +30,11 @@
                             <b>Followers:</b> {{followers}}<br>
                             <b>Description:</b><br>{{description}}<br>
                             <b>Admin:</b> {{owner}}<br>
-                            <button class="btn btn-{{color}} btn-sm" onclick="App.views.choose_timetable({{pk}},{{reverse}})">{{action}}</button><br>
                         </p>
+                        <div class="card-footer">
+                            <button class="btn btn-{{color}} btn-sm" onclick="App.views.choose_timetable({{pk}},{{reverse}})">{{action}}</button>
+                            <button class="btn btn-danger btn-sm" onclick="App.views.delete_timetable({{pk}})" {{admin_panel}}>Delete</button>
+                        </div>
                     </div>
                 </div>
                 <hr size="#">
@@ -69,13 +72,15 @@
             }
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{pk}}', App.models.timetables[timetable_id].pk)
+                .replace('{{pk}}', App.models.timetables[timetable_id].pk)
                 .replace('{{name}}', App.models.timetables[timetable_id].name)
                 .replace('{{description}}', App.models.timetables[timetable_id].description)
                 .replace('{{owner}}', App.models.timetables[timetable_id].owner.username)
                 .replace('{{action}}', App.vars.tmp.followed ? "Unfollow" : "Follow")
-                .replace('{{color}}', App.vars.tmp.followed ? "danger" : "primary")
+                .replace('{{color}}', App.vars.tmp.followed ? "warning" : "primary")
                 .replace('{{reverse}}', App.vars.tmp.followed ? 1 : 0)
                 .replace('{{followers}}', App.models.timetables[timetable_id].followers.length)
+                .replace('{{admin_panel}}', (App.models.timetables[timetable_id].owner.pk == App.models.user.pk) ? '' : 'hidden')
             );
         };
     } else {

@@ -378,8 +378,7 @@ def delete_course_asset_view(request, asset_pk):
     if request.user.is_authenticated:
         asset = Asset.objects.filter(pk=asset_pk, category__timetable__owner=request.user.student_set.get())
         if asset:
-            asset[0].media.file.delete()
-            asset[0].media.delete()
+            asset[0].delete()
             return apiResponse()
         else:
             return apiResponse(code=524)
