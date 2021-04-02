@@ -28,6 +28,7 @@ class Student(models.Model):
             'username': self.user.username,
             'email': self.user.email,
             'last_login': self.user.last_login,
+            'date_joined': self.user.date_joined,
         }
 
 class Absent(models.Model):
@@ -44,8 +45,8 @@ class Absent(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
-            'user': self.student.get_as_json(),
+            'pk': self.pk,
+            'user': self.student.pk,
             'description': self.description,
             'time': self.time,
         }
@@ -67,11 +68,11 @@ class Timetable(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
             'description': self.description,
-            'moderators': [moderator.get_as_json() for moderator in self.moderators.all()],
-            'followers': [follower.get_as_json() for follower in self.followers.all()],
+            'moderators': self.moderators.count(),
+            'followers': self.followers.count(),
             'owner': self.owner.get_as_json()
         }
 
@@ -88,9 +89,9 @@ class Lecturer(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
-            'timetable': self.timetable.get_as_json(),
+            'timetable_pk': self.timetable.pk,
         }
 
 class Course(models.Model):
@@ -109,12 +110,12 @@ class Course(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
             'description': self.description,
             'code': self.code,
-            'lecturers': [lecturer.get_as_json() for lecturer in self.lecturers.all()],
-            'followers': [follower.get_as_json() for follower in self.followers.all()],
+            'lecturers': self.lecturers.count(),
+            'followers': self.followers.count(),
         }
 
 class Classe(models.Model):
@@ -138,14 +139,14 @@ class Classe(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'description': self.description,
             'location': self.location.get_as_json(),
             'course': self.course.get_as_json(),
             'date': self.date,
             'status': self.status,
             'attendance_done': self.attendance_done,
-            'absents': [absent.get_as_json() for absent in self.absents.all()],
+            'absents': self.absents.count(),
             'begin': self.begin,
             'end': self.end,
             'updated': self.updated,
@@ -165,10 +166,10 @@ class Location(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
             'description': self.description,
-            'timetable': self.timetable.get_as_json(),
+            'timetable_pk': self.timetable.pk,
         }
 
 class Media(models.Model):
@@ -197,12 +198,12 @@ class Asset(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
             'description': self.description,
             'category': self.category.get_as_json(),
             'course': self.course.get_as_json(),
-            'readers': [reader.get_as_json() for reader in self.readers.all()],
+            'readers': self.readers.count(),
             'pub_date': self.pub_date,
             'url': self.media.file.url,
         }
@@ -221,10 +222,10 @@ class Category(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
             'description': self.description,
-            'timetable': self.timetable.get_as_json(),
+            'timetable_pk': self.timetable.pk,
         }
 
 class Event(models.Model):
@@ -247,11 +248,11 @@ class Event(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'name': self.name,
             'description': self.description,
             'location': self.location.get_as_json(),
-            'interested': [i.get_as_json() for i in self.interested.all()],
+            'interested': self.interested.count(),
             'status': self.status,
             'date': self.date,
             'begin': self.begin,
@@ -273,7 +274,7 @@ class Notification(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': str(self.pk),
+            'pk': self.pk,
             'description': self.description,
         }
 

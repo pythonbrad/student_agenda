@@ -45,6 +45,14 @@
     if (App.models.classes.length) {
         App.vars.tmp.$el.empty();
         for (var i = 0; i < App.models.classes.length; i++) {
+            // We verify if owner
+            App.vars.tmp.owner = 0;
+            for (var ii = 0; ii < App.models.timetables.length; ii++) {
+                if (App.models.timetables[ii].owner.pk == App.models.user.pk) {
+                    App.vars.tmp.owner = 1;
+                    break;
+                };
+            };
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{code}}', App.models.classes[i].course.code)
                 .replace('{{name}}', App.models.classes[i].course.name)
@@ -56,7 +64,7 @@
                 .replace('{{attendance_done}}', App.models.classes[i].attendance_done ? 'Yes' : 'No')
                 .replace('{{last_update}}', App.models.classes[i].updated)
                 .replace('{{description}}', App.models.classes[i].description)
-                .replace('{{admin_panel}}', (App.models.classes[i].location.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
                 .replace('{{id}}', i)
                 .replace('{{classe_pk}}', App.models.classes[i].pk)
             );

@@ -48,7 +48,6 @@ App = {
 						if (d.code == 200) {
 							App.vars.is_login = 1;
 							App.models.user = {username: d.result.username, pk: d.result.pk};
-							App.vars.now = d.result.last_login;
 						} else {
 							App.vars.is_login = 0;
 						};
@@ -59,7 +58,7 @@ App = {
 								clearInterval(App.events[1]);
 								if (App.vars.is_login) {
 									// We load c0nstant
-								    Addons.request('/api/user/status/choice', null, function (d) {
+								    Addons.request('/api/user/status/choices', null, function (d) {
 								        if(d.code == 200) {
 								            App.vars.STATUS_CHOICES = d.result;
 								            App.vars.STATUS_CHOICES_DICT = {};
@@ -68,16 +67,22 @@ App = {
 								            };
 								        };
 								    }, true);
-									// We verify if least 1 timetable is already follow
-									Addons.request('/api/user/timetable/follow', null, function (d) {
-										if (d.code == 200 && d.result.length) {
-											// We load the home view
-											App.models.timetables = d.result;
-											App.views.home();
-										} else {
-											App.views.choose_timetable();
+								    App.vars.can_pass = 0;
+								    App.vars.get_followed_timetables();
+								    // We get datas
+								    App.events[1] = setInterval(function () {
+										// We verify if all the operations are finished
+										if (App.vars.can_pass) {
+											clearInterval(App.events[1]);
+											if (App.models.timetables.length) {
+												// We load the home view
+												App.views.home();
+											} else {
+												// We go to choose timatable
+												App.views.choose_timetable();
+											};
 										};
-									}, true);
+									}, 100);
 								} else {
 									// We load the login view
 									App.views.login();
@@ -99,7 +104,7 @@ App = {
 							$('#main').load('app/templates/choose_timetable.html');
 						};
 					}, 100);
-					if (timetable_pk) {
+					if (timetable_pk!=null) {
 						Addons.request(
 							'/api/user/timetable/'+timetable_pk+'/'+(reverse?'unfollow':'follow'),
 							null,
@@ -115,11 +120,10 @@ App = {
 						);
 					} else {
 						// We load timetable
-						Addons.request('/api/user/timetable', null, function (d) {
+						Addons.request('/api/user/timetables', null, function (d) {
 							if (d.code == 200) {
-								App.models.timetables = d.result;
-								// We load the page
-								App.vars.can_pass = 1;
+								App.models.full_timetables = d.result;
+								App.vars.get_followed_timetables();
 							} else {
 								alert('error: code '+d.code);
 							};
@@ -188,7 +192,7 @@ App = {
 					// We save the data form
 			        App.vars.tmp.form = {name:name,description:description,status:status,date:date,begin:begin,end:end,location_pk:location_pk, timetable_pk:timetable_pk};
 					// We send data
-					if (name && description && status && date && begin && end && location_pk) {
+					if (name && description && status && date && begin && end && location_pk!=null) {
 						Addons.request('/api/admin/timetable/event/add',
 							{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
 							function (d) {
@@ -239,7 +243,7 @@ App = {
 			        App.vars.tmp.form = {event_id:event_id,name:name,description:description,status:status,date:date,begin:begin,end:end,location_pk:location_pk,timetable_pk:timetable_pk};
 					// We send data
 					if (event_id != null) {
-						if (name && description && status && date && begin && end && location_pk) {
+						if (name && description && status && date && begin && end && location_pk!=null) {
 							Addons.request('/api/admin/timetable/event/'+App.models.events[event_id].pk+'/update',
 								{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
 								function (d) {
@@ -260,7 +264,7 @@ App = {
 					        	begin:App.models.events[event_id].begin,
 					        	end:App.models.events[event_id].end,
 					        	location_pk:App.models.events[event_id].location.pk,
-					        	timetable_pk:App.models.events[event_id].location.timetable.pk,
+					        	timetable_pk:App.models.events[event_id].location.timetable_pk,
 					        	event_id:event_id
 					        };
 							// We load the template
@@ -286,7 +290,7 @@ App = {
 					// We save the data form
 			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end,location_pk:location_pk,course_pk:course_pk,timetable_pk:timetable_pk};
 					// We send data
-					if (description && attendance_done && status && date && begin && end && location_pk && course_pk) {
+					if (description && attendance_done && status && date && begin && end && location_pk!=null && course_pk!=null) {
 						Addons.request('/api/admin/timetable/course/'+course_pk+'/classe/add',
 							{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 							function (d) {
@@ -336,7 +340,7 @@ App = {
 			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end,location_pk:location_pk,course_pk:course_pk,timetable_pk:timetable_pk,lesson_id:lesson_id};
 					// We send data
 					if (lesson_id != null) {
-						if (description && attendance_done && status && date && begin && end && location_pk && course_pk) {
+						if (description && attendance_done && status && date && begin && end && location_pk!=null && course_pk!=null) {
 							Addons.request('/api/admin/timetable/classe/'+App.models.classes[lesson_id].pk+'/update',
 								{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 								function (d) {
@@ -358,7 +362,7 @@ App = {
 					        	end:App.models.classes[lesson_id].end,
 					        	location_pk:App.models.classes[lesson_id].location.pk,
 					        	course_pk:App.models.classes[lesson_id].course.pk,
-					        	timetable_pk:App.models.classes[lesson_id].location.timetable.pk,
+					        	timetable_pk:App.models.classes[lesson_id].location.timetable_pk,
 					        	lesson_id:lesson_id
 					        };
 							// We load the template
@@ -384,7 +388,7 @@ App = {
 					// We save the data form
 			        App.vars.tmp.form = {name:name,timetable_pk:timetable_pk};
 					// We send data
-					if (name && timetable_pk) {
+					if (name && timetable_pk!=null) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/lecturer/add',
 							{name:name},
 							function (d) {
@@ -416,7 +420,7 @@ App = {
 					// We save the data form
 			        App.vars.tmp.form = {name:name,description:description,timetable_pk:timetable_pk};
 					// We send data
-					if (name && description && timetable_pk) {
+					if (name && description && timetable_pk!=null) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/location/add',
 							{name:name,description:description},
 							function (d) {
@@ -448,7 +452,7 @@ App = {
 					// We save the data form
 			        App.vars.tmp.form = {name:name,description:description,timetable_pk:timetable_pk};
 					// We send data
-					if (name && description && timetable_pk) {
+					if (name && description && timetable_pk!=null) {
 						Addons.request('/api/admin/timetable/'+timetable_pk+'/category/add',
 							{name:name,description:description},
 							function (d) {
@@ -513,7 +517,7 @@ App = {
 					// We save the data form
 			        App.vars.tmp.form = {name:name,description:description,category_pk:category_pk,course_pk:course_pk,timetable_pk:timetable_pk};
 					// We send data
-					if (name && description && category_pk && course_pk && files.length) {
+					if (name && description && category_pk!=null && course_pk!=null && files.length) {
 						if (files[0].size < MAX_SIZE) {
 							media_data = new FormData();
 							media_data.append('file', files[0]);
@@ -591,7 +595,7 @@ App = {
 			        App.vars.tmp.form = {name:name,description:description,category_pk:category_pk,course_pk:course_pk,timetable_pk:timetable_pk,asset_id:asset_id};
 					// We send data
 					if (asset_id != null) {
-						if (name && description && category_pk && course_pk) {
+						if (name && description && category_pk!=null && course_pk!=null) {
 							Addons.request('/api/admin/timetable/asset/'+App.models.assets[asset_id].pk+'/update',
 								{name:name,description:description,category:category_pk,course:course_pk},
 								function (d) {
@@ -609,7 +613,7 @@ App = {
 					        	description:App.models.assets[asset_id].description,
 					        	category_pk:App.models.assets[asset_id].category.pk,
 					        	course_pk:App.models.assets[asset_id].course.pk,
-					        	timetable_pk:App.models.assets[asset_id].category.timetable.pk,
+					        	timetable_pk:App.models.assets[asset_id].category.timetable_pk,
 					        	asset_id:asset_id
 					        };
 							// We load the template
@@ -668,7 +672,7 @@ App = {
 					// We get datas
 					App.models.assets = [];
 					for (var i = 0; i < App.models.timetables.length; i++) {
-						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/asset', null, function (d) {
+						Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/assets', null, function (d) {
 							if (d.code == 200) {
 								for (var ii = 0; ii < d.result.length; ii++) {
 									App.models.assets.push(d.result[ii]);
@@ -865,7 +869,7 @@ App = {
 			// We get datas
 			App.models.classes = [];
 			for (var i = 0; i < App.models.timetables.length; i++) {
-				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/classe'+((next_day != null)?'/'+next_day:''), null, function (d) {
+				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/classes'+((next_day != null)?'/'+next_day:''), null, function (d) {
 					if (d.code == 200) {
 						for (var ii = 0; ii < d.result.length; ii++) {
 							App.models.classes.push(d.result[ii]);
@@ -881,7 +885,7 @@ App = {
 			// We get datas
 			App.models.events = [];
 			for (var i = 0; i < App.models.timetables.length; i++) {
-				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/event'+((next_day != null)?'/'+next_day:''), null, function (d) {
+				Addons.request('/api/user/timetable/'+App.models.timetables[i].pk+'/events'+((next_day != null)?'/'+next_day:''), null, function (d) {
 					if (d.code == 200) {
 						for (var ii = 0; ii < d.result.length; ii++) {
 							App.models.events.push(d.result[ii]);
@@ -892,6 +896,17 @@ App = {
 					};
 				}, false);
 			};
+		},
+		get_followed_timetables: function (safe=function () {}) {
+			// We get datas
+			App.models.timetables = [];
+			Addons.request('/api/user/timetables/followed', null, function (d) {
+				if (d.code == 200 && d.result.length) {
+					// We load the home view
+					App.models.timetables = d.result;
+				};
+				App.vars.can_pass = 1;
+			}, true);
 		},
 	},
 };

@@ -42,17 +42,25 @@
     if (App.models.events.length) {
         App.vars.tmp.$el.empty();
         for (var i = 0; i < App.models.events.length; i++) {
+            // We verify if owner
+            App.vars.tmp.owner = 0;
+            for (var ii = 0; ii < App.models.timetables.length; ii++) {
+                if (App.models.timetables[ii].owner.pk == App.models.user.pk) {
+                    App.vars.tmp.owner = 1;
+                    break;
+                };
+            };
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{name}}', App.models.events[i].name)
                 .replace('{{description}}', App.models.events[i].description)
                 .replace('{{location}}', App.models.events[i].location.name)
-                .replace('{{interested}}', App.models.events[i].interested.length)
+                .replace('{{interested}}', App.models.events[i].interested)
                 .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.events[i].status])
                 .replace('{{date}}', App.models.events[i].date)
                 .replace('{{begin}}', App.models.events[i].begin)
                 .replace('{{end}}', App.models.events[i].end)
                 .replace('{{updated}}', App.models.events[i].updated)
-                .replace('{{admin_panel}}', (App.models.events[i].location.timetable.owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
                 .replace('{{id}}', i)
                 .replace('{{event_pk}}', App.models.events[i].pk)
             );

@@ -68,7 +68,7 @@
         choice = App.vars.tmp.$timetable_pk.val();
         App.vars.tmp.$lecturer_pks.empty();
         if(choice) {
-            Addons.request('/api/user/timetable/'+choice+'/lecturer', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice+'/lecturers', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         App.vars.tmp.$lecturer_pks.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");

@@ -79,14 +79,14 @@
         App.vars.tmp.$category_pk.empty();
         App.vars.tmp.$course_pk.empty();
         if(choice) {
-            Addons.request('/api/user/timetable/'+choice+'/category', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice+'/categories', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         App.vars.tmp.$category_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");
                     };
                 };
             }, false);
-            Addons.request('/api/user/timetable/'+choice+'/course', null, function (d) {
+            Addons.request('/api/user/timetable/'+choice+'/courses', null, function (d) {
                 if(d.code == 200) {
                     for (var i = 0; i < d.result.length; i++) {
                         App.vars.tmp.$course_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].name+"</option");

@@ -59,28 +59,28 @@
 <script type="text/javascript">
     App.vars.tmp.$el=$('#block');
     App.vars.tmp.$html=App.vars.tmp.$el.html();
-    if (App.models.timetables.length) {
+    if (App.models.full_timetables.length) {
         App.vars.tmp.$el.empty();
-        for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+        for (var timetable_id = 0; timetable_id < App.models.full_timetables.length; timetable_id++) {
             // We verify if already choosed or not
             App.vars.tmp.followed = 0;
-            for (var follower_id = 0; follower_id < App.models.timetables[timetable_id].followers.length; follower_id++) {
-                if (App.models.timetables[timetable_id].followers[follower_id].pk == App.models.user.pk) {
+            for (var followed_timetable_id = 0; followed_timetable_id < App.models.timetables.length; followed_timetable_id++) {
+                if (App.models.timetables[followed_timetable_id].pk == App.models.full_timetables[timetable_id].pk) {
                     App.vars.tmp.followed = 1;
                     break;
                 };
             }
             App.vars.tmp.$el.append(App.vars.tmp.$html
-                .replace('{{pk}}', App.models.timetables[timetable_id].pk)
-                .replace('{{pk}}', App.models.timetables[timetable_id].pk)
-                .replace('{{name}}', App.models.timetables[timetable_id].name)
-                .replace('{{description}}', App.models.timetables[timetable_id].description)
-                .replace('{{owner}}', App.models.timetables[timetable_id].owner.username)
+                .replace('{{pk}}', App.models.full_timetables[timetable_id].pk)
+                .replace('{{pk}}', App.models.full_timetables[timetable_id].pk)
+                .replace('{{name}}', App.models.full_timetables[timetable_id].name)
+                .replace('{{description}}', App.models.full_timetables[timetable_id].description)
+                .replace('{{owner}}', App.models.full_timetables[timetable_id].owner.username)
                 .replace('{{action}}', App.vars.tmp.followed ? "Unfollow" : "Follow")
                 .replace('{{color}}', App.vars.tmp.followed ? "warning" : "primary")
                 .replace('{{reverse}}', App.vars.tmp.followed ? 1 : 0)
-                .replace('{{followers}}', App.models.timetables[timetable_id].followers.length)
-                .replace('{{admin_panel}}', (App.models.timetables[timetable_id].owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{followers}}', App.models.full_timetables[timetable_id].followers)
+                .replace('{{admin_panel}}', (App.models.full_timetables[timetable_id].owner.pk == App.models.user.pk) ? '' : 'hidden')
             );
         };
     } else {

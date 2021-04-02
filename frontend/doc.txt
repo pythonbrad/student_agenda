@@ -27,15 +27,16 @@
                         next();
                     }, delay);
                 },
-                splash: function () {
-                    $(callback).load(...);
+                splash: function (...) {
+                    ...
                 },
                 home: function (...) {
-                    App.views.splash()
-                    // We perform operation
-                    // ...
-                    // We load the home page
-                    $(callback).load('...');
+                    App.views.splash(
+                        function () {
+                            // We perform operation
+                            // ...
+                        };
+                    )
                 },
                 ...
                 logout: function (...) {...},
