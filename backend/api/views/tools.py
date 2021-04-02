@@ -15,5 +15,5 @@ def apiResponse(result=None, code=200, info=None):
     return JsonResponse({
         'result': result,
         'code': code,
-        'error': error if not info else info,
+        'errors': [error] if not info else info,
     })

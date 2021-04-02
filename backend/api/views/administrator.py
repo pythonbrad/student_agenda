@@ -12,7 +12,7 @@ def add_timetable_view(request):
         if request.POST:
             data = request.POST
             if Timetable.objects.filter(name=data.get('name', None)):
-                return apiResponse(code=401, info="timetable's name already used")
+                return apiResponse(code=401, info=["Timetable's name already used"])
             else:
                 timetable = Timetable(
                     name=data.get('name', None),
@@ -25,8 +25,8 @@ def add_timetable_view(request):
                     timetable.followers.add(request.user.student_set.get())
                     timetable.save()
                     return apiResponse()
-                except ValidationError:
-                    return apiResponse(code=501)
+                except ValidationError as err:
+                    return apiResponse(code=501, info=err.messages)
         else:
             return apiResponse(code=101)
     else:
@@ -100,8 +100,8 @@ def add_timetable_lecturer_view(request, timetable_pk):
                     lecturer.full_clean()
                     lecturer.save()
                     return apiResponse()
-                except ValidationError:
-                    return apiResponse(code=506)
+                except ValidationError as err:
+                    return apiResponse(code=506, info=err.messages)
             else:
                 return apiResponse(code=507)
         else:
@@ -144,8 +144,8 @@ def add_timetable_course_view(request):
                     else:
                         return apiResponse(code=528)
                 return apiResponse()
-            except ValidationError:
-                return apiResponse(code=509)
+            except ValidationError as err:
+                return apiResponse(code=509, info=err.messages)
         else:
             return apiResponse(code=103)
     else:
@@ -223,8 +223,7 @@ def add_timetable_classe_view(request, course_pk=None, classe_pk=None):
                     classe.save()
                     return apiResponse()
                 except ValidationError as err:
-                    print(err)
-                    return apiResponse(code=513)
+                    return apiResponse(code=513, info=err.messages)
             else:
                 return apiResponse(code=514)
         else:
@@ -263,8 +262,8 @@ def add_timetable_location_view(request, timetable_pk):
                     location.full_clean()
                     location.save()
                     return apiResponse()
-                except ValidationError:
-                    return apiResponse(code=516)
+                except ValidationError as err:
+                    return apiResponse(code=516, info=err.messages)
             else:
                 return apiResponse(code=517)
         else:
@@ -300,8 +299,8 @@ def add_timetable_category_view(request, timetable_pk):
                     category.full_clean()
                     category.save()
                     return apiResponse()
-                except ValidationError:
-                    return apiResponse(code=519)
+                except ValidationError as err:
+                    return apiResponse(code=519, info=err.messages)
             else:
                 return apiResponse(code=520)
         else:
@@ -365,8 +364,8 @@ def add_course_asset_view(request, course_pk=None, asset_pk=None):
                     asset.full_clean()
                     asset.save()
                     return apiResponse()
-                except ValidationError:
-                    return apiResponse(code=522)
+                except ValidationError as err:
+                    return apiResponse(code=522, info=err.messages)
             else:
                 return apiResponse(code=523)
         else:
@@ -417,8 +416,8 @@ def add_timetable_event_view(request, event_pk=None):
                     event.save()
                     event.interested.add(request.user.student_set.get())
                     return apiResponse()
-                except ValidationError:
-                    return apiResponse(code=525)
+                except ValidationError as err:
+                    return apiResponse(code=525, info=err.messages)
             else:
                 return apiResponse(code=526)
         else:

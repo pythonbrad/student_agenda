@@ -12,10 +12,10 @@ App = {
 				// We show the splash
 				$('#splash').show();
 				$('#main').hide();
-				$('#main').empty();
 			};
 			// We do minor operations
 			if(next != null) {
+				$('#main').empty();
 				// We clean last error, delete all events and tmp datas
 				App.vars.errors = [];
 				App.vars.tmp = {};
@@ -105,7 +105,7 @@ App = {
 							null,
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.choose_timetable();
@@ -147,7 +147,7 @@ App = {
 							{name: name, description: description},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.index();
@@ -179,7 +179,7 @@ App = {
 							{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.admin();
@@ -228,7 +228,7 @@ App = {
 								{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
 								function (d) {
 									if (d.code != 200) {
-										App.vars.errors = [d.error];
+										App.vars.errors = d.errors;
 										App.vars.can_pass = 1;
 									} else {
 										App.views.events();
@@ -275,7 +275,7 @@ App = {
 							{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.admin();
@@ -323,7 +323,7 @@ App = {
 								{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 								function (d) {
 									if (d.code != 200) {
-										App.vars.errors = [d.error];
+										App.vars.errors = d.errors;
 										App.vars.can_pass = 1;
 									} else {
 										App.views.home();
@@ -371,7 +371,7 @@ App = {
 							{name:name},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.admin();
@@ -403,7 +403,7 @@ App = {
 							{name:name,description:description},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.admin();
@@ -435,7 +435,7 @@ App = {
 							{name:name,description:description},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.admin();
@@ -467,7 +467,7 @@ App = {
 							{name:name,code:code,description:description,lecturers:lecturer_pks},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.admin();
@@ -513,7 +513,7 @@ App = {
 											{name:name,description:description,category:category_pk,media:media_pk},
 											function (d) {
 												if (d.code != 200) {
-													App.vars.errors = [d.error];
+													App.vars.errors = d.errors;
 													App.vars.can_pass = 1;
 												} else {
 													App.views.admin();
@@ -522,7 +522,7 @@ App = {
 											false
 										);
 									} else {
-										App.vars.errors = [response.error];
+										App.vars.errors = response.errors;
 										App.vars.can_pass = 1;
 									};
 								},
@@ -576,7 +576,7 @@ App = {
 								{name:name,description:description,category:category_pk,course:course_pk},
 								function (d) {
 									if (d.code != 200) {
-										App.vars.errors = [d.error];
+										App.vars.errors = d.errors;
 										App.vars.can_pass = 1;
 									} else {
 										App.views.supports();
@@ -722,7 +722,7 @@ App = {
 							{username: username, password: password},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.index();
@@ -757,7 +757,7 @@ App = {
 							{username: username, email: email, password: password, password2: password2},
 							function (d) {
 								if (d.code != 200) {
-									App.vars.errors = [d.error];
+									App.vars.errors = d.errors;
 									App.vars.can_pass = 1;
 								} else {
 									App.views.login();
