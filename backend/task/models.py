@@ -153,6 +153,10 @@ class Classe(models.Model):
             'timetable_pk': self.location.timetable.pk,
         }
 
+    def save(self, *args, **kwargs):
+        self.updated = timezone.now()
+        super().save(*args, **kwargs)
+
 class Location(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=255, default='')
@@ -261,6 +265,10 @@ class Event(models.Model):
             'updated': self.updated,
             'timetable_pk': self.location.timetable.pk,
         }
+
+    def save(self, *args, **kwargs):
+        self.updated = timezone.now()
+        super().save(*args, **kwargs)
 
     
 class Notification(models.Model):
