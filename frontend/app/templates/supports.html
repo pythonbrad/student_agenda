@@ -38,26 +38,26 @@
     App.vars.tmp.$html = App.vars.tmp.$el.html();
     if (App.models.assets.length) {
         App.vars.tmp.$el.empty();
-        for (var i = 0; i < App.models.assets.length; i++) {
+        for (var asset_id = 0; asset_id < App.models.assets.length; asset_id++) {
             // We verify if owner
             App.vars.tmp.owner = 0;
-            for (var ii = 0; ii < App.models.timetables.length; ii++) {
-                if (App.models.timetables[ii].owner.pk == App.models.user.pk) {
-                    App.vars.tmp.owner = 1;
+            for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+                if (App.models.timetables[timetable_id].pk == App.models.assets[asset_id].timetable_pk) {
+                    App.vars.tmp.owner = App.models.timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk});
                     break;
                 };
             };
             App.vars.tmp.$el.append(App.vars.tmp.$html
-                .replace('{{code}}', App.models.assets[i].course.code)
-                .replace('{{name}}', App.models.assets[i].name)
-                .replace('{{description}}', App.models.assets[i].description)
-                .replace('{{pub_date}}', App.models.assets[i].pub_date)
-                .replace('{{category}}', App.models.assets[i].category.name)
-                .replace('{{nb_downloading}}', App.models.assets[i].readers)
-                .replace('{{id}}', i)
+                .replace('{{code}}', App.models.assets[asset_id].course.code)
+                .replace('{{name}}', App.models.assets[asset_id].name)
+                .replace('{{description}}', App.models.assets[asset_id].description)
+                .replace('{{pub_date}}', App.models.assets[asset_id].pub_date)
+                .replace('{{category}}', App.models.assets[asset_id].category.name)
+                .replace('{{nb_downloading}}', App.models.assets[asset_id].readers)
+                .replace('{{id}}', asset_id)
                 .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
-                .replace('{{id}}', i)
-                .replace('{{asset_pk}}', App.models.assets[i].pk)
+                .replace('{{id}}', asset_id)
+                .replace('{{asset_pk}}', App.models.assets[asset_id].pk)
             );
         };
     } else {
