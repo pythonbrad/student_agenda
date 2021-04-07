@@ -44,29 +44,29 @@
     App.vars.tmp.$html = App.vars.tmp.$el.html();
     if (App.models.classes.length) {
         App.vars.tmp.$el.empty();
-        for (var i = 0; i < App.models.classes.length; i++) {
+        for (var classe_id = 0; classe_id < App.models.classes.length; classe_id++) {
             // We verify if owner
             App.vars.tmp.owner = 0;
-            for (var ii = 0; ii < App.models.timetables.length; ii++) {
-                if (App.models.timetables[ii].owner.pk == App.models.user.pk) {
-                    App.vars.tmp.owner = 1;
+            for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+                if (App.models.timetables[timetable_id].pk == App.models.classes[classe_id].timetable_pk) {
+                    App.vars.tmp.owner = App.models.timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk});
                     break;
                 };
             };
             App.vars.tmp.$el.append(App.vars.tmp.$html
-                .replace('{{code}}', App.models.classes[i].course.code)
-                .replace('{{name}}', App.models.classes[i].course.name)
-                .replace('{{date}}', App.models.classes[i].date)
-                .replace('{{begin}}', App.models.classes[i].begin)
-                .replace('{{end}}', App.models.classes[i].end)
-                .replace('{{venue}}', App.models.classes[i].location.name)
-                .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.classes[i].status])
-                .replace('{{attendance_done}}', App.models.classes[i].attendance_done ? 'Yes' : 'No')
-                .replace('{{last_update}}', App.models.classes[i].updated)
-                .replace('{{description}}', App.models.classes[i].description)
+                .replace('{{code}}', App.models.classes[classe_id].course.code)
+                .replace('{{name}}', App.models.classes[classe_id].course.name)
+                .replace('{{date}}', App.models.classes[classe_id].date)
+                .replace('{{begin}}', App.models.classes[classe_id].begin)
+                .replace('{{end}}', App.models.classes[classe_id].end)
+                .replace('{{venue}}', App.models.classes[classe_id].location.name)
+                .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.classes[classe_id].status])
+                .replace('{{attendance_done}}', App.models.classes[classe_id].attendance_done ? 'Yes' : 'No')
+                .replace('{{last_update}}', App.models.classes[classe_id].updated)
+                .replace('{{description}}', App.models.classes[classe_id].description)
                 .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
-                .replace('{{id}}', i)
-                .replace('{{classe_pk}}', App.models.classes[i].pk)
+                .replace('{{id}}', classe_id)
+                .replace('{{classe_pk}}', App.models.classes[classe_id].pk)
             );
         };
     } else {

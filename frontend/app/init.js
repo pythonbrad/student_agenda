@@ -178,6 +178,33 @@ App = {
 				);
 			};
 		},
+		moderators: function (user_pk, timetable_pk, add) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					App.events[0] = setInterval(function () {
+						// We verify if all the operations are finished
+						if (App.vars.can_pass) {
+							clearInterval(App.events[0]);
+							$('#main').load('app/templates/moderators.html');
+						};
+					}, 100);
+					if (timetable_pk!=null && user_pk!=null) {
+						Addons.request(
+							'/api/admin/timetable/'+timetable_pk+'/moderator/'+(add?'add':'remove')+'/'+user_pk,
+							null,
+							function (d) {
+								App.views.moderators();
+							},
+							false
+						);
+					} else {
+						// We load timetable
+						App.vars.get_followed_timetables();
+					};
+				}
+			);
+		},
 		add_event: function (name,description,status,date,begin,end,location_pk,timetable_pk) {
 			App.views.splash(
 				function () {
@@ -193,7 +220,7 @@ App = {
 			        App.vars.tmp.form = {name:name,description:description,status:status,date:date,begin:begin,end:end,location_pk:location_pk, timetable_pk:timetable_pk};
 					// We send data
 					if (name && description && status && date && begin && end && location_pk!=null) {
-						Addons.request('/api/admin/timetable/event/add',
+						Addons.request('/api/moderator/timetable/event/add',
 							{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
 							function (d) {
 								if (d.code != 200) {
@@ -215,7 +242,7 @@ App = {
 				App.views.splash(
 					function () {
 						// We perform operation
-						Addons.request('/api/admin/timetable/event/'+event_pk+'/delete',null,
+						Addons.request('/api/moderator/timetable/event/'+event_pk+'/delete',null,
 							function (d) {
 								App.views.events();
 							},false
@@ -244,7 +271,7 @@ App = {
 					// We send data
 					if (event_id != null) {
 						if (name && description && status && date && begin && end && location_pk!=null) {
-							Addons.request('/api/admin/timetable/event/'+App.models.events[event_id].pk+'/update',
+							Addons.request('/api/moderator/timetable/event/'+App.models.events[event_id].pk+'/update',
 								{name:name,description:description,status:status,date:date,begin:begin,end:end,location:location_pk},
 								function (d) {
 									if (d.code != 200) {
@@ -291,7 +318,7 @@ App = {
 			        App.vars.tmp.form = {description:description,attendance_done:attendance_done,status:status,date:date,begin:begin,end:end,location_pk:location_pk,course_pk:course_pk,timetable_pk:timetable_pk};
 					// We send data
 					if (description && attendance_done && status && date && begin && end && location_pk!=null && course_pk!=null) {
-						Addons.request('/api/admin/timetable/course/'+course_pk+'/classe/add',
+						Addons.request('/api/moderator/timetable/course/'+course_pk+'/classe/add',
 							{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 							function (d) {
 								if (d.code != 200) {
@@ -314,7 +341,7 @@ App = {
 				App.views.splash(
 					function () {
 						// We perform operation
-						Addons.request('/api/admin/timetable/classe/'+classe_pk+'/delete',null,function (d) {
+						Addons.request('/api/moderator/timetable/classe/'+classe_pk+'/delete',null,function (d) {
 							App.views.home();
 						}, false);
 					}
@@ -341,7 +368,7 @@ App = {
 					// We send data
 					if (lesson_id != null) {
 						if (description && attendance_done && status && date && begin && end && location_pk!=null && course_pk!=null) {
-							Addons.request('/api/admin/timetable/classe/'+App.models.classes[lesson_id].pk+'/update',
+							Addons.request('/api/moderator/timetable/classe/'+App.models.classes[lesson_id].pk+'/update',
 								{description:description, attendance_done:attendance_done, status:status, date:date, begin:begin, end:end, location:location_pk, course:course_pk},
 								function (d) {
 									if (d.code != 200) {
@@ -522,7 +549,7 @@ App = {
 							media_data = new FormData();
 							media_data.append('file', files[0]);
 							$.ajax({
-								url: '/api/admin/media/add',
+								url: '/api/moderator/media/add',
 								type: 'post',
 								data: media_data,
 								contentType: false,
@@ -531,7 +558,7 @@ App = {
 									if(response.code == 200){
 										media_pk = response.result;
 										Addons.request(
-											'/api/admin/timetable/course/'+course_pk+'/asset/add',
+											'/api/moderator/timetable/course/'+course_pk+'/asset/add',
 											{name:name,description:description,category:category_pk,media:media_pk},
 											function (d) {
 												if (d.code != 200) {

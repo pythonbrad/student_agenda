@@ -30,6 +30,7 @@
                             <b>Followers:</b> {{followers}}<br>
                             <b>Description:</b><br>{{description}}<br>
                             <b>Admin:</b> {{owner}}<br>
+                            <b>Moderators:</b> {{moderators}}<br>
                         </p>
                         <div class="card-footer">
                             <button class="btn btn-{{color}} btn-sm" onclick="App.views.choose_timetable({{pk}},{{reverse}})">{{action}}</button>
@@ -80,7 +81,8 @@
                 .replace('{{color}}', App.vars.tmp.followed ? "warning" : "primary")
                 .replace('{{reverse}}', App.vars.tmp.followed ? 1 : 0)
                 .replace('{{followers}}', App.models.full_timetables[timetable_id].followers)
-                .replace('{{admin_panel}}', (App.models.full_timetables[timetable_id].owner.pk == App.models.user.pk) ? '' : 'hidden')
+                .replace('{{moderators}}', App.models.full_timetables[timetable_id].moderators.length)
+                .replace('{{admin_panel}}', (App.models.full_timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk})) ? '' : 'hidden')
             );
         };
     } else {

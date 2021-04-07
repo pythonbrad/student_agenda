@@ -1,0 +1,94 @@
+<div class="container">
+    <span class="row"><hr size="#"></span>
+    <h3 class="row">
+        <span class="col-1"></span>
+        <span class="col" id='header'>Moderators</span>
+        <span class="col-1"></span>
+    </h3>
+    <div class="row">
+        <span class="col-1"></span>
+        <form class="form col" action="#">
+            <div class="form-group">
+                <label for="timetable_pk">Timetable</label>
+                <select class="form-control" id="timetable_pk" onchange="App.vars.tmp.load_data()">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label for="moderator_pk">Moderators</label>
+                    <select class="form-control" id="moderator_pk"></select>
+                </div>
+                <div class="">
+                    <br>
+                    <div class="row">
+                        <button class="btn col" onclick='App.vars.tmp.moderators(1)'><i class="fas fa-arrow-left"></i></button>
+                    </div>
+                    <div class="row">
+                        <button class="btn col" onclick='App.vars.tmp.moderators(0)'><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="follower_pk">Followers</label>
+                    <select class="form-control" id="follower_pk"></select>
+                </div>
+            </div>
+            <hr size="#">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-dark btn-sm" onclick="App.views.admin()">Return to administration's panel</button>
+                </div>
+            </div>
+        </form>
+        <span class="col-1"></span>
+    </div>
+    <div class="row">
+        <span class="col-1"></span>
+        <span class="col" id="moderator_error"></span>
+        <span class="col-1"></span>
+    </div>
+    <br>
+</div>
+<script type="text/javascript">
+    // We define element that we will use
+    App.vars.tmp.$timetable_pk = $('#timetable_pk');
+    App.vars.tmp.$moderator_pk = $('#moderator_pk');
+    App.vars.tmp.$follower_pk = $('#follower_pk');
+    App.vars.tmp.moderators = function (add) {
+        timetable_pk = App.vars.tmp.$timetable_pk.val().split('_')[1];
+        user_pk = add ? App.vars.tmp.$follower_pk.val() : App.vars.tmp.$moderator_pk.val();
+        App.views.moderators(user_pk,timetable_pk,add);
+    };
+    App.vars.tmp.load_data = function () {
+        choice_id = App.vars.tmp.$timetable_pk.val().split('_')[0];
+        choice_pk = App.vars.tmp.$timetable_pk.val().split('_')[1];
+        App.vars.tmp.$moderator_pk.empty();
+        App.vars.tmp.$follower_pk.empty();
+        if(choice_pk) {
+            Addons.request('/api/admin/timetable/'+choice_pk+'/followers', null, function (d) {
+                if(d.code == 200) {
+                    for (var i = 0; i < d.result.length; i++) {
+                        if(d.result[i].pk == App.models.user.pk) {
+                            // Do nothing
+                        } else if(App.models.timetables[choice_id].moderators.find(function (x) {return x==d.result[i].pk})) {
+                            console.log(App.models.timetables[choice_id].moderators);
+                            App.vars.tmp.$moderator_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].username+"</option");
+                        } else {
+                            App.vars.tmp.$follower_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].username+"</option");
+                        };
+                    };
+                };
+            }, false);
+        };
+    };
+    // We load timetable
+    for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+        if (App.models.timetables[timetable_id].owner.pk==App.models.user.pk) {
+            App.vars.tmp.$timetable_pk.append("<option value='"+timetable_id+'_'+App.models.timetables[timetable_id].pk+"'>"+App.models.timetables[timetable_id].name+"</option>");
+        };
+    };
+    App.vars.tmp.$error = $('#moderator_error');
+    for (var i = 0; i < App.vars.errors.length; i++) {
+        App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
+    };
+</script>

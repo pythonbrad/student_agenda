@@ -71,7 +71,7 @@ class Timetable(models.Model):
             'pk': self.pk,
             'name': self.name,
             'description': self.description,
-            'moderators': self.moderators.count(),
+            'moderators': [moderator.pk for moderator in self.moderators.all()],
             'followers': self.followers.count(),
             'owner': self.owner.get_as_json()
         }
@@ -150,6 +150,7 @@ class Classe(models.Model):
             'begin': self.begin,
             'end': self.end,
             'updated': self.updated,
+            'timetable_pk': self.location.timetable.pk,
         }
 
 class Location(models.Model):
@@ -258,6 +259,7 @@ class Event(models.Model):
             'begin': self.begin,
             'end': self.end,
             'updated': self.updated,
+            'timetable_pk': self.location.timetable.pk,
         }
 
     

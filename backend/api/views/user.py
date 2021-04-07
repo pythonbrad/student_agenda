@@ -23,18 +23,6 @@ def get_timetable_follow_by_me_view(request):
         return apiResponse(code=624)
 
 
-def get_timetable_follower_view(request, timetable_pk):
-    if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk)
-        if timetable:
-            timetable = timetable[0]
-            return apiResponse(result=[follower.get_as_json() for followers in timetable.followers.all()])
-        else:
-            return apiResponse(code=522)
-    else:
-        return apiResponse(code=624)
-
-
 def follow_timetable_view(request, timetable_pk):
     if request.user.is_authenticated:
         timetable = Timetable.objects.filter(pk=timetable_pk)

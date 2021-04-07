@@ -104,9 +104,9 @@
         App.vars.tmp.$status.append("<option value='"+App.vars.STATUS_CHOICES[i][0]+"'>"+App.vars.STATUS_CHOICES[i][1]+"</option");
     };
     // We load timetable
-    for (var i = 0; i < App.models.timetables.length; i++) {
-        if (App.models.timetables[i].owner.pk == App.models.user.pk) {
-            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[i].pk+"'>"+App.models.timetables[i].name+"</option>");
+    for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+        if (App.models.timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk})) {
+            App.vars.tmp.$timetable_pk.append("<option value='"+App.models.timetables[timetable_id].pk+"'>"+App.models.timetables[timetable_id].name+"</option>");
         };
     };
     App.vars.tmp.$error = $('#event_error');

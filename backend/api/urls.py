@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import authentification, user, administrator
+from .views import authentification, user, administrator, moderator
 
 
 urlpatterns = [
@@ -23,18 +23,21 @@ urlpatterns = [
     path('user/timetable/asset/<asset_pk>/read', user.set_asset_reader_view),
     path('admin/timetable/add', administrator.add_timetable_view),
     path('admin/timetable/<int:timetable_pk>/delete', administrator.delete_timetable_view),
-    path('admin/media/add', administrator.add_media_view),
-    path('admin/timetable/course/<int:course_pk>/classe/add', administrator.add_timetable_classe_view),
-    path('admin/timetable/classe/<int:classe_pk>/delete', administrator.delete_timetable_classe_view),
-    path('admin/timetable/classe/<int:classe_pk>/update', administrator.update_timetable_classe_view),
-    path('admin/timetable/course/<int:course_pk>/asset/add', administrator.add_course_asset_view),
-    path('admin/timetable/asset/<int:asset_pk>/delete', administrator.delete_course_asset_view),
-    path('admin/timetable/asset/<int:asset_pk>/update', administrator.update_course_asset_view),
+    path('admin/timetable/<int:timetable_pk>/moderator/add/<int:user_pk>', administrator.add_timetable_moderator_view),
+    path('admin/timetable/<int:timetable_pk>/moderator/remove/<int:user_pk>', administrator.remove_timetable_moderator_view),
     path('admin/timetable/course/add', administrator.add_timetable_course_view),
+    path('admin/timetable/<int:timetable_pk>/followers', administrator.get_timetable_follower_view),
     path('admin/timetable/<int:timetable_pk>/lecturer/add', administrator.add_timetable_lecturer_view),
     path('admin/timetable/<int:timetable_pk>/location/add', administrator.add_timetable_location_view),
     path('admin/timetable/<int:timetable_pk>/category/add', administrator.add_timetable_category_view),
-    path('admin/timetable/event/add', administrator.add_timetable_event_view),
-    path('admin/timetable/event/<int:event_pk>/delete', administrator.delete_timetable_event_view),
-    path('admin/timetable/event/<int:event_pk>/update', administrator.update_timetable_event_view),
+    path('moderator/media/add', moderator.add_media_view),
+    path('moderator/timetable/course/<int:course_pk>/classe/add', moderator.add_timetable_classe_view),
+    path('moderator/timetable/classe/<int:classe_pk>/delete', moderator.delete_timetable_classe_view),
+    path('moderator/timetable/classe/<int:classe_pk>/update', moderator.update_timetable_classe_view),
+    path('moderator/timetable/course/<int:course_pk>/asset/add', moderator.add_course_asset_view),
+    path('moderator/timetable/asset/<int:asset_pk>/delete', moderator.delete_course_asset_view),
+    path('moderator/timetable/asset/<int:asset_pk>/update', moderator.update_course_asset_view),
+    path('moderator/timetable/event/add', moderator.add_timetable_event_view),
+    path('moderator/timetable/event/<int:event_pk>/delete', moderator.delete_timetable_event_view),
+    path('moderator/timetable/event/<int:event_pk>/update', moderator.update_timetable_event_view),
 ]

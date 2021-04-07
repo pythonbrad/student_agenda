@@ -41,28 +41,28 @@
     App.vars.tmp.$html = App.vars.tmp.$el.html();
     if (App.models.events.length) {
         App.vars.tmp.$el.empty();
-        for (var i = 0; i < App.models.events.length; i++) {
+        for (var event_id = 0; event_id < App.models.events.length; event_id++) {
             // We verify if owner
             App.vars.tmp.owner = 0;
-            for (var ii = 0; ii < App.models.timetables.length; ii++) {
-                if (App.models.timetables[ii].owner.pk == App.models.user.pk) {
-                    App.vars.tmp.owner = 1;
+            for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
+                if (App.models.timetables[timetable_id].pk == App.models.events[event_id].timetable_pk) {
+                    App.vars.tmp.owner = App.models.timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk});
                     break;
                 };
             };
             App.vars.tmp.$el.append(App.vars.tmp.$html
-                .replace('{{name}}', App.models.events[i].name)
-                .replace('{{description}}', App.models.events[i].description)
-                .replace('{{location}}', App.models.events[i].location.name)
-                .replace('{{interested}}', App.models.events[i].interested)
-                .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.events[i].status])
-                .replace('{{date}}', App.models.events[i].date)
-                .replace('{{begin}}', App.models.events[i].begin)
-                .replace('{{end}}', App.models.events[i].end)
-                .replace('{{updated}}', App.models.events[i].updated)
+                .replace('{{name}}', App.models.events[event_id].name)
+                .replace('{{description}}', App.models.events[event_id].description)
+                .replace('{{location}}', App.models.events[event_id].location.name)
+                .replace('{{interested}}', App.models.events[event_id].interested)
+                .replace('{{status}}', App.vars.STATUS_CHOICES_DICT[App.models.events[event_id].status])
+                .replace('{{date}}', App.models.events[event_id].date)
+                .replace('{{begin}}', App.models.events[event_id].begin)
+                .replace('{{end}}', App.models.events[event_id].end)
+                .replace('{{updated}}', App.models.events[event_id].updated)
                 .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
-                .replace('{{id}}', i)
-                .replace('{{event_pk}}', App.models.events[i].pk)
+                .replace('{{id}}', event_id)
+                .replace('{{event_pk}}', App.models.events[event_id].pk)
             );
         };
     } else {
