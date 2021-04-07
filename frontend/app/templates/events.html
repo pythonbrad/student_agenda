@@ -37,6 +37,7 @@
 </div>
 <!-- We duplicate the data -->
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     App.vars.tmp.$el = $('#block');
     App.vars.tmp.$html = App.vars.tmp.$el.html();
     if (App.models.events.length) {
@@ -68,4 +69,5 @@
     } else {
         App.vars.tmp.$el[0].innerHTML = 'No events for the moment.';
     };
+    App.views.splash(null, 'hide');
 </script>

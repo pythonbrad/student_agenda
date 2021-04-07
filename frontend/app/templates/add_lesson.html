@@ -75,6 +75,7 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     // We define element that we will use
     App.vars.tmp.$description = $('#lesson_description');
     App.vars.tmp.$attendance_done = $('#lesson_attendance_done');
@@ -145,4 +146,5 @@
         App.vars.tmp.$location_pk.val(App.vars.tmp.form.location_pk);
         App.vars.tmp.$course_pk.val(App.vars.tmp.form.course_pk);
     };
+    App.views.splash(null, 'hide');
 </script>

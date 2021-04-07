@@ -31,6 +31,7 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     App.vars.tmp.login = function () {
         username = $('#user_username').val();
         password = $('#user_password').val();
@@ -44,4 +45,5 @@
     if (App.vars.tmp.form) {
         $('#user_username').val(App.vars.tmp.form.username);
     };
+    App.views.splash(null, 'hide');
 </script>

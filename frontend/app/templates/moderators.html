@@ -50,6 +50,7 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     // We define element that we will use
     App.vars.tmp.$timetable_pk = $('#timetable_pk');
     App.vars.tmp.$moderator_pk = $('#moderator_pk');
@@ -91,4 +92,5 @@
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
     };
+    App.views.splash(null, 'hide');
 </script>

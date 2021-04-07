@@ -66,6 +66,7 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     // We define element that we will use
     App.vars.tmp.$name = $('#event_name');
     App.vars.tmp.$description = $('#event_description');
@@ -125,4 +126,5 @@
         App.vars.tmp.load_location();
         App.vars.tmp.$location_pk.val(App.vars.tmp.form.location_pk);
     };
+    App.views.splash(null, 'hide');
 </script>

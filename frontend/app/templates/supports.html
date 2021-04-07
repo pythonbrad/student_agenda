@@ -33,6 +33,7 @@
 </div>
 <!-- We duplicate the data -->
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     App.vars.tmp.$el = $('#block');
     App.vars.tmp.$html = App.vars.tmp.$el.html();
     if (App.models.assets.length) {
@@ -73,4 +74,5 @@
             alert('Please allow popups for launch the downloading');
         };
     };
+    App.views.splash(null, 'hide');
 </script>

@@ -9,6 +9,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     (function () {
         // We config the calendar
         moment.locale('en');
@@ -72,4 +73,5 @@
             daynotes: daynotes
         }).init();
     })();
+    App.views.splash(null, 'hide');
 </script>

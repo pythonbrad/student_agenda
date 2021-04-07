@@ -38,6 +38,7 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     // We define element that we will use
     App.vars.tmp.$name = $('#lecturer_name');
     App.vars.tmp.$timetable_pk = $('#lecturer_timetable_pk');
@@ -61,4 +62,5 @@
         App.vars.tmp.$name.val(App.vars.tmp.form.name);
         App.vars.tmp.$timetable_pk.val(App.vars.tmp.form.timetable_pk);
     };
+    App.views.splash(null, 'hide');
 </script>

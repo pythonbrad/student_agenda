@@ -38,6 +38,7 @@
     <br>
 </div>
 <script type="text/javascript">
+    App.views.splash(null, 'show');
     App.vars.tmp.login = function () {
         username = $('#user_username').val();
         email = $('#user_email').val();
@@ -54,4 +55,5 @@
         $('#user_username').val(App.vars.tmp.form.username);
         $('#user_email').val(App.vars.tmp.form.email);
     };
+    App.views.splash(null, 'hide');
 </script>
