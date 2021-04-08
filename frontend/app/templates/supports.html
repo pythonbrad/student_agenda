@@ -42,7 +42,7 @@
             // We verify if owner
             App.vars.tmp.owner = 0;
             for (var timetable_id = 0; timetable_id < App.models.timetables.length; timetable_id++) {
-                if (App.models.timetables[timetable_id].pk == App.models.assets[asset_id].timetable_pk) {
+                if (App.models.timetables[timetable_id].pk == App.models.assets[asset_id].category.timetable_pk) {
                     App.vars.tmp.owner = App.models.timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk});
                     break;
                 };

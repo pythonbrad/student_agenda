@@ -54,6 +54,7 @@
         };
     };
     App.vars.tmp.$error = $('#lecturer_error');
+    App.vars.tmp.$error.empty();
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
     };

@@ -120,6 +120,7 @@
         };
     };
     // We load status
+    App.vars.tmp.$status.empty()
     for (var i = 0; i < App.vars.STATUS_CHOICES.length; i++) {
         App.vars.tmp.$status.append("<option value='"+App.vars.STATUS_CHOICES[i][0]+"'>"+App.vars.STATUS_CHOICES[i][1]+"</option");
     };
@@ -130,6 +131,7 @@
         };
     };
     App.vars.tmp.$error = $('#lesson_error');
+    App.vars.tmp.$error.empty();
     for (var i = 0; i < App.vars.errors.length; i++) {
         App.vars.tmp.$error.append('<h4 class="text-danger text-center">'+App.vars.errors[i]+'</h4>');
     };

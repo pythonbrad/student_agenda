@@ -623,7 +623,7 @@ App = {
 					// We send data
 					if (asset_id != null) {
 						if (name && description && category_pk!=null && course_pk!=null) {
-							Addons.request('/api/admin/timetable/asset/'+App.models.assets[asset_id].pk+'/update',
+							Addons.request('/api/moderator/timetable/asset/'+App.models.assets[asset_id].pk+'/update',
 								{name:name,description:description,category:category_pk,course:course_pk},
 								function (d) {
 									if (d.code != 200) {
