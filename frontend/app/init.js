@@ -593,7 +593,7 @@ App = {
 				App.views.splash(
 					function () {
 						// We perform operation
-						Addons.request('/api/admin/timetable/asset/'+asset_pk+'/delete',null,
+						Addons.request('/api/moderator/timetable/asset/'+asset_pk+'/delete',null,
 							function (d) {
 								App.views.supports();
 							},false
