@@ -533,7 +533,7 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					MAX_SIZE = 2621440;
+					MAX_SIZE = 10485760;
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
