@@ -288,6 +288,15 @@ class Notification(models.Model):
             'description': self.description,
         }
 
+
+class Feedback(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField(max_length=1024)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return 'Feedback from %s' % author.username
+
 # Signals
 # Delete file when media delete
 @receiver(pre_delete, sender=Asset)

@@ -6,6 +6,7 @@ urlpatterns = [
     path('auth/signin', authentification.signin_view),
     path('auth/login', authentification.login_view),
     path('auth/logout', authentification.logout_view),
+    path('user/feedback', user.feedback_view),
     path('user/timetables/followed', user.get_timetable_follow_by_me_view),
     path('user/timetable/<int:timetable_pk>/follow', user.follow_timetable_view),
     path('user/timetable/<int:timetable_pk>/unfollow', user.unfollow_timetable_view),

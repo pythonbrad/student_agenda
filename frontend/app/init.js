@@ -885,6 +885,38 @@ App = {
 				}, 100);
 			});
 		},
+		feedback: function (message) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					App.events[0] = setInterval(function () {
+						// We verify if all the operations are finished
+						if (App.vars.can_pass) {
+							clearInterval(App.events[0]);
+							$('#main').load('app/templates/feedback.html');
+						}
+					}, 100);
+					// We save the data form
+			        App.vars.tmp.form = {message:message};
+					// We send data
+					if (message) {
+						Addons.request('/api/user/feedback',
+							{message:message},
+							function (d) {
+								if (d.code != 200) {
+									App.vars.errors = d.errors;
+									App.vars.can_pass = 1;
+								} else {
+									App.views.profil();
+								};
+							}, false);
+					} else {
+						// We load the template
+						App.vars.can_pass = 1;
+					};
+				}
+			);
+		},
 	},
 	models: {},
 	events: {},

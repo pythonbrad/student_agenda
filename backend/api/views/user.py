@@ -1,4 +1,4 @@
-from task.models import Course, Classe, Timetable, Notification
+from task.models import Course, Classe, Timetable, Notification, Feedback
 from task.models import Lecturer, Absent, Asset, Event, STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
@@ -338,3 +338,20 @@ def get_notification(request):
         return apiResponse(result=[notification.get_as_json() for notification in notifications])
     else:
         return apiResponse(code=622)
+
+@csrf_exempt
+def feedback_view(request):
+    if request.user.is_authenticated:
+        if request.POST:
+            data = request.POST
+            feedback = Feedback(author=request.user, message=data.get('message', None))
+            try:
+                feedback.full_clean()
+                feedback.save()
+                return apiResponse()
+            except ValidationError as err:
+                return apiResponse(code=522, info=err.messages)
+        else:
+            return apiResponse(code=102)
+    else:
+        return apiResponse(code=625)
