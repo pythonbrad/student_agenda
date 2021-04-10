@@ -33,7 +33,7 @@ class Student(models.Model):
 
 class Absent(models.Model):
     student = models.ForeignKey('Student', on_delete=models.CASCADE)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     time = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -54,7 +54,7 @@ class Absent(models.Model):
 
 class Timetable(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     owner = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='Owner')
     moderators = models.ManyToManyField('Student', related_name='Moderators')
     followers = models.ManyToManyField('Student')
@@ -96,7 +96,7 @@ class Lecturer(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     code = models.CharField(max_length=10)
     lecturers = models.ManyToManyField('Lecturer')
     followers = models.ManyToManyField('Student')
@@ -119,11 +119,11 @@ class Course(models.Model):
         }
 
 class Classe(models.Model):
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
+    status = models.CharField(choices=STATUS_CHOICES, max_length=1)
     absents = models.ManyToManyField('Absent')
     attendance_done = models.BooleanField(default=0)
     begin = models.TimeField(default=timezone.now)
@@ -159,7 +159,7 @@ class Classe(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -184,7 +184,7 @@ class Media(models.Model):
 
 class Asset(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     readers = models.ManyToManyField('Student')
@@ -215,7 +215,7 @@ class Asset(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -235,10 +235,10 @@ class Category(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=64)
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     interested = models.ManyToManyField('Student')
-    status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
+    status = models.CharField(choices=STATUS_CHOICES, max_length=1)
     date = models.DateField(default=timezone.now)
     begin = models.TimeField(default=timezone.now)
     end = models.TimeField(default=timezone.now)
@@ -273,7 +273,7 @@ class Event(models.Model):
     
 class Notification(models.Model):
     receivers = models.ManyToManyField('Student')
-    description = models.CharField(max_length=1024, default='')
+    description = models.TextField(max_length=1024)
 
     class Meta:
         verbose_name = "Notification"
