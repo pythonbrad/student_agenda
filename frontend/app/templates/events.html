@@ -10,6 +10,7 @@
                 </div>
                 <div class="col">
                     <h4>{{name}}</h4>
+                    <i>from {{timetable}}</i>
                 </div>
             </div>
             <br>
@@ -53,6 +54,7 @@
             };
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{name}}', App.models.events[event_id].name)
+                .replace('{{timetable}}', App.models.timetables[timetable_id].name)
                 .replace('{{description}}', App.models.events[event_id].description)
                 .replace('{{location}}', App.models.events[event_id].location.name)
                 .replace('{{interested}}', App.models.events[event_id].interested)

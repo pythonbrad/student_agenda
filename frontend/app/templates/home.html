@@ -9,8 +9,8 @@
                     <i class="fas fa-4x fa-book" style="color: brown;"></i>
                 </div>
                 <div class="col">
-                    <span>{{code}}</span>
-                    <h4>{{name}}</h4>
+                    <h4><b>{{code}}:</b> {{name}}</h4>
+                    <i>from {{timetable}}</i>
                 </div>
             </div>
             <br>
@@ -56,6 +56,7 @@
             };
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{code}}', App.models.classes[classe_id].course.code)
+                .replace('{{timetable}}', App.models.timetables[timetable_id].name)
                 .replace('{{name}}', App.models.classes[classe_id].course.name)
                 .replace('{{date}}', App.models.classes[classe_id].date)
                 .replace('{{begin}}', App.models.classes[classe_id].begin)

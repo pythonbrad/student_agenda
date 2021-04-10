@@ -7,8 +7,8 @@
                     <i class="fas fa-4x fa-book text-primary"></i>
                 </div>
                 <div class="col">
-                    <span>Course: {{code}}</span>
-                    <h4>{{name}}</h4>
+                    <h4><b>{{code}}:</b> {{name}}</h4>
+                    <i>from {{timetable}}</i>
                 </div>
             </div>
             <br>
@@ -50,6 +50,7 @@
             App.vars.tmp.$el.append(App.vars.tmp.$html
                 .replace('{{code}}', App.models.assets[asset_id].course.code)
                 .replace('{{name}}', App.models.assets[asset_id].name)
+                .replace('{{timetable}}', App.models.timetables[timetable_id].name)
                 .replace('{{description}}', App.models.assets[asset_id].description)
                 .replace('{{pub_date}}', App.models.assets[asset_id].pub_date)
                 .replace('{{category}}', App.models.assets[asset_id].category.name)
