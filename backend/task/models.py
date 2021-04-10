@@ -33,7 +33,7 @@ class Student(models.Model):
 
 class Absent(models.Model):
     student = models.ForeignKey('Student', on_delete=models.CASCADE)
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=1024, default='')
     time = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -53,8 +53,8 @@ class Absent(models.Model):
     
 
 class Timetable(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=64, unique=True)
+    description = models.CharField(max_length=1024, default='')
     owner = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='Owner')
     moderators = models.ManyToManyField('Student', related_name='Moderators')
     followers = models.ManyToManyField('Student')
@@ -77,7 +77,7 @@ class Timetable(models.Model):
         }
 
 class Lecturer(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=64)
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -95,8 +95,8 @@ class Lecturer(models.Model):
         }
 
 class Course(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=1024, default='')
     code = models.CharField(max_length=10)
     lecturers = models.ManyToManyField('Lecturer')
     followers = models.ManyToManyField('Student')
@@ -119,7 +119,7 @@ class Course(models.Model):
         }
 
 class Classe(models.Model):
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=1024, default='')
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
@@ -158,8 +158,8 @@ class Classe(models.Model):
         super().save(*args, **kwargs)
 
 class Location(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=1024, default='')
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -183,8 +183,8 @@ class Media(models.Model):
     author = models.ForeignKey('Student', on_delete=models.CASCADE)
 
 class Asset(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=1024, default='')
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     readers = models.ManyToManyField('Student')
@@ -214,8 +214,8 @@ class Asset(models.Model):
         }
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=1024, default='')
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -234,8 +234,8 @@ class Category(models.Model):
         }
 
 class Event(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=255, default='')
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=1024, default='')
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     interested = models.ManyToManyField('Student')
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default=STATUS_CHOICES[0][0])
@@ -273,7 +273,7 @@ class Event(models.Model):
     
 class Notification(models.Model):
     receivers = models.ManyToManyField('Student')
-    description = models.CharField(max_length=255, default='')
+    description = models.CharField(max_length=1024, default='')
 
     class Meta:
         verbose_name = "Notification"

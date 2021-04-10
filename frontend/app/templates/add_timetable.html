@@ -10,11 +10,11 @@
         <form class="form col" action="#">
             <div class="form-group">
                 <label for="timetable_name">Name</label>
-                <input type="text" class="form-control" id="timetable_name" placeholder="Enter the timetable's name">
+                <input type="text" class="form-control" id="timetable_name"  maxlength="64" placeholder="Enter the timetable's name">
             </div>
             <div class="form-group">
                 <label for="timetable_description">Description</label>
-                <input type="text" class="form-control" id="timetable_description" placeholder="Enter the timetable's description">
+                <input type="text" class="form-control" id="timetable_description" maxlength="1024" placeeholder="Enter the timetable's description">
             </div>
             <div class="form-group">
                 <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.add_timetable()">
