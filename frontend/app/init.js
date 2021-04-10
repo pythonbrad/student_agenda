@@ -705,9 +705,7 @@ App = {
 									App.models.assets.push(d.result[ii]);
 								};
 							};
-							if (i+1 == App.models.timetables.length) {
-								App.vars.can_pass = 1;
-							};
+							App.vars.can_pass = 1;
 						}, false);
 					};
 				}
@@ -744,13 +742,28 @@ App = {
 			App.views.splash(
 				function () {
 					// We perform operation
-					// We load the template
-					App.views.base(
-						function () {
-							$('#contains').load('app/templates/notifications.html');
-							$('#header').load('app/templates/notifications_header.html');
-						}
-					);
+					App.events[0] = setInterval(function () {
+						// We verify if all the operations are finished
+						if (App.vars.can_pass) {
+							clearInterval(App.events[0]);
+							// We load the page
+							App.views.base(
+								function () {
+									$('#header').load('app/templates/notifications_header.html');
+									$('#contains').load('app/templates/notifications.html');
+								}
+							);
+						};
+					}, 100);
+					Addons.request('/api/user/timetable/notifications', null, function (d) {
+						if (d.code == 200) {
+							App.models.notifications = [];
+							for (var ii = 0; ii < d.result.length; ii++) {
+								App.models.notifications.push(d.result[ii]);
+							};
+						};
+						App.vars.can_pass = 1;
+					}, false);
 				}
 			);
 		},
@@ -934,9 +947,7 @@ App = {
 							App.models.classes.push(d.result[ii]);
 						};
 					};
-					if (i+1 == App.models.timetables.length) {
-						App.vars.can_pass = 1;
-					};
+					App.vars.can_pass = 1;
 				}, false);
 			};
 		},
@@ -950,9 +961,7 @@ App = {
 							App.models.events.push(d.result[ii]);
 						};
 					};
-					if (i+1 == App.models.timetables.length) {
-						App.vars.can_pass = 1;
-					};
+					App.vars.can_pass = 1;
 				}, false);
 			};
 		},

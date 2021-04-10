@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
 
 STATUS_CHOICES = (
@@ -272,8 +272,10 @@ class Event(models.Model):
 
     
 class Notification(models.Model):
+    timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE)
     receivers = models.ManyToManyField('Student')
     description = models.TextField(max_length=1024)
+    created_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name = "Notification"
@@ -284,13 +286,14 @@ class Notification(models.Model):
 
     def get_as_json(self):
         return {
-            'pk': self.pk,
+            'timetable': self.timetable.name,
+            'created_date': self.created_date,
             'description': self.description,
         }
 
 
 class Feedback(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Student, on_delete=models.CASCADE)
     message = models.TextField(max_length=1024)
     created_date = models.DateTimeField(default=timezone.now)
 
@@ -298,7 +301,51 @@ class Feedback(models.Model):
         return 'Feedback from %s' % author.username
 
 # Signals
-# Delete file when media delete
+# Delete file when
 @receiver(pre_delete, sender=Asset)
 def delete_media(sender, instance, **kwargs):
     instance.media.file.delete()
+
+# Create notification when
+@receiver(post_save, sender=Classe)
+def update_classe(instance, created, **kwargs):
+    if created:
+        message = "A class of %s has been added for %s %s"
+    else:
+        message = "The class of %s at %s %s has been updated"
+    Notification.objects.create(
+        description=message % (
+            instance.course.code,
+            instance.date,
+            instance.begin
+        ),
+        timetable=instance.location.timetable,
+    )
+
+@receiver(post_save, sender=Asset)
+def update_asset(instance, created, **kwargs):
+    if created:
+        message = "The asset <%s> of %s has been added"
+    else:
+        message = "The asset <%s> of %s has been updated"
+    Notification.objects.create(
+        description=message % (
+            instance.name,
+            instance.course.code
+        ),
+        timetable=instance.category.timetable,
+    )
+
+@receiver(post_save, sender=Event)
+def update_event(instance, created, **kwargs):
+    if created:
+        message = "An event has been added for %s %s"
+    else:
+        message = "The event at %s %s has been updated"
+    Notification.objects.create(
+        description=message % (
+            instance.date,
+            instance.begin
+        ),
+        timetable=instance.location.timetable,
+    )

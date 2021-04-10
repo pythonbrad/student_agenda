@@ -334,17 +334,23 @@ def unfollow_event_view(request, event_pk):
 
 def get_notification(request):
     if request.user.is_authenticated:
-        notifications = Notification.objects.filter(receivers=request.user.student_set.get())
-        return apiResponse(result=[notification.get_as_json() for notification in notifications])
+        notifications = Notification.objects.filter(timetable__followers=request.user.student_set.get()).exclude(receivers=request.user.student_set.get())
+        if not notifications:
+            notifications = Notification.objects.filter(timetable__followers=request.user.student_set.get())[:5]
+        results = []
+        for notification in notifications:
+            results.append(notification.get_as_json())
+            notification.receivers.add(request.user.student_set.get())
+        return apiResponse(result=results)
     else:
-        return apiResponse(code=622)
+        return apiResponse(code=623)
 
 @csrf_exempt
 def feedback_view(request):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
-            feedback = Feedback(author=request.user, message=data.get('message', None))
+            feedback = Feedback(author=request.user.student_set.get(), message=data.get('message', None))
             try:
                 feedback.full_clean()
                 feedback.save()
