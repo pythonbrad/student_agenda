@@ -72,7 +72,6 @@
                         if(d.result[i].pk == App.models.user.pk) {
                             // Do nothing
                         } else if(App.models.timetables[choice_id].moderators.find(function (x) {return x==d.result[i].pk})) {
-                            console.log(App.models.timetables[choice_id].moderators);
                             App.vars.tmp.$moderator_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].username+"</option");
                         } else {
                             App.vars.tmp.$follower_pk.append("<option value='"+d.result[i].pk+"'>"+d.result[i].username+"</option");

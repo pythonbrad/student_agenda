@@ -28,7 +28,8 @@
                     </div>
                     <div class="card-footer" {{admin_panel}}>
                         <button class="btn btn-warning btn-sm" onclick='App.views.update_event({{id}})'>Update</button>
-                        <button class="btn btn-danger btn-sm" onclick='App.views.delete_event({{event_pk}})'>Delete</button>
+                        <!-- Button trigger modal -->
+                        <button class="btn btn-danger btn-sm" onclick='App.vars.tmp.to_delete={{event_pk}}' data-toggle="modal" data-target="#delete_event">Delete</button>
                     </div>
                 </div>
             </div>
@@ -36,6 +37,24 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="delete_event" tabindex="-1" aria-labelledby="delete_eventLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete_eventLabel">Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <span class="text">Are you sure to delete it?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#delete_event').on('hidden.bs.modal', function (event) {App.views.delete_event(App.vars.tmp.to_delete)})">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- We duplicate the data -->
 <script type="text/javascript">
     App.views.splash(null, 'show');

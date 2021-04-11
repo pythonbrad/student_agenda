@@ -165,18 +165,16 @@ App = {
 			);
 		},
 		delete_timetable: function (timetable_pk) {
-			if (prompt("Enter <delete> if your are sure.") == 'delete') {
-				App.views.splash(
-					function () {
-						// We perform operation
-						Addons.request('/api/admin/timetable/'+timetable_pk+'/delete',null,
-							function (d) {
-								App.views.choose_timetable();
-							},false
-						);
-					}
-				);
-			};
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/admin/timetable/'+timetable_pk+'/delete',null,
+						function (d) {
+							App.views.choose_timetable();
+						},false
+					);
+				}
+			);
 		},
 		moderators: function (user_pk, timetable_pk, add) {
 			App.views.splash(
@@ -238,18 +236,16 @@ App = {
 			);
 		},
 		delete_event: function (event_pk) {
-			if (prompt("Enter <delete> if your are sure.") == 'delete') {
-				App.views.splash(
-					function () {
-						// We perform operation
-						Addons.request('/api/moderator/timetable/event/'+event_pk+'/delete',null,
-							function (d) {
-								App.views.events();
-							},false
-						);
-					}
-				);
-			};
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/moderator/timetable/event/'+event_pk+'/delete',null,
+						function (d) {
+							App.views.events();
+						},false
+					);
+				}
+			);
 		},
 		update_event: function (event_id,name,description,status,date,begin,end,location_pk,timetable_pk) {
 			App.views.splash(
@@ -337,16 +333,14 @@ App = {
 			);
 		},
 		delete_lesson: function (classe_pk) {
-			if (prompt("Enter <delete> if your are sure.") == 'delete') {
-				App.views.splash(
-					function () {
-						// We perform operation
-						Addons.request('/api/moderator/timetable/classe/'+classe_pk+'/delete',null,function (d) {
-							App.views.home();
-						}, false);
-					}
-				);
-			};
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/moderator/timetable/classe/'+classe_pk+'/delete',null,function (d) {
+						App.views.home();
+					}, false);
+				}
+			);
 		},
 		update_lesson: function (lesson_id,description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
 			App.views.splash(
@@ -589,18 +583,16 @@ App = {
 			);
 		},
 		delete_asset: function (asset_pk) {
-			if (prompt("Enter <delete> if your are sure.") == 'delete') {
-				App.views.splash(
-					function () {
-						// We perform operation
-						Addons.request('/api/moderator/timetable/asset/'+asset_pk+'/delete',null,
-							function (d) {
-								App.views.supports();
-							},false
-						);
-					}
-				);
-			};
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/moderator/timetable/asset/'+asset_pk+'/delete',null,
+						function (d) {
+							App.views.supports();
+						},false
+					);
+				}
+			);
 		},
 		update_asset: function (asset_id, name, description, category_pk, course_pk, files, timetable_pk) {
 			App.views.splash(

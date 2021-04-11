@@ -29,7 +29,8 @@
                         <button class="btn btn-info btn-sm" onclick="alert('Coming Soon...')">See more</button>
                         <span {{admin_panel}}>
                             <button class="btn btn-warning btn-sm" onclick='App.views.update_lesson({{id}})'>Update</button>
-                            <button class="btn btn-danger btn-sm" onclick='App.views.delete_lesson({{classe_pk}})'>Delete</button>
+                            <!-- Button trigger modal -->
+                            <button class="btn btn-danger btn-sm" onclick='App.vars.tmp.to_delete={{classe_pk}}' data-toggle="modal" data-target="#delete_lesson">Delete</button>
                         </span>
                     </div>
                 </div>
@@ -37,6 +38,23 @@
         </div>
         <br>
     </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="delete_lesson" tabindex="-1" aria-labelledby="delete_lessonLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete_lessonLabel">Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <span class="text">Are you sure to delete it?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#delete_lesson').on('hidden.bs.modal', function (event) {App.views.delete_lesson(App.vars.tmp.to_delete)})">Yes</button>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- We duplicate the data -->
 <script type="text/javascript">
