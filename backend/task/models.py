@@ -32,7 +32,7 @@ class Student(models.Model):
         }
 
 class Absent(models.Model):
-    student = models.ForeignKey('Student', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField(max_length=1024)
     time = models.DateTimeField(default=timezone.now)
 
@@ -41,12 +41,12 @@ class Absent(models.Model):
         verbose_name_plural = "Absents"
 
     def __str__(self):
-        return str(self.student)
+        return str(self.user)
 
     def get_as_json(self):
         return {
             'pk': self.pk,
-            'user': self.student.pk,
+            'user': self.user.pk,
             'description': self.description,
             'time': self.time,
         }
@@ -55,9 +55,9 @@ class Absent(models.Model):
 class Timetable(models.Model):
     name = models.CharField(max_length=64, unique=True)
     description = models.TextField(max_length=1024)
-    owner = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='Owner')
-    moderators = models.ManyToManyField('Student', related_name='Moderators')
-    followers = models.ManyToManyField('Student')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Owner')
+    moderators = models.ManyToManyField(User, related_name='Moderators')
+    followers = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Timetable"
@@ -73,7 +73,7 @@ class Timetable(models.Model):
             'description': self.description,
             'moderators': [moderator.pk for moderator in self.moderators.all()],
             'followers': self.followers.count(),
-            'owner': self.owner.get_as_json()
+            'owner': self.owner.student_set.get().get_as_json()
         }
 
 class Lecturer(models.Model):
@@ -99,7 +99,7 @@ class Course(models.Model):
     description = models.TextField(max_length=1024)
     code = models.CharField(max_length=10)
     lecturers = models.ManyToManyField('Lecturer')
-    followers = models.ManyToManyField('Student')
+    followers = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Course"
@@ -180,14 +180,14 @@ class Location(models.Model):
 class Media(models.Model):
     file = models.FileField(upload_to='uploads/%Y/%m/%d/%I_%M_%p')
     time = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey('Student', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Asset(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(max_length=1024)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-    readers = models.ManyToManyField('Student')
+    readers = models.ManyToManyField(User)
     media = models.ForeignKey('Media', on_delete=models.CASCADE)
     pub_date = models.DateTimeField(default=timezone.now)
 
@@ -237,7 +237,7 @@ class Event(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(max_length=1024)
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
-    interested = models.ManyToManyField('Student')
+    interested = models.ManyToManyField(User)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1)
     date = models.DateField(default=timezone.now)
     begin = models.TimeField(default=timezone.now)
@@ -273,7 +273,7 @@ class Event(models.Model):
     
 class Notification(models.Model):
     timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE)
-    receivers = models.ManyToManyField('Student')
+    receivers = models.ManyToManyField(User)
     description = models.TextField(max_length=1024)
     created_date = models.DateTimeField(default=timezone.now)
 
@@ -295,7 +295,7 @@ class Notification(models.Model):
 class Announce(models.Model):
     message = models.TextField(max_length=1024) 
     audience = models.IntegerField(default=0) # 0 for all users
-    receivers = models.ManyToManyField(Student)
+    receivers = models.ManyToManyField(User)
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -309,7 +309,7 @@ class Announce(models.Model):
 
 
 class Feedback(models.Model):
-    author = models.ForeignKey(Student, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField(max_length=1024)
     created_date = models.DateTimeField(default=timezone.now)
 
@@ -326,7 +326,7 @@ def delete_media(sender, instance, **kwargs):
 @receiver(post_save, sender=Classe)
 def update_classe(instance, created, **kwargs):
     if created:
-        message = "A class of %s has been added for %s %s."
+        message = "A class for %s has been added for %s %s."
     else:
         message = "The class of %s at %s %s has been updated."
     Notification.objects.create(
@@ -341,9 +341,9 @@ def update_classe(instance, created, **kwargs):
 @receiver(post_save, sender=Asset)
 def update_asset(instance, created, **kwargs):
     if created:
-        message = "The asset <%s> of %s has been added."
+        message = "An asset %s for %s has been added."
     else:
-        message = "The asset <%s> of %s has been updated."
+        message = "The asset %s of %s has been updated."
     Notification.objects.create(
         description=message % (
             instance.name,

@@ -14,7 +14,7 @@ def add_timetable_classe_view(request, course_pk=None, classe_pk=None):
             else:
                 classe = Classe()
             location = Location.objects.filter(
-                pk=data.get('location', None), timetable__owner=request.user.student_set.get())
+                pk=data.get('location', None), timetable__owner=request.user)
             course = Course.objects.filter(
                 pk=data.get('course') if classe_pk else course_pk)
             if location and course and classe:
@@ -46,7 +46,7 @@ def update_timetable_classe_view(request, classe_pk):
 
 def delete_timetable_classe_view(request, classe_pk):
     if request.user.is_authenticated:
-        classe = Classe.objects.filter(pk=classe_pk, location__timetable__owner=request.user.student_set.get())
+        classe = Classe.objects.filter(pk=classe_pk, location__timetable__owner=request.user)
         if classe:
             classe.delete()
             return apiResponse()
@@ -60,7 +60,7 @@ def delete_timetable_classe_view(request, classe_pk):
 def add_media_view(request):
     if request.user.is_authenticated:
         if request.FILES:
-            media = Media.objects.create(file=request.FILES['file'], author=request.user.student_set.get())
+            media = Media.objects.create(file=request.FILES['file'], author=request.user)
             return apiResponse(result=media.pk)
         else:
             return apiResponse(code=529)
@@ -80,7 +80,7 @@ def add_course_asset_view(request, course_pk=None, asset_pk=None):
             else:
                 asset = Asset()
             category = Category.objects.filter(
-                pk=data.get('category', None), timetable__owner=request.user.student_set.get())
+                pk=data.get('category', None), timetable__owner=request.user)
             if not asset_pk:
                 media = Media.objects.filter(
                     pk=data.get('media', None))
@@ -111,7 +111,7 @@ def add_course_asset_view(request, course_pk=None, asset_pk=None):
 
 def delete_course_asset_view(request, asset_pk):
     if request.user.is_authenticated:
-        asset = Asset.objects.filter(pk=asset_pk, category__timetable__owner=request.user.student_set.get())
+        asset = Asset.objects.filter(pk=asset_pk, category__timetable__owner=request.user)
         if asset:
             asset[0].delete()
             return apiResponse()
@@ -136,7 +136,7 @@ def add_timetable_event_view(request, event_pk=None):
             else:
                 event = Event()
             location = Location.objects.filter(
-                pk=data.get('location', None), timetable__owner=request.user.student_set.get())
+                pk=data.get('location', None), timetable__owner=request.user)
             if location and event:
                 event.name=data.get('name', None)
                 event.description=data.get('description', None)
@@ -148,7 +148,7 @@ def add_timetable_event_view(request, event_pk=None):
                 try:
                     event.full_clean()
                     event.save()
-                    event.interested.add(request.user.student_set.get())
+                    event.interested.add(request.user)
                     return apiResponse()
                 except ValidationError as err:
                     return apiResponse(code=525, info=err.messages)
@@ -161,7 +161,7 @@ def add_timetable_event_view(request, event_pk=None):
 
 def delete_timetable_event_view(request, event_pk):
     if request.user.is_authenticated:
-        event = Event.objects.filter(pk=event_pk, location__timetable__owner=request.user.student_set.get())
+        event = Event.objects.filter(pk=event_pk, location__timetable__owner=request.user)
         if event:
             event.delete()
             return apiResponse()

@@ -15,7 +15,7 @@ def get_timetable_view(request):
 
 def get_timetable_follow_by_me_view(request):
     if request.user.is_authenticated:
-        timetables = Timetable.objects.filter(followers=request.user.student_set.get())
+        timetables = Timetable.objects.filter(followers=request.user)
         if timetables:
             return apiResponse(result=[timetable.get_as_json() for timetable in timetables])
         else:
@@ -29,7 +29,7 @@ def follow_timetable_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            timetable.followers.add(request.user.student_set.get())
+            timetable.followers.add(request.user)
             timetable.save()
             return apiResponse()
         else:
@@ -43,7 +43,7 @@ def unfollow_timetable_view(request, timetable_pk):
         timetable = Timetable.objects.filter(pk=timetable_pk)
         if timetable:
             timetable = timetable[0]
-            timetable.followers.remove(request.user.student_set.get())
+            timetable.followers.remove(request.user)
             timetable.save()
             return apiResponse()
         else:
@@ -106,7 +106,7 @@ def set_course_follower_view(request, course_pk):
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
-            course.followers.add(request.user.student_set.get())
+            course.followers.add(request.user)
             course.save()
             return apiResponse()
         else:
@@ -120,7 +120,7 @@ def unset_course_follower_view(request, course_pk):
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
-            course.followers.remove(request.user.student_set.get())
+            course.followers.remove(request.user)
             course.save()
             return apiResponse()
         else:
@@ -171,9 +171,9 @@ def set_classe_absent_view(request, classe_pk):
             classe = Classe.objects.filter(pk=classe_pk)
             if classe:
                 classe = classe[0]
-                if not Absent.objects.filter(student__user=request.user):
+                if not Absent.objects.filter(user=request.user):
                     absent = Absent.objects.create(
-                        student=request.user.student_set.get(),
+                        user=request.user,
                         description=data.get('description', None))
                     classe.absents.add(absent)
                     classe.save()
@@ -193,7 +193,7 @@ def unset_classe_absent_view(request, classe_pk):
         classe = Classe.objects.filter(pk=classe_pk)
         if classe:
             classe = classe[0]
-            classe.absents.remove(request.user.student_set.get())
+            classe.absents.remove(request.user)
             classe.save()
             return apiResponse()
         else:
@@ -254,7 +254,7 @@ def set_asset_reader_view(request, asset_pk):
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset = asset[0]
-            asset.readers.add(request.user.student_set.get())
+            asset.readers.add(request.user)
             asset.save()
             return apiResponse()
         else:
@@ -268,7 +268,7 @@ def unset_asset_reader_view(request, asset_pk):
         asset = Asset.objects.filter(pk=asset_pk)
         if asset:
             asset = asset[0]
-            asset.readers.remove(request.user.student_set.get())
+            asset.readers.remove(request.user)
             asset.save()
             return apiResponse()
         else:
@@ -310,7 +310,7 @@ def follow_event_view(request, event_pk):
         event = Event.objects.filter(pk=event_pk)
         if event:
             event = event[0]
-            event.interested.add(request.user.student_set.get())
+            event.interested.add(request.user)
             event.save()
             return apiResponse()
         else:
@@ -324,7 +324,7 @@ def unfollow_event_view(request, event_pk):
         event = Event.objects.filter(pk=event_pk)
         if event:
             event = event[0]
-            event.interested.remove(request.user.student_set.get())
+            event.interested.remove(request.user)
             event.save()
             return apiResponse()
         else:
@@ -335,20 +335,20 @@ def unfollow_event_view(request, event_pk):
 
 def get_notification(request):
     if request.user.is_authenticated:
-        notifications = Notification.objects.filter(timetable__followers=request.user.student_set.get()).exclude(receivers=request.user.student_set.get())
+        notifications = Notification.objects.filter(timetable__followers=request.user).exclude(receivers=request.user)
         if not notifications:
-            notifications = Notification.objects.filter(timetable__followers=request.user.student_set.get())[:5]
+            notifications = Notification.objects.filter(timetable__followers=request.user)[:5]
         results = []
         for notification in notifications:
             results.append(notification.get_as_json())
-            notification.receivers.add(request.user.student_set.get())
+            notification.receivers.add(request.user)
         return apiResponse(result=results)
     else:
         return apiResponse(code=623)
 
 def get_announce(request):
     if request.user.is_authenticated:
-        announces = Announce.objects.filter(Q(audience=request.user.pk) | Q(audience=0)).exclude(receivers=request.user.student_set.get())
+        announces = Announce.objects.filter(Q(audience=request.user.pk) | Q(audience=0)).exclude(receivers=request.user)
         results = []
         for announce in announces:
             results.append(announce.get_as_json())
@@ -362,7 +362,7 @@ def feedback_view(request):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
-            feedback = Feedback(author=request.user.student_set.get(), message=data.get('message', None))
+            feedback = Feedback(author=request.user, message=data.get('message', None))
             try:
                 feedback.full_clean()
                 feedback.save()
