@@ -39,4 +39,41 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div id="announce">
+        <div class="modal fade" id="staticBackdrop{{i}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop{{i}}Label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdrop{{i}}Label">Announce</h5>
+              </div>
+              <div class="modal-body">
+                <span class="text">{{contains}}</span><br>
+                <i class="text">{{date}}</i>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/javascript">
+    $announce = $('#announce');
+    $html = $announce.html();
+    $announce.empty();
+    Addons.request('/api/user/timetable/announces', null, function (d) {
+        for (var i = 0; i < d.result.length; i++) {
+            $announce.append($html
+                .replace('{{contains}}', d.result[i].message)
+                .replace('{{date}}', d.result[i].created_date)
+                .replace('{{i}}', i)
+                .replace('{{i}}', i)
+                .replace('{{i}}', i)
+            );
+            $('#staticBackdrop'+i).modal('show');
+        };
+    });
+</script>

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import pre_delete, post_save, m2m_changed
 from django.dispatch import receiver
 
 STATUS_CHOICES = (
@@ -292,6 +292,22 @@ class Notification(models.Model):
         }
 
 
+class Announce(models.Model):
+    message = models.TextField(max_length=1024) 
+    audience = models.IntegerField(default=0) # 0 for all users
+    receivers = models.ManyToManyField(Student)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return 'Announce for USER_ID %s' % self.audience
+
+    def get_as_json(self):
+        return {
+            'message': self.message,
+            'created_date': self.created_date
+        }
+
+
 class Feedback(models.Model):
     author = models.ForeignKey(Student, on_delete=models.CASCADE)
     message = models.TextField(max_length=1024)
@@ -310,9 +326,9 @@ def delete_media(sender, instance, **kwargs):
 @receiver(post_save, sender=Classe)
 def update_classe(instance, created, **kwargs):
     if created:
-        message = "A class of %s has been added for %s %s"
+        message = "A class of %s has been added for %s %s."
     else:
-        message = "The class of %s at %s %s has been updated"
+        message = "The class of %s at %s %s has been updated."
     Notification.objects.create(
         description=message % (
             instance.course.code,
@@ -325,9 +341,9 @@ def update_classe(instance, created, **kwargs):
 @receiver(post_save, sender=Asset)
 def update_asset(instance, created, **kwargs):
     if created:
-        message = "The asset <%s> of %s has been added"
+        message = "The asset <%s> of %s has been added."
     else:
-        message = "The asset <%s> of %s has been updated"
+        message = "The asset <%s> of %s has been updated."
     Notification.objects.create(
         description=message % (
             instance.name,
@@ -339,9 +355,9 @@ def update_asset(instance, created, **kwargs):
 @receiver(post_save, sender=Event)
 def update_event(instance, created, **kwargs):
     if created:
-        message = "An event has been added for %s %s"
+        message = "An event has been added for %s %s."
     else:
-        message = "The event at %s %s has been updated"
+        message = "The event at %s %s has been updated."
     Notification.objects.create(
         description=message % (
             instance.date,
@@ -349,3 +365,20 @@ def update_event(instance, created, **kwargs):
         ),
         timetable=instance.location.timetable,
     )
+
+# Create announce when
+@receiver(post_save, sender=User)
+def new_user(instance, created, **kwargs):
+    if created:
+        Announce.objects.create(audiance=instance.pk, message="Hello %s and welcome, to Student's Agenda." % instance.username)
+
+@receiver(m2m_changed, sender=Timetable.moderators.through)
+def update_moderator(instance, action, pk_set, **kwargs):
+    if action == 'post_remove':
+        for i in pk_set:
+            Announce.objects.create(audience=i, message="From %s, you lost your status of moderator." % instance.name)
+    elif action == 'post_add':
+        for i in pk_set:
+            Announce.objects.create(audience=i, message="From %s, you have been granted to moderator." % instance.name)
+    else:
+        pass

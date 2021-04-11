@@ -23,6 +23,7 @@ urlpatterns = [
     path('user/timetable/<int:timetable_pk>/assets', user.get_timetable_asset_view),
     path('user/timetable/asset/<asset_pk>/read', user.set_asset_reader_view),
     path('user/timetable/notifications', user.get_notification),
+    path('user/timetable/announces', user.get_announce),
     path('admin/timetable/add', administrator.add_timetable_view),
     path('admin/timetable/<int:timetable_pk>/delete', administrator.delete_timetable_view),
     path('admin/timetable/<int:timetable_pk>/moderator/add/<int:user_pk>', administrator.add_timetable_moderator_view),

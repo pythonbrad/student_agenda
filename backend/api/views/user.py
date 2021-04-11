@@ -1,9 +1,10 @@
-from task.models import Course, Classe, Timetable, Notification, Feedback
+from task.models import Course, Classe, Timetable, Notification, Feedback, Announce
 from task.models import Lecturer, Absent, Asset, Event, STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from .tools import apiResponse
 from django.utils import timezone
+from django.db.models import Q
 
 
 def get_timetable_view(request):
@@ -344,6 +345,16 @@ def get_notification(request):
         return apiResponse(result=results)
     else:
         return apiResponse(code=623)
+
+def get_announce(request):
+    if request.user.is_authenticated:
+        announces = Announce.objects.filter(Q(audience=request.user.pk) | Q(audience=0)).exclude(receivers=request.user.student_set.get())
+        results = []
+        for announce in announces:
+            results.append(announce.get_as_json())
+        return apiResponse(result=results)
+    else:
+        return apiResponse(code=626)
 
 @csrf_exempt
 def feedback_view(request):
