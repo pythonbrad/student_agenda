@@ -352,6 +352,7 @@ def get_announce(request):
         results = []
         for announce in announces:
             results.append(announce.get_as_json())
+            announce.receivers.add(request.user)
         return apiResponse(result=results)
     else:
         return apiResponse(code=626)

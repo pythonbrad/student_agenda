@@ -370,7 +370,7 @@ def update_event(instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def new_user(instance, created, **kwargs):
     if created:
-        Announce.objects.create(audiance=instance.pk, message="Hello %s and welcome, to Student's Agenda." % instance.username)
+        Announce.objects.create(audience=instance.pk, message="Hello %s and welcome, to Student's Agenda." % instance.username)
 
 @receiver(m2m_changed, sender=Timetable.moderators.through)
 def update_moderator(instance, action, pk_set, **kwargs):
