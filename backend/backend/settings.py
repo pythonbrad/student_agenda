@@ -121,6 +121,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
+FILE_UPLOAD_MAX_MEMORY_SIZE = 33554432
 
 MEDIA_ROOT = BASE_DIR / 'media'
+
+MEGA_AUTH = {'email': 'fomegnemeudje@outlook.com', 'password': 'student_agenda'}
+MEGA_ROOT = 'StudentAgenda'
+MEGA_TMP = '/tmp'

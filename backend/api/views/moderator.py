@@ -1,7 +1,8 @@
-from task.models import Course, Event, Classe, Location, Media, Asset, Category
+from task.models import Course, Event, Classe, Location, Media, Asset, Category, Packet
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
-from .tools import apiResponse
+from .tools import apiResponse, MegaFile
+from django.conf import settings
 
 @csrf_exempt
 def add_timetable_classe_view(request, course_pk=None, classe_pk=None):
@@ -60,7 +61,16 @@ def delete_timetable_classe_view(request, classe_pk):
 def add_media_view(request):
     if request.user.is_authenticated:
         if request.FILES:
-            media = Media.objects.create(file=request.FILES['file'], author=request.user)
+            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), settings.MEGA_TMP)
+            while 1:
+                data = request.FILES['file'].read(262144)#256KB
+                if data:
+                    mega_file.write(data)
+                else:
+                    break
+            media = Media.objects.create(author=request.user, origin_name=request.FILES['file'].name)
+            media.packets.add(*[Packet.objects.create(url=packet) for packet in mega_file.packets])
+            media.save()
             return apiResponse(result=media.pk)
         else:
             return apiResponse(code=529)

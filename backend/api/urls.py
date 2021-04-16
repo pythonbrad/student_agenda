@@ -22,6 +22,7 @@ urlpatterns = [
     path('user/timetable/<int:timetable_pk>/events/<int:next_day>', user.get_timetable_event_view),
     path('user/timetable/<int:timetable_pk>/assets', user.get_timetable_asset_view),
     path('user/timetable/asset/<asset_pk>/read', user.set_asset_reader_view),
+    path('user/timetable/media/<media_pk>/download', user.download_media_view),
     path('user/timetable/notifications', user.get_notification),
     path('user/timetable/announces', user.get_announce),
     path('admin/timetable/add', administrator.add_timetable_view),

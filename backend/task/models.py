@@ -177,8 +177,16 @@ class Location(models.Model):
             'timetable_pk': self.timetable.pk,
         }
 
+class Packet(models.Model):
+    url = models.URLField()
+    time = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.url
+
 class Media(models.Model):
-    file = models.FileField(upload_to='uploads/%Y/%m/%d/%I_%M_%p')
+    packets  = models.ManyToManyField('Packet')
+    origin_name = models.CharField(max_length=255)
     time = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -210,7 +218,7 @@ class Asset(models.Model):
             'course': self.course.get_as_json(),
             'readers': self.readers.count(),
             'pub_date': self.pub_date,
-            'url': self.media.file.url,
+            'url': self.media.pk,
         }
 
 class Category(models.Model):

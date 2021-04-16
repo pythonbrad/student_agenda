@@ -1,10 +1,12 @@
-from task.models import Course, Classe, Timetable, Notification, Feedback, Announce
+from task.models import Course, Classe, Timetable, Notification, Feedback, Announce, Media
 from task.models import Lecturer, Absent, Asset, Event, STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
-from .tools import apiResponse
 from django.utils import timezone
 from django.db.models import Q
+from .tools import apiResponse, MegaFile
+from django.conf import settings
+from django.http import FileResponse
 
 
 def get_timetable_view(request):
@@ -371,5 +373,17 @@ def feedback_view(request):
                 return apiResponse(code=522, info=err.messages)
         else:
             return apiResponse(code=102)
+    else:
+        return apiResponse(code=625)
+
+def download_media_view(request, media_pk):
+    if request.user.is_authenticated:
+        media = Media.objects.filter(pk=media_pk)
+        if media:
+            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), str(settings.MEGA_TMP), name=media[0].origin_name)
+            mega_file.packets = [packet.url for packet in media[0].packets.all()]
+            return FileResponse(mega_file)
+        else:
+            return apiResponse(code=523)
     else:
         return apiResponse(code=625)
