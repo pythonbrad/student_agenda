@@ -341,7 +341,7 @@ def get_notification(request):
         if not notifications:
             notifications = Notification.objects.filter(timetable__followers=request.user)[:5]
         results = []
-        for notification in notifications:
+        for notification in notifications.order_by('-pk'):
             results.append(notification.get_as_json())
             notification.receivers.add(request.user)
         return apiResponse(result=results)
