@@ -25,24 +25,30 @@ def apiResponse(result=None, code=200, info=None):
 
 class MegaFile:
     """
-        THis module permit to use a cloud file like a local file
+        This module permit to use a cloud file like a local file
+        auth and cloud_folder are optional for downloading
     """
-    def __init__(self, auth, cloud_folder, tmp_folder, name=None):
+    def __init__(self, auth={}, cloud_folder=None, tmp_folder=None):
         self.mega_api = Mega()
         self.mega_api.login(**auth)
-        self.cloud_folder = self.mega_api.find(cloud_folder)[0]
-        self.tmp_folder = tmp_folder
+        self.cloud_folder = self.mega_api.find(cloud_folder)[0] if cloud_folder else cloud_folder
+        if tmp_folder != None:
+            self.tmp_folder = tmp_folder
+        else:
+            raise ValueError("tmp_folder is required")
         self.packets = []
-        self.name = name
 
     def write(self, data):
-        filename = str(time.time())
-        tmp_file = open(self.tmp_folder+'/'+filename, 'wb')
-        tmp_file.write(data)
-        tmp_file.close()
-        cloud_file = self.mega_api.upload(self.tmp_folder+'/'+filename, self.cloud_folder)
-        self.packets.append(self.mega_api.get_upload_link(cloud_file))
-        os.remove(self.tmp_folder+'/'+filename)
+        if cloud_folder != None and auth != None:
+            filename = str(time.time())
+            tmp_file = open(self.tmp_folder+'/'+filename, 'wb')
+            tmp_file.write(data)
+            tmp_file.close()
+            cloud_file = self.mega_api.upload(self.tmp_folder+'/'+filename, self.cloud_folder)
+            self.packets.append(self.mega_api.get_upload_link(cloud_file))
+            os.remove(self.tmp_folder+'/'+filename)
+        else:
+            raise ValueError("auth and cloud_folder is required for this operation")
 
     def read(self, x=None):
         if self.packets:

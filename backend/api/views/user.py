@@ -380,9 +380,9 @@ def download_media_view(request, media_pk):
     if request.user.is_authenticated:
         media = Media.objects.filter(pk=media_pk)
         if media:
-            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), str(settings.MEGA_TMP), name=media[0].origin_name)
+            mega_file = MegaFile(tmp_folder=str(settings.MEGA_TMP))
             mega_file.packets = [packet.url for packet in media[0].packets.all()]
-            return FileResponse(mega_file)
+            return FileResponse(mega_file, filename=media[0].origin_name)
         else:
             return apiResponse(code=523)
     else:
