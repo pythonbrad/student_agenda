@@ -337,11 +337,11 @@ def unfollow_event_view(request, event_pk):
 
 def get_notification(request):
     if request.user.is_authenticated:
-        notifications = Notification.objects.filter(timetable__followers=request.user).exclude(receivers=request.user)
+        notifications = Notification.objects.filter(timetable__followers=request.user).exclude(receivers=request.user).order_by('-pk')
         if not notifications:
-            notifications = Notification.objects.filter(timetable__followers=request.user)[:5]
+            notifications = Notification.objects.filter(timetable__followers=request.user).order_by('-pk')[:5]
         results = []
-        for notification in notifications.order_by('-pk'):
+        for notification in notifications:
             results.append(notification.get_as_json())
             notification.receivers.add(request.user)
         return apiResponse(result=results)
