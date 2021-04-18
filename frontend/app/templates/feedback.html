@@ -5,15 +5,23 @@
         <span class="col">Send an feedback</span>
         <span class="col-1"></span>
     </h3>
+    <h5 class="row">
+        <span class="col-1"></span>
+        <span class="col">
+            It's always a pleasure to hear from you!
+            Ask us a question, or tell us what you love or hate about this application.
+            We'll get back to you over email ASAP.
+        </span>
+        <span class="col-1"></span>
+    </h5>
     <div class="row">
         <span class="col-1"></span>
         <form class="form col" action="#">
             <div class="form-group">
-                <label for="feedback">Message</label>
                 <textarea type="text" class="form-control" id="feedback" maxlength="1024" placeholder="Enter the message"></textarea>
             </div>
             <div class="form-group">
-                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.feedback()">
+                <input class="btn btn-sm btn-primary" type="submit" onclick="App.vars.tmp.feedback()" value="Send">
             </div>
             <hr size="#">
             <div class="row">
