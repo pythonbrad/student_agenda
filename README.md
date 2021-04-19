@@ -1,6 +1,6 @@
 # Student's agenda
 
-![Image](https://github.com/pythonbrad/student_agenda/blob/master/snapshot.png)
+![Image](https://github.com/pythonbrad/student_agenda/blob/master/snapshot.gif)
 
 ## Problem:
 ### Many students of UB (University of BUEA) match problems of informations (often caused by the disturbance of the network):
