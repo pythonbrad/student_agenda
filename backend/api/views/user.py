@@ -350,7 +350,7 @@ def get_notification(request):
 
 def get_announce(request):
     if request.user.is_authenticated:
-        announces = Announce.objects.filter(Q(audience=request.user.pk) | Q(audience=0)).exclude(receivers=request.user).order_by('-pk')
+        announces = Announce.objects.filter(Q(audience=request.user.pk) | Q(audience=0), created_date__gte=request.user.date_joined).exclude(receivers=request.user).order_by('-pk')
         results = []
         for announce in announces:
             results.append(announce.get_as_json())
