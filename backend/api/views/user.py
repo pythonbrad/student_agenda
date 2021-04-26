@@ -337,7 +337,7 @@ def unfollow_event_view(request, event_pk):
 
 def get_notification(request):
     if request.user.is_authenticated:
-        notifications = Notification.objects.filter(timetable__followers=request.user).exclude(receivers=request.user).order_by('-pk')
+        notifications = Notification.objects.filter(timetable__followers=request.user, created_date__gte=request.user.date_joined).exclude(receivers=request.user).order_by('-pk')
         if not notifications:
             notifications = Notification.objects.filter(timetable__followers=request.user).order_by('-pk')[:5]
         results = []
