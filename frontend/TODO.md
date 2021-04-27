@@ -1,3 +1,6 @@
+# les notifications doivent decrire le plus possible les changements
+# on follow a timetable by asking
+
 **possibiliter de duplicate les donnees directly on the calendar**
 *delete timetable lecturer*
 *delete timetable course*
