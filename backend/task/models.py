@@ -334,9 +334,9 @@ def delete_media(sender, instance, **kwargs):
 @receiver(post_save, sender=Classe)
 def update_classe(instance, created, **kwargs):
     if created:
-        message = "A class for %s has been added for %s %s."
+        message = "A class for %s has been added on %s at %s."
     else:
-        message = "The class of %s at %s %s has been updated."
+        message = "The class of %s on %s at %s has been updated."
     Notification.objects.create(
         description=message % (
             instance.course.code,
@@ -363,9 +363,9 @@ def update_asset(instance, created, **kwargs):
 @receiver(post_save, sender=Event)
 def update_event(instance, created, **kwargs):
     if created:
-        message = "An event has been added for %s %s."
+        message = "An event has been added on %s at %s."
     else:
-        message = "The event at %s %s has been updated."
+        message = "The event on %s at %s has been updated."
     Notification.objects.create(
         description=message % (
             instance.date,

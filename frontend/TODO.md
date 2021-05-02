@@ -1,4 +1,4 @@
-# les notifications doivent decrire le plus possible les changements
+# implementer une fonctionnaliter next_view
 # on follow a timetable by asking
 
 **possibiliter de duplicate les donnees directly on the calendar**
