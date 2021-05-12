@@ -186,6 +186,7 @@ class Packet(models.Model):
 
 class Media(models.Model):
     packets  = models.ManyToManyField('Packet')
+    is_online = models.BooleanField()
     origin_name = models.CharField(max_length=255)
     origin_content_type = models.CharField(max_length=255)
     origin_size = models.IntegerField()

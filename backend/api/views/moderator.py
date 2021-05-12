@@ -61,14 +61,20 @@ def delete_timetable_classe_view(request, classe_pk):
 def add_media_view(request):
     if request.user.is_authenticated:
         if request.FILES:
-            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), settings.MEGA_TMP)
+            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), settings.MEGA_TMP, online_mode=0)
             while 1:
                 data = request.FILES['file'].read(262144)#256KB
                 if data:
                     mega_file.write(data)
                 else:
                     break
-            media = Media.objects.create(author=request.user, origin_name=request.FILES['file'].name, origin_content_type=request.FILES['file'].content_type, origin_size=request.FILES['file'].size)
+            media = Media.objects.create(
+                author=request.user,
+                origin_name=request.FILES['file'].name,
+                origin_content_type=request.FILES['file'].content_type,
+                origin_size=request.FILES['file'].size,
+                is_online=mega_file.online_mode
+            )
             media.packets.add(*[Packet.objects.create(url=packet) for packet in mega_file.packets])
             media.save()
             return apiResponse(result=media.pk)
