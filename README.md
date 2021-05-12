@@ -20,3 +20,10 @@
 - To find and download a document given (same after many months)
 - At a student to inform the course delegate of his absence
 - To evict the repetitive diffusions of the same informations
+
+# Installation
+`shell
+python3 -m pip install --upgrade pip
+python3 -m pip install django
+python3 -m pip install mega.py
+`
