@@ -328,7 +328,7 @@ class Feedback(models.Model):
 # Delete file when
 @receiver(post_delete, sender=Asset)
 def delete_media(sender, instance, **kwargs):
-    instance.media.file.delete()
+    pass
 
 # Create notification when
 @receiver(post_save, sender=Classe)

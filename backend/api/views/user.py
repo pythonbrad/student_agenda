@@ -6,8 +6,8 @@ from django.utils import timezone
 from django.db.models import Q
 from .tools import apiResponse, MegaFile
 from django.conf import settings
-from django.http import FileResponse
-
+from django.http import HttpResponse
+from wsgiref.util import FileWrapper
 
 def get_timetable_view(request):
     if request.user.is_authenticated:
@@ -382,7 +382,9 @@ def download_media_view(request, media_pk):
         if media:
             mega_file = MegaFile(tmp_folder=str(settings.MEGA_TMP))
             mega_file.packets = [packet.url for packet in media[0].packets.all()]
-            return FileResponse(mega_file, filename=media[0].origin_name)
+            response = HttpResponse(FileWrapper(mega_file))
+            response['Content-Disposition'] = 'attachment; filename=%s' % media[0].origin_name
+            return response
         else:
             return apiResponse(code=523)
     else:
