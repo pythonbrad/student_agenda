@@ -128,3 +128,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEGA_AUTH = {'email': 'fomegnemeudje@outlook.com', 'password': 'student_agenda'}
 MEGA_ROOT = 'StudentAgenda'
 MEGA_TMP = '/tmp'
+MEGA_ENABLED = 1

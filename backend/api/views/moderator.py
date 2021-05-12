@@ -61,7 +61,7 @@ def delete_timetable_classe_view(request, classe_pk):
 def add_media_view(request):
     if request.user.is_authenticated:
         if request.FILES:
-            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), settings.MEGA_TMP, online_mode=0)
+            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), settings.MEGA_TMP, online_mode=settings.MEGA_ENABLED)
             while 1:
                 data = request.FILES['file'].read(262144)#256KB
                 if data:
