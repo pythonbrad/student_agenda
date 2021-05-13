@@ -187,6 +187,8 @@ class Packet(models.Model):
 class Media(models.Model):
     packets  = models.ManyToManyField('Packet')
     origin_name = models.CharField(max_length=255)
+    origin_content_type = models.CharField(max_length=255)
+    origin_size = models.IntegerField()
     time = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
