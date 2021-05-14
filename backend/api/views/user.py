@@ -383,7 +383,7 @@ def download_media_view(request, media_pk):
             mega_file = MegaFile(tmp_folder=str(settings.MEGA_TMP), online_mode=media[0].is_online)
             mega_file.packets = [packet.url for packet in media[0].packets.all()]
             response = HttpResponse(FileWrapper(mega_file), content_type=media[0].origin_content_type)
-            response['Content-Disposition'] = 'attachment; filename=%s' % media[0].origin_name
+            response['Content-Disposition'] = 'attachment; filename="%s"' % media[0].origin_name
             response['Content-Length'] = media[0].origin_size
             return response
         else:
