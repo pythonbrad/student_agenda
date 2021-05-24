@@ -22,8 +22,8 @@
 - To evict the repetitive diffusions of the same informations
 
 # Installation
-`shell
+```sh
 python3 -m pip install --upgrade pip
 python3 -m pip install django
 python3 -m pip install mega.py
-`
+```
