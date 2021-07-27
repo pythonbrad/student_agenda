@@ -1,18 +1,16 @@
-# implementer une fonctionnaliter next_view
-# on follow a timetable by asking
+# TODO LIST 
 
-**possibiliter de duplicate les donnees directly on the calendar**
-*delete timetable lecturer*
-*delete timetable course*
-remove course lecturer
-*delete timetable location*
-*delete timetable category*
-
-
-*Possibility to user to see all information about a lesson (lecturer, location, course, )*
-get classe absent
-set classe absent
-unset classe absent
-
-
-*Possibility to user to see all information about a lesson (lecturer, location, course, )*
+- [ ] Implementer une fonctionnaliter next_view
+- [ ] Should follow a timetable by invitation
+- [ ] Other update
+	- [ ] possibiliter de duplicate les donnees directly on the calendar
+	- [ ] delete timetable lecturer
+	- [ ] delete timetable course
+	- [ ] remove course lecturer
+	- [ ] delete timetable location
+	- [ ] delete timetable category
+	- [ ] Possibility to user to see all information about a lesson (lecturer, location, course, )
+	- [ ] Get classe absent
+	- [ ] Set classe absent
+	- [ ] Unset classe absent
+	- [ ] Possibility to user to see all information about a lesson (lecturer, location, course, )
