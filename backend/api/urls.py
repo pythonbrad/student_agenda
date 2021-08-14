@@ -8,7 +8,7 @@ urlpatterns = [
     path('auth/logout', authentification.logout_view),
     path('user/feedback', user.feedback_view),
     path('user/timetables/followed', user.get_timetable_follow_by_me_view),
-    path('user/timetable/<int:timetable_pk>/follow', user.follow_timetable_view),
+    path('user/timetable/<int:timetable_pk>/follow/<str:timetable_code>', user.follow_timetable_view),
     path('user/timetable/<int:timetable_pk>/unfollow', user.unfollow_timetable_view),
     path('user/timetables', user.get_timetable_view),
     path('user/status/choices', user.get_status_choice_view),

@@ -58,6 +58,7 @@ class Timetable(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Owner')
     moderators = models.ManyToManyField(User, related_name='Moderators')
     followers = models.ManyToManyField(User)
+    code = models.CharField(max_length=32, unique=True)
 
     class Meta:
         verbose_name = "Timetable"
@@ -73,7 +74,8 @@ class Timetable(models.Model):
             'description': self.description,
             'moderators': [moderator.pk for moderator in self.moderators.all()],
             'followers': self.followers.count(),
-            'owner': self.owner.student_set.get().get_as_json()
+            'owner': self.owner.student_set.get().get_as_json(),
+            'code': self.code,
         }
 
 class Lecturer(models.Model):

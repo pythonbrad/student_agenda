@@ -93,7 +93,7 @@ App = {
 				}
 			);
 		},
-		choose_timetable: function (timetable_pk, reverse) {
+		choose_timetable: function (timetable_pk, reverse, code='') {
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -106,7 +106,7 @@ App = {
 					}, 100);
 					if (timetable_pk!=null) {
 						Addons.request(
-							'/api/user/timetable/'+timetable_pk+'/'+(reverse?'unfollow':'follow'),
+							'/api/user/timetable/'+timetable_pk+'/'+(reverse?'unfollow':'follow/'+code),
 							null,
 							function (d) {
 								if (d.code != 200) {

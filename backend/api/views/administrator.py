@@ -3,7 +3,7 @@ from task.models import Location, Course, Lecturer, Category
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from .tools import apiResponse
-
+import time, random, string
 
 
 @csrf_exempt
@@ -17,7 +17,8 @@ def add_timetable_view(request):
                 timetable = Timetable(
                     name=data.get('name', None),
                     description=data.get('description', None),
-                    owner=request.user)
+                    owner=request.user,
+                    code=''.join([random.choices(string.ascii_letters, k=10)[10%(int(i)+1)] for i in str(time.time_ns())]))
                 try:
                     timetable.full_clean()
                     timetable.save()

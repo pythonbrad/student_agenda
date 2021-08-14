@@ -31,9 +31,11 @@
                             <b>Description:</b><br>{{description}}<br>
                             <b>Admin:</b> {{owner}}<br>
                             <b>Moderators:</b> {{moderators}}<br>
+                            <b>Shared code:</b> {{timetable_code}}<br>
                         </p>
                         <div class="card-footer">
-                            <button class="btn btn-{{color}} btn-sm" onclick="App.views.choose_timetable({{pk}},{{reverse}})">{{action}}</button>
+                            <button class="btn btn-primary btn-sm" onclick="App.vars.tmp.to_follow={{pk}}" data-toggle="modal" data-target="#follow_timetable" {{follow}}>Follow</button>
+                            <button class="btn btn-warning btn-sm" onclick="App.views.choose_timetable({{pk}},1)" {{unfollow}}>Unfollow</button>
                             <!-- Button trigger modal -->
                             <button class="btn btn-danger btn-sm" onclick="App.vars.tmp.to_delete={{pk}}" data-toggle="modal" data-target="#delete_timetable" {{admin_panel}}>Delete</button>
                         </div>
@@ -75,6 +77,23 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="follow_timetable" tabindex="-1" aria-labelledby="follow_timetableLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="follow_timetableLabel">Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <span class="text">Enter the timetable code: </span>
+        <input id='timetable_code' type="text" name="code">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#follow_timetable').on('hidden.bs.modal', function (event) {App.views.choose_timetable(App.vars.tmp.to_follow,0,$('#timetable_code').val())})">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
     App.views.splash(null, 'show');
     App.vars.tmp.$el=$('#block');
@@ -91,14 +110,15 @@
                 };
             }
             App.vars.tmp.$el.append(App.vars.tmp.$html
+                .replace('{{timetable_code}}', App.models.full_timetables[timetable_id].code)
                 .replace('{{pk}}', App.models.full_timetables[timetable_id].pk)
                 .replace('{{pk}}', App.models.full_timetables[timetable_id].pk)
+                .replace('{{pk}}', App.models.full_timetables[timetable_id].pk)
+                .replace('{{follow}}', App.vars.tmp.followed ? 'hidden' : '')
+                .replace('{{unfollow}}', App.vars.tmp.followed ? '' : 'hidden')
                 .replace('{{name}}', App.models.full_timetables[timetable_id].name)
                 .replace('{{description}}', App.models.full_timetables[timetable_id].description)
                 .replace('{{owner}}', App.models.full_timetables[timetable_id].owner.username)
-                .replace('{{action}}', App.vars.tmp.followed ? "Unfollow" : "Follow")
-                .replace('{{color}}', App.vars.tmp.followed ? "warning" : "primary")
-                .replace('{{reverse}}', App.vars.tmp.followed ? 1 : 0)
                 .replace('{{followers}}', App.models.full_timetables[timetable_id].followers)
                 .replace('{{moderators}}', App.models.full_timetables[timetable_id].moderators.length)
                 .replace('{{admin_panel}}', (App.models.full_timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk})) ? '' : 'hidden')

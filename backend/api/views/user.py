@@ -11,7 +11,13 @@ from wsgiref.util import FileWrapper
 
 def get_timetable_view(request):
     if request.user.is_authenticated:
-        return apiResponse(result=[timetable.get_as_json() for timetable in Timetable.objects.all()])
+        result = []
+        for timetable in Timetable.objects.all():
+            _ = timetable.get_as_json()
+            if timetable.owner == request.user:
+                _.update({'code': timetable.code})
+            result.append(_)
+        return apiResponse(result=result)
     else:
         return apiResponse(code=601)
 
@@ -26,9 +32,9 @@ def get_timetable_follow_by_me_view(request):
         return apiResponse(code=624)
 
 
-def follow_timetable_view(request, timetable_pk):
+def follow_timetable_view(request, timetable_pk, timetable_code=''):
     if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk)
+        timetable = Timetable.objects.filter(pk=timetable_pk, code=timetable_code)
         if timetable:
             timetable = timetable[0]
             timetable.followers.add(request.user)
