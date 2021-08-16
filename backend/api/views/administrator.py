@@ -7,18 +7,22 @@ import time, random, string
 
 
 @csrf_exempt
-def add_timetable_view(request):
+def add_timetable_view(request, timetable_pk=None):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
+            if timetable_pk:
+                timetable = Timetable.objects.filter(pk=timetable_pk)
             if Timetable.objects.filter(name=data.get('name', None)):
                 return apiResponse(code=401, info=["Timetable's name already used"])
             else:
-                timetable = Timetable(
+                timetable = timetable[0] if timetable else Timetable()
+                timetable.update(
                     name=data.get('name', None),
                     description=data.get('description', None),
                     owner=request.user,
-                    code=''.join([random.choices(string.ascii_letters, k=10)[10%(int(i)+1)] for i in str(time.time_ns())]))
+                    code=''.join([random.choices(string.ascii_letters, k=10)[10%(int(i)+1)] for i in str(time.time_ns())])
+                )
                 try:
                     timetable.full_clean()
                     timetable.save()
@@ -33,6 +37,9 @@ def add_timetable_view(request):
     else:
         return apiResponse(code=601)
 
+@csrf_exempt
+def update_timetable_view(request, timetable_pk):
+    return add_timetable_view(request, timetable_pk=timetable_pk)
 
 def delete_timetable_view(request, timetable_pk):
     if request.user.is_authenticated:
@@ -45,17 +52,6 @@ def delete_timetable_view(request, timetable_pk):
             return apiResponse(code=502)
     else:
         return apiResponse(code=602)
-
-def get_timetable_moderator_view(request, timetable_pk):
-    if request.user.is_authenticated:
-        timetable = Timetable.objects.filter(pk=timetable_pk, owner=request.user)
-        if timetable:
-            timetable = timetable[0]
-            return apiResponse(result=[moderator.student_set.get().get_as_json() for moderator in timetable.moderators])
-        else:
-            return apiResponse(code=503)
-    else:
-        return apiResponse(code=603)
 
 def add_timetable_moderator_view(request, timetable_pk, user_pk):
     if request.user.is_authenticated:
@@ -100,14 +96,17 @@ def get_timetable_follower_view(request, timetable_pk):
 
 
 @csrf_exempt
-def add_timetable_lecturer_view(request, timetable_pk):
+def add_timetable_lecturer_view(request, timetable_pk=None, lecturer_pk=None):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
-            timetable = Timetable.objects.filter(
+            if lecturer_pk:
+                lecturer = Lecturer.objects.filter(pk=lecturer_pk)
+            timetable = lecturer[0].timetable if lecturer else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
+            lecturer = lecturer[0] if lecturer else Lecturer()
+            lecturer.update(name=data.get('name', None))
             if timetable:
-                lecturer = Lecturer(name=data.get('name', None))
                 lecturer.timetable = timetable[0]
                 try:
                     lecturer.full_clean()
@@ -122,6 +121,9 @@ def add_timetable_lecturer_view(request, timetable_pk):
     else:
         return apiResponse(code=606)
 
+@csrf_exempt
+def update_timetable_lecturer_view(request, lecturer_pk):
+    return add_timetable_lecturer_view(request, lecturer_pk=lecturer_pk)
 
 def delete_timetable_lecturer_view(request, lecturer_pk):
     if request.user.is_authenticated:
@@ -137,11 +139,14 @@ def delete_timetable_lecturer_view(request, lecturer_pk):
 
 
 @csrf_exempt
-def add_timetable_course_view(request):
+def add_timetable_course_view(request, course_pk=None):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
-            course = Course(
+            if course_pk:
+                course = Course.objects.filter(pk=course_pk)
+            course = course[0] if course else Course()
+            course.update(
                 name=data.get('name', None),
                 description=data.get('description', None),
                 code=data.get('code', None)
@@ -164,6 +169,9 @@ def add_timetable_course_view(request):
     else:
         return apiResponse(code=608)
 
+@csrf_exempt
+def update_timetable_course_view(request, course_pk):
+    return add_timetable_course_view(request, course_pk=course_pk)
 
 def delete_timetable_course_view(request, course_pk):
     if request.user.is_authenticated:
@@ -176,48 +184,18 @@ def delete_timetable_course_view(request, course_pk):
     else:
         return apiResponse(code=609)
 
-
 @csrf_exempt
-def add_course_lecturer_view(request, course_pk, lecturer_pk):
-    if request.user.is_authenticated:
-        lecturer = Lecturer.objects.filter(pk=lecturer_pk, timetable__owner=request.user)
-        course = Course.objects.filter(pk=course_pk)
-        if course and lecturer:
-            course = course[0]
-            course.lecturers.add(lecturer[0])
-            course.save()
-            return apiResponse()
-        else:
-            return apiResponse(code=511)
-    else:
-        return apiResponse(code=610)
-
-
-@csrf_exempt
-def remove_course_lecturer_view(request, course_pk, lecturer_pk):
-    if request.user.is_authenticated:
-        lecturer = Lecturer.objects.filter(pk=lecturer_pk, timetable__owner=request.user)
-        course = Course.objects.filter(pk=course_pk)
-        if course and lecturer:
-            course = course[0]
-            course.lecturers.remove(lecturer[0])
-            course.save()
-            return apiResponse()
-        else:
-            return apiResponse(code=512)
-    else:
-        return apiResponse(code=611)
-
-
-@csrf_exempt
-def add_timetable_location_view(request, timetable_pk):
+def add_timetable_location_view(request, timetable_pk=None, location_pk=None):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
-            timetable = Timetable.objects.filter(
+            if location_pk:
+                location = Location.objects.filter(pk=location_pk)
+            timetable = location[0].timetable if location else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             if timetable:
-                location = Location(name=data.get('name', None), description=data.get('description', None))
+                location = location[0] if location else Location()
+                location.update(name=data.get('name', None), description=data.get('description', None))
                 location.timetable = timetable[0]
                 try:
                     location.full_clean()
@@ -232,6 +210,9 @@ def add_timetable_location_view(request, timetable_pk):
     else:
         return apiResponse(code=614)
 
+@csrf_exempt
+def update_timetable_location_view(request, location_pk):
+    return add_timetable_location_view(request, location_pk=location_pk)
 
 def delete_timetable_location_view(request, location_pk):
     if request.user.is_authenticated:
@@ -247,14 +228,17 @@ def delete_timetable_location_view(request, location_pk):
 
 
 @csrf_exempt
-def add_timetable_category_view(request, timetable_pk):
+def add_timetable_category_view(request, timetable_pk=None, category_pk=None):
     if request.user.is_authenticated:
         if request.POST:
             data = request.POST
-            timetable = Timetable.objects.filter(
+            if category_pk:
+                category = Category.objects.filter(pk=category_pk)
+            timetable = category[0].timetable if category else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             if timetable:
-                category = Category(name=data.get('name', None), description=data.get('description', None))
+                category = category[0] if category else Category()
+                category.update(name=data.get('name', None), description=data.get('description', None))
                 category.timetable = timetable[0]
                 try:
                     category.full_clean()
@@ -269,6 +253,9 @@ def add_timetable_category_view(request, timetable_pk):
     else:
         return apiResponse(code=616)
 
+@csrf_exempt
+def update_timetable_category_view(request, category_pk):
+    return add_timetable_category_view(request, category_pk=category_pk)
 
 def delete_timetable_category_view(request, category_pk):
     if request.user.is_authenticated:

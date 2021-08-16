@@ -3,6 +3,18 @@
 - [ ] Implementer a functionality next_view
 - [ ] Should follow a timetable by invitation
 - [ ] Other update
+	- [ ] View for:
+		- [ ] administrator.update_timetable_view
+		- [ ] administrator.add_timetable_course_view
+		- [ ] administrator.add_timetable_course_view
+		- [ ] administrator.update_timetable_lecturer_view
+		- [ ] administrator.delete_timetable_lecturer_view
+		- [ ] administrator.update_timetable_location_view
+		- [ ] administrator.delete_timetable_location_view
+		- [ ] administrator.update_timetable_category_view
+		- [ ] administrator.delete_timetable_category_view
+		- [ ] moderator.delete_timetable_classe_view
+		- [ ] moderator.delete_timetable_event_view
 	- [ ] possibility de duplicate the data directly on the calendar
 	- [ ] delete timetable lecturer
 	- [ ] delete timetable course
