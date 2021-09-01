@@ -31,7 +31,7 @@
                             <b>Description:</b><br>{{description}}<br>
                             <b>Admin:</b> {{owner}}<br>
                             <b>Moderators:</b> {{moderators}}<br>
-                            <b>Shared code:</b> {{timetable_code}}<br>
+                            <div {{admin_panel}}><b>Shared code:</b> {{timetable_code}}<br></div>
                         </p>
                         <div class="card-footer">
                             <button class="btn btn-primary btn-sm" onclick="App.vars.tmp.to_follow={{pk}}" data-toggle="modal" data-target="#follow_timetable" {{follow}}>Follow</button>
@@ -121,6 +121,7 @@
                 .replace('{{owner}}', App.models.full_timetables[timetable_id].owner.username)
                 .replace('{{followers}}', App.models.full_timetables[timetable_id].followers)
                 .replace('{{moderators}}', App.models.full_timetables[timetable_id].moderators.length)
+                .replace('{{admin_panel}}', (App.models.full_timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk})) ? '' : 'hidden')
                 .replace('{{admin_panel}}', (App.models.full_timetables[timetable_id].moderators.find(function (x) {return x==App.models.user.pk})) ? '' : 'hidden')
             );
         };
