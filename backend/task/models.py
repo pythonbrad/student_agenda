@@ -75,7 +75,6 @@ class Timetable(models.Model):
             'moderators': [moderator.pk for moderator in self.moderators.all()],
             'followers': self.followers.count(),
             'owner': self.owner.student_set.get().get_as_json(),
-            'code': self.code,
         }
 
 class Lecturer(models.Model):
