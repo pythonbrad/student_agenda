@@ -16,7 +16,7 @@ def add_timetable_view(request, timetable_pk=None):
             if Timetable.objects.filter(name=data.get('name', None)):
                 return apiResponse(code=401, info=["Timetable's name already used"])
             else:
-                timetable = timetable[0] if timetable else Timetable()
+                timetable = timetable[0] if timetable_pk else Timetable()
                 timetable.update(
                     name=data.get('name', None),
                     description=data.get('description', None),
