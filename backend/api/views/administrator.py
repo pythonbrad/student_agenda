@@ -16,13 +16,17 @@ def add_timetable_view(request, timetable_pk=None):
             if Timetable.objects.filter(name=data.get('name', None)):
                 return apiResponse(code=401, info=["Timetable's name already used"])
             else:
-                timetable = timetable[0] if timetable_pk else Timetable()
-                timetable.update(
-                    name=data.get('name', None),
-                    description=data.get('description', None),
-                    owner=request.user,
-                    code=''.join([random.choices(string.ascii_letters, k=10)[10%(int(i)+1)] for i in str(time.time_ns())])
-                )
+                dicts = {
+                    'name': data.get('name', None),
+                    'description': data.get('description', None),
+                    'owner': request.user,
+                    'code': ''.join([random.choices(string.ascii_letters, k=10)[10%(int(i)+1)] for i in str(time.time_ns())])
+                }
+                if timetable_pk:
+                    timetable = timetable[0]
+                    timetable.update(**dicts)
+                else:
+                    timetable = Timetable(**dicts)
                 try:
                     timetable.full_clean()
                     timetable.save()
@@ -104,8 +108,14 @@ def add_timetable_lecturer_view(request, timetable_pk=None, lecturer_pk=None):
                 lecturer = Lecturer.objects.filter(pk=lecturer_pk)
             timetable = lecturer[0].timetable if lecturer else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
-            lecturer = lecturer[0] if lecturer else Lecturer()
-            lecturer.update(name=data.get('name', None))
+            dicts = {
+                'name': data.get('name', None)
+            }
+            if lecturer:
+                lecturer = lecturer[0]
+                lecturer.update(**dicts)
+            else:
+                lecturer = Lecturer(**dicts)
             if timetable:
                 lecturer.timetable = timetable[0]
                 try:
@@ -145,12 +155,16 @@ def add_timetable_course_view(request, course_pk=None):
             data = request.POST
             if course_pk:
                 course = Course.objects.filter(pk=course_pk)
-            course = course[0] if course else Course()
-            course.update(
-                name=data.get('name', None),
-                description=data.get('description', None),
-                code=data.get('code', None)
-            )
+            dicts = {
+                "name": data.get('name', None),
+                "description": data.get('description', None),
+                "code": data.get('code', None)
+            }
+            if course:
+                course = course[0]
+                course.update(**dicts)
+            else:
+                course = Course(**dicts)
             try:
                 course.full_clean()
                 course.save()
@@ -194,8 +208,12 @@ def add_timetable_location_view(request, timetable_pk=None, location_pk=None):
             timetable = location[0].timetable if location else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             if timetable:
-                location = location[0] if location else Location()
-                location.update(name=data.get('name', None), description=data.get('description', None))
+                dicts = {"name": data.get('name', None), "description": data.get('description', None)}
+                if location:
+                    location = location[0]
+                    location.update(**dicts)
+                else:
+                    location = Location(**dicts)
                 location.timetable = timetable[0]
                 try:
                     location.full_clean()
@@ -237,8 +255,12 @@ def add_timetable_category_view(request, timetable_pk=None, category_pk=None):
             timetable = category[0].timetable if category else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             if timetable:
-                category = category[0] if category else Category()
-                category.update(name=data.get('name', None), description=data.get('description', None))
+                dicts = {"name": data.get('name', None), "description": data.get('description', None)}
+                if category:
+                    category = category[0]
+                    category.update(**dicts)
+                else:
+                    category = Category(**dicts)
                 category.timetable = timetable[0]
                 try:
                     category.full_clean()
