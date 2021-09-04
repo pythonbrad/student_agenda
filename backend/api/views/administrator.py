@@ -106,12 +106,12 @@ def add_timetable_lecturer_view(request, timetable_pk=None, lecturer_pk=None):
             data = request.POST
             if lecturer_pk:
                 lecturer = Lecturer.objects.filter(pk=lecturer_pk)
-            timetable = lecturer[0].timetable if lecturer else Timetable.objects.filter(
+            timetable = lecturer[0].timetable if lecturer_pk else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             dicts = {
                 'name': data.get('name', None)
             }
-            if lecturer:
+            if lecturer_pk:
                 lecturer = lecturer[0]
                 lecturer.update(**dicts)
             else:
@@ -160,7 +160,7 @@ def add_timetable_course_view(request, course_pk=None):
                 "description": data.get('description', None),
                 "code": data.get('code', None)
             }
-            if course:
+            if course_pk:
                 course = course[0]
                 course.update(**dicts)
             else:
@@ -205,11 +205,11 @@ def add_timetable_location_view(request, timetable_pk=None, location_pk=None):
             data = request.POST
             if location_pk:
                 location = Location.objects.filter(pk=location_pk)
-            timetable = location[0].timetable if location else Timetable.objects.filter(
+            timetable = location[0].timetable if location_pk else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             if timetable:
                 dicts = {"name": data.get('name', None), "description": data.get('description', None)}
-                if location:
+                if location_pk:
                     location = location[0]
                     location.update(**dicts)
                 else:
@@ -252,11 +252,11 @@ def add_timetable_category_view(request, timetable_pk=None, category_pk=None):
             data = request.POST
             if category_pk:
                 category = Category.objects.filter(pk=category_pk)
-            timetable = category[0].timetable if category else Timetable.objects.filter(
+            timetable = category[0].timetable if category_pk else Timetable.objects.filter(
                 pk=timetable_pk, owner=request.user)
             if timetable:
                 dicts = {"name": data.get('name', None), "description": data.get('description', None)}
-                if category:
+                if category_pk:
                     category = category[0]
                     category.update(**dicts)
                 else:
