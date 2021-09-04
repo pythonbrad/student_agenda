@@ -22,6 +22,7 @@
 - To evict the repetitive diffusion of the same information
 
 # Installation
+We recommanded to use https://github.com/pythonbrad/mega.py in the case where github.com/odwyersoftware/mega.py is not updated.
 ```sh
 python3 -m pip install --upgrade pip
 python3 -m pip install django
