@@ -84,7 +84,7 @@
     };
     App.vars.tmp.download = function (id) {
         Addons.request('/api/user/timetable/asset/'+App.models.assets[id].pk+'/read', null, function (){});
-        var win = window.open('/api/user/timetable/media/'+App.models.assets[id].pk+'/download', '_blank');
+        var win = window.open('/api/user/timetable/media/'+App.models.assets[id].url+'/download', '_blank');
         if (win) {
             //Browser has allowed it to be opened
             win.focus();
