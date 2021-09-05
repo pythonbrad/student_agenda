@@ -102,7 +102,7 @@ def get_course_follower_view(request, course_pk):
         course = Course.objects.filter(pk=course_pk)
         if course:
             course = course[0]
-            return apiResponse(result=[follower.get_as_json() for followers in course.followers.all()])
+            return apiResponse(result=[follower.get_as_json() for follower in course.followers.all()])
         else:
             return apiResponse(code=506)
     else:
