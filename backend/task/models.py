@@ -33,7 +33,7 @@ class Student(models.Model):
 
 class Absent(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     time = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -54,7 +54,7 @@ class Absent(models.Model):
 
 class Timetable(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='Owner')
     moderators = models.ManyToManyField(User, related_name='Moderators')
     followers = models.ManyToManyField(User)
@@ -97,7 +97,7 @@ class Lecturer(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     code = models.CharField(max_length=10)
     lecturers = models.ManyToManyField('Lecturer')
     followers = models.ManyToManyField(User)
@@ -120,7 +120,7 @@ class Course(models.Model):
         }
 
 class Classe(models.Model):
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
@@ -160,7 +160,7 @@ class Classe(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -194,9 +194,14 @@ class Media(models.Model):
     time = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def get_as_json(self):
+        return {
+            'pk': self.pk,
+        }
+
 class Asset(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
     readers = models.ManyToManyField(User)
@@ -227,7 +232,7 @@ class Asset(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     timetable = models.ForeignKey('Timetable', on_delete=models.CASCADE)
 
     class Meta:
@@ -247,7 +252,7 @@ class Category(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     location = models.ForeignKey('Location', on_delete=models.CASCADE)
     interested = models.ManyToManyField(User)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1)
@@ -286,7 +291,7 @@ class Event(models.Model):
 class Notification(models.Model):
     timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE)
     receivers = models.ManyToManyField(User)
-    description = models.TextField(max_length=1024)
+    description = models.TextField(max_length=1024, default='', blank=True)
     created_date = models.DateTimeField(default=timezone.now)
 
     class Meta:

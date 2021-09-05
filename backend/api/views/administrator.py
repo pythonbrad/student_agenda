@@ -33,7 +33,7 @@ def add_timetable_view(request, timetable_pk=None):
                     timetable.moderators.add(request.user)
                     timetable.followers.add(request.user)
                     timetable.save()
-                    return apiResponse()
+                    return apiResponse(result=timetable.get_as_json())
                 except ValidationError as err:
                     return apiResponse(code=501, info=err.messages)
         else:
@@ -121,7 +121,7 @@ def add_timetable_lecturer_view(request, timetable_pk=None, lecturer_pk=None):
                 try:
                     lecturer.full_clean()
                     lecturer.save()
-                    return apiResponse()
+                    return apiResponse(result=lecturer.get_as_json())
                 except ValidationError as err:
                     return apiResponse(code=506, info=err.messages)
             else:
@@ -169,13 +169,13 @@ def add_timetable_course_view(request, course_pk=None):
                 course.full_clean()
                 course.save()
                 course.followers.add(request.user)
-                for pk in data.get('lecturers[]', []):
+                for pk in data.get('lecturers[]', data.get('lecturers', '').split(',')):
                     lecturer = Lecturer.objects.filter(pk=pk, timetable__owner=request.user)
                     if lecturer:
                         course.lecturers.add(lecturer[0])
                     else:
                         return apiResponse(code=528)
-                return apiResponse()
+                return apiResponse(result=course.get_as_json())
             except ValidationError as err:
                 return apiResponse(code=509, info=err.messages)
         else:
@@ -218,7 +218,7 @@ def add_timetable_location_view(request, timetable_pk=None, location_pk=None):
                 try:
                     location.full_clean()
                     location.save()
-                    return apiResponse()
+                    return apiResponse(result=location.get_as_json())
                 except ValidationError as err:
                     return apiResponse(code=516, info=err.messages)
             else:
@@ -265,7 +265,7 @@ def add_timetable_category_view(request, timetable_pk=None, category_pk=None):
                 try:
                     category.full_clean()
                     category.save()
-                    return apiResponse()
+                    return apiResponse(result=category.get_as_json())
                 except ValidationError as err:
                     return apiResponse(code=519, info=err.messages)
             else:

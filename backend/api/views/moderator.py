@@ -77,7 +77,7 @@ def add_media_view(request):
             )
             media.packets.add(*[Packet.objects.create(url=packet) for packet in mega_file.packets])
             media.save()
-            return apiResponse(result=media.pk)
+            return apiResponse(result=media.get_as_json())
         else:
             return apiResponse(code=529)
     else:

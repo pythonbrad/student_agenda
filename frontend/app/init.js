@@ -550,7 +550,7 @@ App = {
 								processData: false,
 								success: function(response){
 									if(response.code == 200){
-										media_pk = response.result;
+										media_pk = response.result.pk;
 										Addons.request(
 											'/api/moderator/timetable/course/'+course_pk+'/asset/add',
 											{name:name,description:description,category:category_pk,media:media_pk},
