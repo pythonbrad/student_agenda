@@ -200,7 +200,7 @@ class Media(models.Model):
         }
 
 class Asset(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=128)
     description = models.TextField(max_length=1024, default='', blank=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
