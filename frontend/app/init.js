@@ -342,6 +342,26 @@ App = {
 				}
 			);
 		},
+		update_status_lesson: function (classe_pk, status) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/moderator/timetable/classe/'+classe_pk+'/status/'+status,null,function (d) {
+						App.views.home();
+					}, false);
+				}
+			);
+		},
+		update_attendance_lesson: function (classe_pk) {
+			App.views.splash(
+				function () {
+					// We perform operation
+					Addons.request('/api/moderator/timetable/classe/'+classe_pk+'/attend/toggle',null,function (d) {
+						App.views.home();
+					}, false);
+				}
+			);
+		},
 		update_lesson: function (lesson_id,description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
 			App.views.splash(
 				function () {

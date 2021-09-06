@@ -47,6 +47,8 @@ urlpatterns = [
     path('moderator/timetable/course/<int:course_pk>/classe/add', moderator.add_timetable_classe_view),
     path('moderator/timetable/classe/<int:classe_pk>/update', moderator.update_timetable_classe_view),
     path('moderator/timetable/classe/<int:classe_pk>/delete', moderator.delete_timetable_classe_view),
+    path('moderator/timetable/classe/<int:classe_pk>/status/<str:status>', moderator.update_status_timetable_classe_view),
+    path('moderator/timetable/classe/<int:classe_pk>/attend/toggle', moderator.update_attend_timetable_classe_view),
     path('moderator/timetable/course/<int:course_pk>/asset/add', moderator.add_course_asset_view),
     path('moderator/timetable/asset/<int:asset_pk>/update', moderator.update_course_asset_view),
     path('moderator/timetable/asset/<int:asset_pk>/delete', moderator.delete_course_asset_view),

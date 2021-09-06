@@ -57,6 +57,27 @@ def delete_timetable_classe_view(request, classe_pk):
     else:
         return apiResponse(code=613)
 
+def update_status_timetable_classe_view(request, classe_pk, status):
+    if request.user.is_authenticated:
+        classe = Classe.objects.filter(pk=classe_pk, location__timetable__owner=request.user)
+        if classe:
+            classe.update(status=status)
+            return apiResponse()
+        else:
+            return apiResponse(code=515)
+    else:
+        return apiResponse(code=613)
+
+def update_attend_timetable_classe_view(request, classe_pk):
+    if request.user.is_authenticated:
+        classe = Classe.objects.filter(pk=classe_pk, location__timetable__owner=request.user)
+        if classe:
+            classe.update(attendance_done=not bool(classe[0].attendance_done))
+            return apiResponse()
+        else:
+            return apiResponse(code=515)
+    else:
+        return apiResponse(code=613)
 
 @csrf_exempt
 def add_media_view(request):

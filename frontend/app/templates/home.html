@@ -26,11 +26,11 @@
                         <b>Description:</b> {{description}}<br>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-info btn-sm" onclick="alert('Coming Soon...')">See more</button>
                         <span {{admin_panel}}>
                             <button class="btn btn-warning btn-sm" onclick='App.views.update_lesson({{id}})'>Update</button>
                             <!-- Button trigger modal -->
                             <button class="btn btn-danger btn-sm" onclick='App.vars.tmp.to_delete={{classe_pk}}' data-toggle="modal" data-target="#delete_lesson">Delete</button>
+                            <button class="btn btn-info btn-sm" onclick='App.vars.tmp.to_manage={{classe_pk}}' data-toggle="modal" data-target="#manage_lesson">More</button>
                         </span>
                     </div>
                 </div>
@@ -52,6 +52,26 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#delete_lesson').on('hidden.bs.modal', function (event) {App.views.delete_lesson(App.vars.tmp.to_delete)})">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="manage_lesson" tabindex="-1" aria-labelledby="manage_lessonLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="manage_lessonLabel">Confirmation</h5>
+      </div>
+      <div class="modal-body">
+        <span class="text">Select a lesson status</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#manage_lesson').on('hidden.bs.modal', function (event) {App.views.update_status_lesson(App.vars.tmp.to_manage, 's')})">Started</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal" onclick="$('#manage_lesson').on('hidden.bs.modal', function (event) {App.views.update_status_lesson(App.vars.tmp.to_manage, 'c')})">Cancelled</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="$('#manage_lesson').on('hidden.bs.modal', function (event) {App.views.update_status_lesson(App.vars.tmp.to_manage, 'e')})">Finished</button>
+        <button type="button" class="btn btn-warning" data-dismiss="modal" onclick="$('#manage_lesson').on('hidden.bs.modal', function (event) {App.views.update_status_lesson(App.vars.tmp.to_manage, 'w')})">Waiting</button>
+        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="$('#manage_lesson').on('hidden.bs.modal', function (event) {App.views.update_attendance_lesson(App.vars.tmp.to_manage)})">Toggle Attendance</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Exit</button>
       </div>
     </div>
   </div>
@@ -86,6 +106,7 @@
                 .replace('{{description}}', App.models.classes[classe_id].description)
                 .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
                 .replace('{{id}}', classe_id)
+                .replace('{{classe_pk}}', App.models.classes[classe_id].pk)
                 .replace('{{classe_pk}}', App.models.classes[classe_id].pk)
             );
         };
