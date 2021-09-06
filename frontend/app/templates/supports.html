@@ -18,8 +18,11 @@
                         <b>Description:</b> {{description}}<br>
                         <b>Date of publication:</b> {{pub_date}}<br>
                         <b>Type:</b> {{category}}<br>
+                        <b>Size:</b> {{size}} Mo<br>
                         <b>Number of downloading:</b> <span class="text-primary">{{nb_downloading}}</span><br>
-                        <button class="btn btn-primary btn-sm" onclick='App.vars.tmp.download({{id}})'>Download</button><br>
+                        <button class="btn btn-primary btn-sm" onclick='App.vars.tmp.download({{id}})'>Download</button>
+                        <button class="btn btn-danger btn-sm" onclick='App.vars.tmp.download({{id}}, 1)'>Download with MEGA</button>
+                        <br>
                     </div>
                     <div class="card-footer" {{admin_panel}}>
                         <button class="btn btn-warning btn-sm" onclick='App.views.update_asset({{id}})'>Update</button>
@@ -77,14 +80,18 @@
                 .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
                 .replace('{{id}}', asset_id)
                 .replace('{{asset_pk}}', App.models.assets[asset_id].pk)
+                .replace('{{size}}', App.models.assets[asset_id].size / 1000 / 1000)
             );
         };
     } else {
         App.vars.tmp.$el[0].innerHTML = 'No supports for the moment.';
     };
-    App.vars.tmp.download = function (id) {
+    App.vars.tmp.download = function (id, with_mega) {
         Addons.request('/api/user/timetable/asset/'+App.models.assets[id].pk+'/read', null, function (){});
-        var win = window.open('/api/user/timetable/media/'+App.models.assets[id].url+'/download', '_blank');
+        var win = window.open(
+            with_mega ? App.models.assets[id].cloud_url : ('/api/user/timetable/media/'+App.models.assets[id].media_pk+'/download'),
+            '_blank'
+        );
         if (win) {
             //Browser has allowed it to be opened
             win.focus();

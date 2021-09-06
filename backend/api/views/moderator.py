@@ -1,8 +1,9 @@
-from task.models import Course, Event, Classe, Location, Media, Asset, Category, Packet
+from task.models import Course, Event, Classe, Location, Media, Asset, Category
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
-from .tools import apiResponse, MegaFile
+from .tools import apiResponse
 from django.conf import settings
+from mega import Mega
 
 @csrf_exempt
 def add_timetable_classe_view(request, course_pk=None, classe_pk=None):
@@ -61,21 +62,18 @@ def delete_timetable_classe_view(request, classe_pk):
 def add_media_view(request):
     if request.user.is_authenticated:
         if request.FILES:
-            mega_file = MegaFile(settings.MEGA_AUTH, str(settings.MEGA_ROOT), settings.MEGA_TMP, online_mode=settings.MEGA_ENABLED)
-            while 1:
-                data = request.FILES['file'].read(262144)#256KB
-                if data:
-                    mega_file.write(data)
-                else:
-                    break
+            mega_api = Mega()
+            mega_api.login(**settings.MEGA_AUTH)
+            cloud_folder = mega_api.find(str(settings.MEGA_ROOT))[0]
+            cloud_file = mega_api.upload(dest=cloud_folder, input_file=request.FILES['file'], dest_filename=request.FILES['file'].name, file_size=request.FILES['file'].size)
+                      
             media = Media.objects.create(
                 author=request.user,
                 origin_name=request.FILES['file'].name,
                 origin_content_type=request.FILES['file'].content_type,
                 origin_size=request.FILES['file'].size,
-                is_online=mega_file.online_mode
             )
-            media.packets.add(*[Packet.objects.create(url=packet) for packet in mega_file.packets])
+            media.cloud_url = mega_api.get_upload_link(cloud_file)
             media.save()
             return apiResponse(result=media.get_as_json())
         else:

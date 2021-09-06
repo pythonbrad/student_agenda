@@ -178,16 +178,8 @@ class Location(models.Model):
             'timetable_pk': self.timetable.pk,
         }
 
-class Packet(models.Model):
-    url = models.URLField()
-    time = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return self.url
-
 class Media(models.Model):
-    packets  = models.ManyToManyField('Packet')
-    is_online = models.BooleanField()
+    cloud_url  = models.URLField(max_length=1024)
     origin_name = models.CharField(max_length=255)
     origin_content_type = models.CharField(max_length=255)
     origin_size = models.IntegerField()
@@ -197,6 +189,8 @@ class Media(models.Model):
     def get_as_json(self):
         return {
             'pk': self.pk,
+            'cloud_url': self.cloud_url,
+            'origin_size': self.origin_size
         }
 
 class Asset(models.Model):
@@ -227,7 +221,9 @@ class Asset(models.Model):
             'course': self.course.get_as_json(),
             'readers': self.readers.count(),
             'pub_date': self.pub_date,
-            'url': self.media.pk,
+            'media_pk': self.media.pk,
+            'size': self.media.origin_size,
+            'cloud_url': self.media.cloud_url,
         }
 
 class Category(models.Model):

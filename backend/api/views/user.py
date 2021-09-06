@@ -4,10 +4,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models import Q
-from .tools import apiResponse, MegaFile
+from .tools import apiResponse
 from django.conf import settings
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
+import _thread
+import time
+from mega import Mega
 
 def get_timetable_view(request):
     if request.user.is_authenticated:
@@ -386,9 +389,40 @@ def download_media_view(request, media_pk):
     if request.user.is_authenticated:
         media = Media.objects.filter(pk=media_pk)
         if media:
-            mega_file = MegaFile(tmp_folder=str(settings.MEGA_TMP), online_mode=media[0].is_online)
-            mega_file.packets = [packet.url for packet in media[0].packets.all()]
-            response = HttpResponse(FileWrapper(mega_file), content_type=media[0].origin_content_type)
+            mega_api = Mega()
+
+            class VirtualFile:
+                def __init__(self):
+                    self.data = None
+                    self.readable = False
+                    self.is_closed = False
+
+                # We write if the reading is not active
+                def write(self, x):
+                    while self.readable:
+                        time.sleep(0.1)
+                    self.data = x
+                    self.readable = True
+
+                # We read if the writing is not active
+                def read(self, x=None):
+                    while not self.readable and not self.is_closed:
+                        time.sleep(0.1)
+                    data = self.data
+                    # We clean the data after each reading
+                    self.data = b''
+                    self.readable = False
+                    return data
+
+                # If you don't call it, we will risk to have an infinite reading
+                def close(self):
+                    self.is_closed = True
+
+            output_file = VirtualFile()
+
+            _thread.start_new_thread(lambda:mega_api.download_url(media[0].cloud_url, output_file=output_file), ())
+
+            response = HttpResponse(FileWrapper(output_file), content_type=media[0].origin_content_type)
             response['Content-Disposition'] = 'attachment; filename="%s"' % media[0].origin_name
             response['Content-Length'] = media[0].origin_size
             return response
