@@ -329,6 +329,13 @@ class Feedback(models.Model):
     def __str__(self):
         return 'Feedback from %s' % author.username
 
+    def get_as_json(self):
+        return {
+            'author': self.author.student_set.get().get_as_json(),
+            'message': self.message,
+            'created_date': self.created_date,
+        }
+
 # Signals
 # Delete file when
 @receiver(post_delete, sender=Asset)

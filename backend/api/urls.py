@@ -25,6 +25,7 @@ urlpatterns = [
     path('user/timetable/media/<media_pk>/download', user.download_media_view),
     path('user/timetable/notifications', user.get_notification),
     path('user/timetable/announces', user.get_announce),
+    path('admin/feedback/read', administrator.get_feedback_view),
     path('admin/timetable/add', administrator.add_timetable_view),
     path('admin/timetable/<int:timetable_pk>/update', administrator.update_timetable_view),
     path('admin/timetable/<int:timetable_pk>/delete', administrator.delete_timetable_view),

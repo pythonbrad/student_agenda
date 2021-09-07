@@ -1,5 +1,5 @@
 from task.models import Timetable, User
-from task.models import Location, Course, Lecturer, Category
+from task.models import Location, Course, Lecturer, Category, Feedback
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from .tools import apiResponse
@@ -290,3 +290,9 @@ def delete_timetable_category_view(request, category_pk):
             return apiResponse(code=521)
     else:
         return apiResponse(code=617)
+
+def get_feedback_view(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        return apiResponse(result=[i.get_as_json() for i in Feedback.objects.all()])
+    else:
+        return apiResponse(code=618)
