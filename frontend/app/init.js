@@ -5,6 +5,7 @@ App = {
 	views: {
 		// For the moment load just the pages
 		base: function (next=function () {}) {
+			$('#splash-info').text("");
 			$('#main').load('app/templates/base.html', next);
 		},
 		splash: function (next, option) {
@@ -44,6 +45,7 @@ App = {
 					}, 1000);
 					// We perform operation
 					// We verify if already login
+					$('#splash-info').text("Authentification...");
 					Addons.request('/api/auth/login', null, function (d) {
 						if (d.code == 200) {
 							App.vars.is_login = 1;
@@ -57,6 +59,7 @@ App = {
 							if (App.vars.can_pass) {
 								clearInterval(App.events[1]);
 								if (App.vars.is_login) {
+									$('#splash-info').text("Loading data...");
 									// We load c0nstant
 								    Addons.request('/api/user/status/choices', null, function (d) {
 								        if(d.code == 200) {
@@ -105,6 +108,7 @@ App = {
 						};
 					}, 100);
 					if (timetable_pk!=null) {
+						$('#splash-info').text("Processing...");
 						Addons.request(
 							'/api/user/timetable/'+timetable_pk+'/'+(reverse?'unfollow':'follow/'+code),
 							null,
@@ -119,6 +123,7 @@ App = {
 							false
 						);
 					} else {
+						$('#splash-info').text("Loading data...");
 						// We load timetable
 						Addons.request('/api/user/timetables', null, function (d) {
 							if (d.code == 200) {
@@ -133,6 +138,7 @@ App = {
 			);
 		},
 		add_timetable: function (name, description) {
+			$('#splash-info').text("Creating of a timetable...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -165,6 +171,7 @@ App = {
 			);
 		},
 		delete_timetable: function (timetable_pk) {
+			$('#splash-info').text("Deleting of a timetable...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -177,6 +184,7 @@ App = {
 			);
 		},
 		moderators: function (user_pk, timetable_pk, add) {
+			$('#splash-info').text("Processing...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -204,6 +212,7 @@ App = {
 			);
 		},
 		add_event: function (name,description,status,date,begin,end,location_pk,timetable_pk) {
+			$('#splash-info').text("Creating of an event...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -236,6 +245,7 @@ App = {
 			);
 		},
 		delete_event: function (event_pk) {
+			$('#splash-info').text("Deleting of an event...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -248,6 +258,7 @@ App = {
 			);
 		},
 		update_event: function (event_id,name,description,status,date,begin,end,location_pk,timetable_pk) {
+			$('#splash-info').text("Updating of an event");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -300,6 +311,7 @@ App = {
 			);
 		},
 		add_lesson: function (description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
+			$('#splash-info').text("Creating of an lesson...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -333,6 +345,7 @@ App = {
 			);
 		},
 		delete_lesson: function (classe_pk) {
+			$('#splash-info').text("Deleting of a lesson...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -343,6 +356,7 @@ App = {
 			);
 		},
 		update_status_lesson: function (classe_pk, status) {
+			$('#splash-info').text("Updating of a lesson...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -353,6 +367,7 @@ App = {
 			);
 		},
 		update_attendance_lesson: function (classe_pk) {
+			$('#splash-info').text("Updating of a lesson...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -363,6 +378,7 @@ App = {
 			);
 		},
 		update_lesson: function (lesson_id,description,attendance_done,status,date,begin,end,location_pk,course_pk,timetable_pk) {
+			$('#splash-info').text("Updating of a lesson...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -416,6 +432,7 @@ App = {
 			);
 		},
 		add_lecturer: function (name,timetable_pk) {
+			$('#splash-info').text("Creating of a lecturer...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -448,6 +465,7 @@ App = {
 			);
 		},
 		add_location: function (name,description,timetable_pk) {
+			$('#splash-info').text("Creating of a location...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -480,6 +498,7 @@ App = {
 			);
 		},
 		add_category: function (name,description,timetable_pk) {
+			$('#splash-info').text("Creating of a category...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -512,6 +531,7 @@ App = {
 			);
 		},
 		add_course: function (name,code,description,lecturer_pks, timetable_pk) {
+			$('#splash-info').text("Creating of a course...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -544,10 +564,11 @@ App = {
 			);
 		},
 		add_asset: function (name, description, category_pk, course_pk, files, timetable_pk) {
+			$('#splash-info').text("Updating of an media...");
 			App.views.splash(
 				function () {
 					// We perform operation
-					MAX_SIZE = 1024*1024*64;
+					MAX_SIZE = 64000000; //64MB
 					App.events[0] = setInterval(function () {
 						// We verify if all the operations are finished
 						if (App.vars.can_pass) {
@@ -571,6 +592,7 @@ App = {
 								success: function(response){
 									if(response.code == 200){
 										media_pk = response.result.pk;
+										$('#splash-info').text("Creating of an asset");
 										Addons.request(
 											'/api/moderator/timetable/course/'+course_pk+'/asset/add',
 											{name:name,description:description,category:category_pk,media:media_pk},
@@ -603,6 +625,7 @@ App = {
 			);
 		},
 		delete_asset: function (asset_pk) {
+			$('#splash-info').text("Deleting of an asset...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -615,6 +638,7 @@ App = {
 			);
 		},
 		update_asset: function (asset_id, name, description, category_pk, course_pk, files, timetable_pk) {
+			$('#splash-info').text("Updating of an asset");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -665,6 +689,7 @@ App = {
 			);
 		},
 		home: function (next_day=0) {
+			$('#splash-info').text("Loading lessons...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -692,6 +717,7 @@ App = {
 			);
 		},
 		supports: function () {
+			$('#splash-info').text("Loading supports");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -724,6 +750,7 @@ App = {
 			);
 		},
 		events: function (next_day=0) {
+			$('#splash-info').text("Loading events...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -751,6 +778,7 @@ App = {
 			);
 		},
 		notifications: function () {
+			$('#splash-info').text("Loading notifications");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -780,6 +808,7 @@ App = {
 			);
 		},
 		login: function (username, password) {
+			$('#splash-info').text("Login...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -813,6 +842,7 @@ App = {
 			);
 		},
 		signin: function (username, email, password, password2) {
+			$('#splash-info').text("Signin...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -863,6 +893,7 @@ App = {
 			);
 		},
 		logout: function () {
+			$('#splash-info').text("Logout...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -889,6 +920,7 @@ App = {
 			);
 		},
 		calendar: function () {
+			$('#splash-info').text("Building of the calendar view...");
 			App.views.splash(function () {
 				// We load the lessons
 				App.vars.get_lessons();
@@ -911,6 +943,7 @@ App = {
 			});
 		},
 		feedback: function (message) {
+			$('#splash-info').text("Sending a feedback...");
 			App.views.splash(
 				function () {
 					// We perform operation
