@@ -337,11 +337,6 @@ class Feedback(models.Model):
         }
 
 # Signals
-# Delete file when
-@receiver(post_delete, sender=Asset)
-def delete_media(sender, instance, **kwargs):
-    pass
-
 # Create notification when
 @receiver(post_save, sender=Classe)
 def update_classe(instance, created, **kwargs):
