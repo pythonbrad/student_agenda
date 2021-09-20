@@ -89,7 +89,6 @@ def add_media_view(request):
             cloud_file = mega_api.upload(dest=cloud_folder, input_file=request.FILES['file'], dest_filename=request.FILES['file'].name, file_size=request.FILES['file'].size)
                       
             media = Media.objects.create(
-                author=request.user,
                 origin_name=request.FILES['file'].name,
                 origin_content_type=request.FILES['file'].content_type,
                 origin_size=request.FILES['file'].size,

@@ -184,7 +184,6 @@ class Media(models.Model):
     origin_content_type = models.CharField(max_length=255)
     origin_size = models.IntegerField()
     time = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_as_json(self):
         return {
