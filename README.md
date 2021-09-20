@@ -27,3 +27,6 @@ We recommanded to use https://github.com/pythonbrad/mega.py in the case where gi
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
+
+# Backup
+python3 manage.py dumpdata --exclude auth.permission --exclude contenttypes.contenttype --indent 2 --format json > backup.json

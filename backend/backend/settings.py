@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'task.apps.TaskConfig',
     'api.apps.ApiConfig',
-    'dbbackup',
 ]
 
 MIDDLEWARE = [
