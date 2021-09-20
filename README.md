@@ -29,4 +29,4 @@ python3 -m pip install -r requirements.txt
 ```
 
 # Backup
-python3 manage.py dumpdata --exclude auth.permission --exclude contenttypes.contenttype --indent 2 --format json > backup.json
+python3 manage.py dumpdata --exclude auth.permission --exclude contenttypes.contenttype --indent 2 --format json > backup_$(date +%F).json
