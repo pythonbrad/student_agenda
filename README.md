@@ -29,4 +29,9 @@ python3 -m pip install -r requirements.txt
 ```
 
 # Backup
-python3 manage.py dumpdata --exclude auth.permission --exclude contenttypes.contenttype --indent 2 --format json > backup_$(date +%F).json
+Source: https://www.coderedcorp.com/blog/how-to-dump-your-django-database-and-load-it-into-/
+NB: To evict error like "matching query does not exist", you should organise each model by order of priority
+	eg: auth.user before task.student
+```sh
+python3 manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 -o backup_$(date +%F).json
+```

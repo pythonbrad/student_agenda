@@ -79,6 +79,7 @@
                 .replace('{{id}}', asset_id)
                 .replace('{{admin_panel}}', App.vars.tmp.owner ? '' : 'hidden')
                 .replace('{{id}}', asset_id)
+                .replace('{{id}}', asset_id)
                 .replace('{{asset_pk}}', App.models.assets[asset_id].pk)
                 .replace('{{size}}', App.models.assets[asset_id].size / 1000 / 1000)
             );
