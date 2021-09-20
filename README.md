@@ -35,3 +35,54 @@ NB: To evict error like "matching query does not exist", you should organise eac
 ```sh
 python3 manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 -o backup_$(date +%F).json
 ```
+
+# Actor, Use case and entities
+* An user can manage timetable
+	+ View the lessons of today
+		- Location
+		- Time
+		- Status (waiting, started, ended, cancelled)
+		- Attendance status (done, not done)
+	+ View the events of today
+		- Location
+		- Time
+		- Status (waiting, started, ended, cancelled)
+	+ View the full timetable
+		- Lessons by day
+		- Lessons by week
+		- Lessons by month
+	+ Follow a timetable
+		- Required a shared code
+	+ Unfollow a timetable
+	+ If admin
+	+ Create a timetable
+	+ Delete a timetable
+* An user can manage asset
+	+ View an asset
+		- Course
+		- Descrition
+		- Date of update
+		- NB of downloading
+		- Category
+	+ Download an asset
+	+ If moderator
+	+ Create an asset
+	+ Update an asset
+	+ Delete an asset
+* An user can manage lesson
+	+ View the details about a lesson
+	+ If moderator
+	+ Create a lesson
+	+ Update a lesson
+	+ Delete a lesson
+* An user can manage event
+	+ View the details about a event
+	+ If moderator
+	+ Create a event
+	+ Update a event
+	+ Delete a event
+* An user can manage data
+	+ If admin
+	+ Create a lecturer
+	+ Create a location
+	+ Create a category
