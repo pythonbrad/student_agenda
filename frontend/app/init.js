@@ -258,7 +258,7 @@ App = {
 			);
 		},
 		update_event: function (event_id,name,description,status,date,begin,end,location_pk,timetable_pk) {
-			$('#splash-info').text("Updating of an event");
+			$('#splash-info').text("Updating of an event...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -592,7 +592,7 @@ App = {
 								success: function(response){
 									if(response.code == 200){
 										media_pk = response.result.pk;
-										$('#splash-info').text("Creating of an asset");
+										$('#splash-info').text("Creating of an asset...");
 										Addons.request(
 											'/api/moderator/timetable/course/'+course_pk+'/asset/add',
 											{name:name,description:description,category:category_pk,media:media_pk},
@@ -638,7 +638,7 @@ App = {
 			);
 		},
 		update_asset: function (asset_id, name, description, category_pk, course_pk, files, timetable_pk) {
-			$('#splash-info').text("Updating of an asset");
+			$('#splash-info').text("Updating of an asset...");
 			App.views.splash(
 				function () {
 					// We perform operation
@@ -717,7 +717,7 @@ App = {
 			);
 		},
 		supports: function () {
-			$('#splash-info').text("Loading supports");
+			$('#splash-info').text("Loading supports...");
 			App.views.splash(
 				function () {
 					// We perform operation
