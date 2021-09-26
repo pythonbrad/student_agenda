@@ -103,8 +103,7 @@
     };
     $("#support_key").keyup(function () {
         var text = $("#support_key").val().toLowerCase();
-        var items = $("#block").children();
-        items.each(function(x, y) {
+        $("#block").children().each(function(x, y) {
             y.hidden = (y.innerText.toLowerCase().search(text) == -1);
         });
     });
