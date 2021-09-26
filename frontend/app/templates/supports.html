@@ -101,5 +101,12 @@
             alert('Please allow popups for launch the downloading');
         };
     };
+    $("#support_key").keyup(function () {
+        var text = $("#support_key").val().toLowerCase();
+        var items = $("#block").children();
+        items.each(function(x, y) {
+            y.hidden = (y.innerText.toLowerCase().search(text) == -1);
+        });
+    });
     App.views.splash(null, 'hide');
 </script>
