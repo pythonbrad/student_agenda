@@ -5,4 +5,4 @@ media
 data_generator.py
 settings.py
 credentials.py
-backup_*
+backup
