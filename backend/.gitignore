@@ -1,0 +1,7 @@
+__pycache__
+db.sqlite3
+000*
+media
+data_generator.py
+settings.py
+credentials.py
