@@ -86,3 +86,6 @@ python3 manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -
 	+ Create a lecturer
 	+ Create a location
 	+ Create a category
+
+# How to contrib?
+You can see our todo list [TODO](frontend/TODO.md)
