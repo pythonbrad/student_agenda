@@ -23,14 +23,14 @@
 
 # Installation
 We recommanded to use https://github.com/pythonbrad/mega.py in the case where github.com/odwyersoftware/mega.py is not updated.
-```sh
+```bash
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
 
 # Backup
 Source: https://www.coderedcorp.com/blog/how-to-dump-your-django-database-and-load-it-into-/
-```sh
+```bash
 python3 manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 -o backup_$(date +%F).json
 ```
 ##### NB: To evict error like "matching query does not exist", you should organise each model by order of priority
