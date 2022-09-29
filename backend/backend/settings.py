@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-import credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,6 +126,6 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2097152
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
-MEGA_AUTH = credentials.mega
+MEGA_AUTH = {'email': 'example@example.com', 'password': 'password'}
 MEGA_ROOT = 'StudentAgenda'
 MEGA_TMP = '/tmp'
