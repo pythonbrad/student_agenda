@@ -1,2 +1,0 @@
-django
-git+https://github.com/pythonbrad/mega.py
