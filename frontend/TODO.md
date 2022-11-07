@@ -26,3 +26,4 @@
 	- [ ] Set class absent
 	- [ ] Unset class absent
 	- [ ] Possibility to user to see all information about a lesson (lecturer, location, course, )
+	- [ ] Statistics (graph of lesson organized, lesson cancelled, event organized, event cancelled, attendance, ...)
