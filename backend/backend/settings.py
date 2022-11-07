@@ -11,22 +11,25 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+# reading .env file
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g*!2wr74=be2aoj)q_i2$0n(xq@2)3!%qrx4yd(ze3&m+($ti_'
+SECRET_KEY = env('django_session')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env.list("allowed_hosts")
 
 # Application definition
 
@@ -77,8 +80,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': env('db_name'),
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': env('db_user'),
+        'PASSWORD': env('db_pass'),
+        'HOST': env('db_host'),
+        'PORT': env('db_port'),
     }
 }
 
@@ -126,6 +133,8 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2097152
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
-MEGA_AUTH = {'email': 'example@example.com', 'password': 'password'}
-MEGA_ROOT = 'StudentAgenda'
-MEGA_TMP = '/tmp'
+MEGA_AUTH = {'email': env('mega_email'), 'password': env('mega_password')}
+MEGA_ROOT = env('mega_root')
+MEGA_TMP = env('tmp')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
