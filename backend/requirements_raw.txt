@@ -1,0 +1,5 @@
+Django
+django-environ
+Pillow
+git+https://github.com/pythonbrad/mega.py
+mysqlclient
