@@ -24,7 +24,6 @@ Hence have the good information at good instant, it is not easy.
 - Clone the project
 ```sh
 git clone https://github.com/pythonbrad/student_agenda.git
-cd student_agenda/backend
 ```
 - Install the requirements
 ```sh
